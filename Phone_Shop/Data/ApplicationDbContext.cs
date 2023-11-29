@@ -9,5 +9,8 @@ namespace Phone_Shop.Data
             : base(options)
         {
         }
+        public DbSet<Phone_Shop.Models.Category> Category { get; set; } = default!;
+        public DbSet<Phone_Shop.Models.Seller> Seller { get; set; } = default!;
+        public DbSet<Phone_Shop.Models.Product> Product { get; set; } = default!;
     }
 }
