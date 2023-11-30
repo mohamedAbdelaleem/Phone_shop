@@ -224,6 +224,28 @@ namespace Phone_Shop.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Phone_Shop.Models.Address", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("city")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("governce")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Address");
+                });
+
             modelBuilder.Entity("Phone_Shop.Models.Category", b =>
                 {
                     b.Property<string>("id")
@@ -236,6 +258,75 @@ namespace Phone_Shop.Data.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("OrderedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("TotalPrice")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Oder");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.OrderItem", b =>
+                {
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitPrice")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderID", "ProductID");
+
+                    b.HasIndex("OrderID")
+                        .IsUnique();
+
+                    b.HasIndex("ProductID")
+                        .IsUnique();
+
+                    b.ToTable("OrderItem");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.PickupAddress", b =>
+                {
+                    b.Property<string>("address_id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("user_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("address_id");
+
+                    b.HasIndex("user_id");
+
+                    b.ToTable("PickupAddress");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Product", b =>
@@ -276,6 +367,23 @@ namespace Phone_Shop.Data.Migrations
                     b.HasIndex("seller_id");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.ProductAddress", b =>
+                {
+                    b.Property<string>("address_id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("product_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("address_id");
+
+                    b.HasIndex("product_id")
+                        .IsUnique();
+
+                    b.ToTable("ProductAddress");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Seller", b =>
@@ -344,6 +452,55 @@ namespace Phone_Shop.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Phone_Shop.Models.Order", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.OrderItem", b =>
+                {
+                    b.HasOne("Phone_Shop.Models.Order", "Order")
+                        .WithOne()
+                        .HasForeignKey("Phone_Shop.Models.OrderItem", "OrderID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Phone_Shop.Models.Product", "Product")
+                        .WithOne()
+                        .HasForeignKey("Phone_Shop.Models.OrderItem", "ProductID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.PickupAddress", b =>
+                {
+                    b.HasOne("Phone_Shop.Models.Address", "Address")
+                        .WithOne("PickupAddress")
+                        .HasForeignKey("Phone_Shop.Models.PickupAddress", "address_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "AspNetUser")
+                        .WithMany()
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("AspNetUser");
+                });
+
             modelBuilder.Entity("Phone_Shop.Models.Product", b =>
                 {
                     b.HasOne("Phone_Shop.Models.Category", "Category")
@@ -363,6 +520,25 @@ namespace Phone_Shop.Data.Migrations
                     b.Navigation("Seller");
                 });
 
+            modelBuilder.Entity("Phone_Shop.Models.ProductAddress", b =>
+                {
+                    b.HasOne("Phone_Shop.Models.Address", "Address")
+                        .WithOne("ProductAddress")
+                        .HasForeignKey("Phone_Shop.Models.ProductAddress", "address_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Phone_Shop.Models.Product", "Product")
+                        .WithOne("ProductAddress")
+                        .HasForeignKey("Phone_Shop.Models.ProductAddress", "product_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Phone_Shop.Models.Seller", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
@@ -372,6 +548,21 @@ namespace Phone_Shop.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.Address", b =>
+                {
+                    b.Navigation("PickupAddress")
+                        .IsRequired();
+
+                    b.Navigation("ProductAddress")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.Product", b =>
+                {
+                    b.Navigation("ProductAddress")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -7,7 +7,7 @@ namespace Phone_Shop.Models
 {
     public class Order
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [ForeignKey("User")]

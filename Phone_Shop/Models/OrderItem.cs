@@ -5,11 +5,9 @@ namespace Phone_Shop.Models
 {
     public class OrderItem
     {
-        [Key]
-        public string OrderID { get; set; }
+        public int OrderID { get; set; }
         public Order Order { get; set; }
 
-        [Key]
         public string ProductID { get; set; }
         public Product Product { get; set; }
 

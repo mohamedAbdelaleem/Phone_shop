@@ -39,5 +39,7 @@ namespace Phone_Shop.Models
         [Required]
         public Category Category { get; set; }
 
+        public ProductAddress ProductAddress { get; set; }
+
     }
 }
