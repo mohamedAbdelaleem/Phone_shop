@@ -54,6 +54,11 @@ namespace Phone_Shop.Data
                     .WithOne(pa => pa.Product)
                     .HasForeignKey<ProductAddress>(pa => pa.product_id);
 
+            modelBuilder.Entity<Seller>()
+            .HasOne(s => s.IdentityUser)
+            .WithOne()
+            .HasForeignKey<Seller>(oi => oi.user_id);
+
         }
     }
 }
