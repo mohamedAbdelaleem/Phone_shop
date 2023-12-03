@@ -33,10 +33,8 @@ namespace Phone_Shop.Models
         [Required]
         public DateTime created_at { get; set; }
 
-        [Required]
         public Seller Seller { get; set; }
 
-        [Required]
         public Category Category { get; set; }
 
         public ProductAddress ProductAddress { get; set; }

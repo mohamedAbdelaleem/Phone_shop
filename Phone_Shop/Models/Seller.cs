@@ -16,7 +16,6 @@ namespace Phone_Shop.Models
         [MinLength(14)]
         public string national_Id { get; set; }
 
-        [Required]
         public IdentityUser IdentityUser { get; set; }
     }
 }
