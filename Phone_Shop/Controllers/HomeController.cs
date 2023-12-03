@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Phone_Shop.Models;
+using System.Diagnostics;
 
 namespace Phone_Shop.Controllers
 {

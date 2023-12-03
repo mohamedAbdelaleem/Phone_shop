@@ -5,10 +5,18 @@ namespace Phone_Shop.Models
 {
     public class OrderItem
     {
+        [Key]
         public int OrderID { get; set; }
+        
+        [Required]
+        public string ProductAddress { get; set; }
+        
+        [Required]
         public Order Order { get; set; }
-
+        
+        [Required]
         public string ProductID { get; set; }
+        
         public Product Product { get; set; }
 
         [Required]
