@@ -7,37 +7,37 @@ namespace Phone_Shop.Models
 {
     public class Product
     {
-        [Required]
+        [Key]
         public string Id { get; set; }
-        
+
         [Required]
         [ForeignKey("Seller")]
-        public string seller_id { get; set; }
+        public string SellerId { get; set; }
 
         [Required]
         [ForeignKey("Category")]
-        public string category_id { get; set; }
+        public int CategoryId { get; set; }
 
         [Required]
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [Required]
-        public string description { get; set; }
+        public string Description { get; set; }
 
         [Required]
-        public string imgUrl { get; set; }
+        public string ImgUrl { get; set; }
 
         [Required]
-        public int price { get; set; }
+        public int Price { get; set; }
 
         [Required]
-        public DateTime created_at { get; set; }
-
-        public Seller Seller { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public Category Category { get; set; }
 
         public ProductAddress ProductAddress { get; set; }
+
+        public IdentityUser Seller { get; set; }
 
     }
 }

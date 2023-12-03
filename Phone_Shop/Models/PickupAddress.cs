@@ -1,19 +1,26 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net;
 
 namespace Phone_Shop.Models
 {
     public class PickupAddress
     {
+        [Key]
+        public int AddressId { get; set; }
+        
         [Required]
-        [Key, ForeignKey("Address")]
-        public string address_id { get; set; }
-        [Required]
-        [ForeignKey("AspNetUser")]
-        public string user_id { get; set; }
+        [ForeignKey("User")]
+        public string UserId { get; set; }
 
-        public Address Address { get; set; }
-        public IdentityUser AspNetUser { get; set; }
+        [Required]
+        public string Governace { get; set; }
+        [Required]
+        public string City { get; set; }
+        [Required]
+        public string Street { get; set; }
+
+        public IdentityUser User { get; set; }
     }
 }
