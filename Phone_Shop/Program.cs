@@ -6,7 +6,7 @@ namespace Phone_Shop
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +16,8 @@ namespace Phone_Shop
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
@@ -45,6 +46,63 @@ namespace Phone_Shop
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManger = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                var roles = new[] { "Customer", "Seller", "Admin", "Delivery" };
+                
+                foreach (var role in roles)
+                {
+                    if (!await roleManger.RoleExistsAsync(role))
+                    {
+                        await roleManger.CreateAsync(new IdentityRole(role));
+                    }
+                }
+
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var userManger = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+                var email = "aliadmin12@phone.com";
+                var password = "Ali1212#";
+
+                if (await userManger.FindByEmailAsync(email) == null)
+                {
+                    var admin = new IdentityUser { Email = email, UserName = email };
+
+                    await userManger.CreateAsync(admin, password);
+
+                    await userManger.AddToRoleAsync(admin, "Admin");
+
+                }
+                
+
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var userManger = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+                var email = "delivery@phone.com";
+                var password = "Ali1212#";
+
+                if (await userManger.FindByEmailAsync(email) == null)
+                {
+                    var delivery = new IdentityUser { Email = email, UserName = email };
+
+                    await userManger.CreateAsync(delivery, password);
+
+                    await userManger.AddToRoleAsync(delivery, "Delivery");
+
+                }
+
+
+            }
 
             app.Run();
         }
