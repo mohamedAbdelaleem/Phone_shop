@@ -19,6 +19,7 @@ namespace Phone_Shop.Data
         public DbSet<OrderItem> OrderItem { get; set; }
         public DbSet<PickupAddress> PickupAddress { get; set; }
         public DbSet<ProductAddress> ProductAddress { get; set; }
+        public DbSet<Account> Account { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,12 @@ namespace Phone_Shop.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<OrderItem>()
                 .HasKey(o => new { o.OrderID, o.ProductID });
+
+            modelBuilder.Entity<Account>()
+           .HasOne(A => A.User)
+           .WithOne()
+           .HasForeignKey<Account>(A => A.Id)
+           .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<OrderItem>()
             .HasOne(oi => oi.Product)
@@ -71,9 +78,9 @@ namespace Phone_Shop.Data
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
-            .HasOne(p => p.Category)       
-            .WithMany(c => c.Products)      
-            .HasForeignKey(p => p.CategoryId)  
+            .HasOne(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
         }
     }
