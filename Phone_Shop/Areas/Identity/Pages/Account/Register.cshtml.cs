@@ -102,6 +102,8 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
             [Required]
             public string Role { get; set; }
 
+
+
         }
 
 
