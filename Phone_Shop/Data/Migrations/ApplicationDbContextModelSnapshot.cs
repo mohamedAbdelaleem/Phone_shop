@@ -8,7 +8,7 @@ using Phone_Shop.Data;
 
 #nullable disable
 
-namespace Phone_Shop.Migrations
+namespace Phone_Shop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -312,9 +312,6 @@ namespace Phone_Shop.Migrations
 
                     b.HasKey("OrderID", "ProductID");
 
-                    b.HasIndex("OrderID")
-                        .IsUnique();
-
                     b.HasIndex("ProductID")
                         .IsUnique();
 
@@ -347,8 +344,7 @@ namespace Phone_Shop.Migrations
 
                     b.HasKey("AddressId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("PickupAddress");
                 });
@@ -372,6 +368,9 @@ namespace Phone_Shop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -383,23 +382,27 @@ namespace Phone_Shop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("SellerId")
-                        .IsUnique();
+                    b.HasIndex("SellerId");
+
+                    b.HasIndex("StoreId");
 
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("Phone_Shop.Models.ProductAddress", b =>
+            modelBuilder.Entity("Phone_Shop.Models.Store", b =>
                 {
-                    b.Property<int>("AddressId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -409,7 +412,11 @@ namespace Phone_Shop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProductId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SellerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -417,12 +424,11 @@ namespace Phone_Shop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AddressId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
+                    b.HasIndex("SellerId");
 
-                    b.ToTable("ProductAddress");
+                    b.ToTable("Store");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -509,8 +515,8 @@ namespace Phone_Shop.Migrations
             modelBuilder.Entity("Phone_Shop.Models.OrderItem", b =>
                 {
                     b.HasOne("Phone_Shop.Models.Order", "Order")
-                        .WithOne()
-                        .HasForeignKey("Phone_Shop.Models.OrderItem", "OrderID")
+                        .WithMany()
+                        .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -528,8 +534,8 @@ namespace Phone_Shop.Migrations
             modelBuilder.Entity("Phone_Shop.Models.PickupAddress", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithOne()
-                        .HasForeignKey("Phone_Shop.Models.PickupAddress", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -545,36 +551,38 @@ namespace Phone_Shop.Migrations
                         .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Seller")
-                        .WithOne()
-                        .HasForeignKey("Phone_Shop.Models.Product", "SellerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany()
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Phone_Shop.Models.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
 
                     b.Navigation("Seller");
+
+                    b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("Phone_Shop.Models.ProductAddress", b =>
+            modelBuilder.Entity("Phone_Shop.Models.Store", b =>
                 {
-                    b.HasOne("Phone_Shop.Models.Product", "Product")
-                        .WithOne("ProductAddress")
-                        .HasForeignKey("Phone_Shop.Models.ProductAddress", "ProductId")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Seller")
+                        .WithMany()
+                        .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Phone_Shop.Models.Product", b =>
-                {
-                    b.Navigation("ProductAddress")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

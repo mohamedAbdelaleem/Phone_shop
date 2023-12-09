@@ -36,6 +36,8 @@ namespace Phone_Shop.Models
         [Required]
         public DateTime CreatedAt { get; set; }
 
+        public bool IsActive { get; set; } = false;
+
         public Category Category { get; set; }
 
         public Store Store { get; set; }

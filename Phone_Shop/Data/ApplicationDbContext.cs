@@ -18,7 +18,7 @@ namespace Phone_Shop.Data
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderItem> OrderItem { get; set; }
         public DbSet<PickupAddress> PickupAddress { get; set; }
-        public DbSet<ProductAddress> ProductAddress { get; set; }
+        public DbSet<Store> Store { get; set; }
         public DbSet<Account> Account { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,8 +43,8 @@ namespace Phone_Shop.Data
 
             modelBuilder.Entity<OrderItem>()
             .HasOne(oi => oi.Order)
-            .WithOne()
-            .HasForeignKey<OrderItem>(oi => oi.OrderID)
+            .WithMany()
+            .HasForeignKey(oi => oi.OrderID)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>()
@@ -61,21 +61,27 @@ namespace Phone_Shop.Data
 
             modelBuilder.Entity<PickupAddress>()
             .HasOne(pi => pi.User)
-            .WithOne()
-            .HasForeignKey<PickupAddress>(pi => pi.UserId)
+            .WithMany()
+            .HasForeignKey(pi => pi.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<ProductAddress>()
-                    .HasOne(pa => pa.Product)
-                    .WithOne(p => p.ProductAddress)
-                    .HasForeignKey<ProductAddress>(pa => pa.ProductId)
+            modelBuilder.Entity<Store>()
+                    .HasOne(s => s.Seller)
+                    .WithMany()
+                    .HasForeignKey(s => s.SellerId)
                     .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
             .HasOne(p => p.Seller)
-            .WithOne()
-            .HasForeignKey<Product>(p => p.SellerId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithMany()
+            .HasForeignKey(p => p.SellerId)
+            .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<Product>()
+            .HasOne(p => p.Store)
+            .WithMany()
+            .HasForeignKey(p => p.StoreId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Product>()
             .HasOne(p => p.Category)
