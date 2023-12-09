@@ -17,6 +17,9 @@ namespace Phone_Shop.Models
         [Required]
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
+        [Required]
+        [ForeignKey("Store")]
+        public int StoreId { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -35,7 +38,7 @@ namespace Phone_Shop.Models
 
         public Category Category { get; set; }
 
-        public ProductAddress ProductAddress { get; set; }
+        public Store Store { get; set; }
 
         public IdentityUser Seller { get; set; }
 

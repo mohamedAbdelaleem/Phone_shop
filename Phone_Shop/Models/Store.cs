@@ -1,17 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
+using Microsoft.AspNetCore.Identity;
 
 namespace Phone_Shop.Models
 {
-    public class ProductAddress
+    public class Store
     {
         [Key]
-        public int AddressId { get; set; }
+        public int Id { get; set; }
         [Required]
-        [ForeignKey("Product")]
-        public string ProductId { get; set; }
+        [ForeignKey("Seller")]
+        public string SellerId { get; set; }
 
+
+        [Required]
+        public string Name { get; set; }
         [Required]
         public string Governace { get; set; }
         [Required]
@@ -19,6 +23,6 @@ namespace Phone_Shop.Models
         [Required]
         public string Street { get; set; }
 
-        public Product Product { get; set; }
+        public IdentityUser Seller { get; set; }
     }
 }
