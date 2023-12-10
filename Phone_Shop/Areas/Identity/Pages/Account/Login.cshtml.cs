@@ -120,9 +120,10 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
                     var isDelivery = await _userManager.IsInRoleAsync(user, "Delivery");
-
+                    Console.WriteLine(1);
                     if (isAdmin)
                     {
+                        Console.WriteLine(2);
                         return RedirectToAction("Home", "Admin");
                     }
                     if (isDelivery)
