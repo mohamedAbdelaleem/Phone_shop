@@ -134,7 +134,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.PhoneNumber = Input.Phone;
-                await _userStore.SetUserNameAsync(user, Input.Name, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -154,7 +154,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                     AccountsController accountsController = new AccountsController(_context);
-                    accountsController.Create(user, Input.Photo);
+                    accountsController.Create(user,Input.Name, Input.Photo);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
