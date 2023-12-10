@@ -72,11 +72,11 @@ namespace Phone_Shop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(IdentityUser user, string photo)
+        public async Task<IActionResult> Create(IdentityUser user,string name, string photo)
         {
             Account account = new Account();
             account.Id = user.Id;
-            account.Name = user.UserName;
+            account.Name = name;
             account.Email = user.Email;
             account.Photo = photo;
             if (ModelState.IsValid)
