@@ -16,16 +16,20 @@ namespace Phone_Shop.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int id=1)
+        public IActionResult Index(int PageNumber=1)
         {
             var Result = _context.Product;
             List<Product>result=new List<Product>();
+            ViewData["pagenumber"] = PageNumber;
             int ca = 0;
             foreach (var product in Result)
             {
-                ca++;
-                if (ca>=9*(id-1)+1 && ca<=9*id)
-                    result.Add(product);
+                if (product.IsActive)
+                {
+                    ca++;
+                    if (ca >= 9 * (PageNumber - 1) + 1 && ca <= 9 * PageNumber)
+                        result.Add(product);
+                }
             }
             return View(result);
         }
