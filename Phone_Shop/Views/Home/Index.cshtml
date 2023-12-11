@@ -124,8 +124,38 @@
                 }
           </div>
         </div>
-        <hr/>
-      </div>
+
+
+        <style>
+            .pagination {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 20px;
+            }
+
+                .pagination .page-item {
+                    margin-left: 5px; /* تم تغيير margin-right إلى margin-left لوضعها في الزاوية اليمنى */
+                }
+
+                .pagination .page-link {
+                    color: black;
+                }
+        </style>
+
+        <nav aria-label="Page navigation example" style="padding-bottom: 5%">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="1">1</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="2">2</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="3">3</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="4">4</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="5">5</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="6">6</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="7">7</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="8">8</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="9">9</a></li>
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-id="10">10</a></li>
+            </ul>
+        </nav>
     </div>
   </div>
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
 using System.Diagnostics;
@@ -15,9 +16,18 @@ namespace Phone_Shop.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id=1)
         {
-            return View(_context.Product);
+            var Result = _context.Product;
+            List<Product>result=new List<Product>();
+            int ca = 0;
+            foreach (var product in Result)
+            {
+                ca++;
+                if (ca>=9*(id-1)+1 && ca<=9*id)
+                    result.Add(product);
+            }
+            return View(result);
         }
 
         public IActionResult Privacy()
