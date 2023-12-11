@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Phone_Shop.Data;
 
@@ -12,16 +13,16 @@ namespace Phone_Shop.Controllers
         public AdminController(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
+
         }
 
         public IActionResult Home()
         {
 
-            var inActiveProducts = dbContext.Product.Where(p => !p.IsActive).ToList();
+            var inActiveProducts = dbContext.Product.Where(p => !p.IsActive).OrderByDescending(p => p.CreatedAt).ToList();
 
             ViewData["inActiveProducts"] = inActiveProducts;
-
-
+            
             return View();
         }
 
@@ -34,6 +35,7 @@ namespace Phone_Shop.Controllers
             {
                 return RedirectToAction("Home", "Admin");
             }
+            
 
             var account = dbContext.Account.SingleOrDefault(a => a.Id == product.SellerId);
 
@@ -53,6 +55,22 @@ namespace Phone_Shop.Controllers
             }
 
             product.IsActive = true;
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Home", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult Delete(string id)
+        {
+            var product = dbContext.Product.SingleOrDefault(p => p.Id == id);
+            if (product == null || product.IsActive)
+            {
+                return RedirectToAction("Home", "Admin");
+            }
+
+            
+            dbContext.Product.Remove(product);
             dbContext.SaveChanges();
 
             return RedirectToAction("Home", "Admin");
