@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<Product>
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -103,113 +104,62 @@
           <li><a href="#">Price (high)</a></li>
         </ul>
         <div class="row">
-          <div class="col-sm-6 col-md-4">
-            <div class="shop__thumb">
-              <a href="#">
-                <div class="shop-thumb__img">
-                  <img src="https://www.bootdey.com/image/400x400/87CEFA/000000" class="img-responsive" alt="...">
-                </div>
-                <h5 class="shop-thumb__title">
-                  Product Title
-                </h5>
-                <div class="shop-thumb__price">
-                  <span class="shop-thumb-price_old">$80.99</span>
-                  <span class="shop-thumb-price_new">$59.99</span>
-                </div>
-              </a>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4">
-            <div class="shop__thumb">
-              <a href="#">
-                <div class="shop-thumb__img">
-                  <img src="https://www.bootdey.com/image/400x400/20B2AA/000000" class="img-responsive" alt="...">
-                </div>
-                <h5 class="shop-thumb__title">
-                  Product Title
-                </h5>
-                <div class="shop-thumb__price">
-                  $59.99
-                </div>
-              </a>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4">
-            <div class="shop__thumb">
-              <a href="#">
-                <div class="shop-thumb__img">
-                  <img src="https://www.bootdey.com/image/400x400/FFB6C1/000000" class="img-responsive" alt="...">
-                </div>
-                <h5 class="shop-thumb__title">
-                  Product Title
-                </h5>
-                <div class="shop-thumb__price">
-                  $59.99
-                </div>
-              </a>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4">
-            <div class="shop__thumb">
-              <a href="#">
-                <div class="shop-thumb__img">
-                  <img src="https://www.bootdey.com/image/400x400/87CEFA/000000" class="img-responsive" alt="...">
-                </div>
-                <h5 class="shop-thumb__title">
-                  Product Title
-                </h5>
-                <div class="shop-thumb__price">
-                  $59.99
-                </div>
-              </a>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4">
-            <div class="shop__thumb">
-              <a href="#">
-                <div class="shop-thumb__img">
-                  <img src="https://www.bootdey.com/image/400x400/FFA07A/000000" class="img-responsive" alt="...">
-                </div>
-                <h5 class="shop-thumb__title">
-                  Product Title
-                </h5>
-                <div class="shop-thumb__price">
-                  $59.99
-                </div>
-              </a>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-4">
-            <div class="shop__thumb">
-              <a href="#">
-                <div class="shop-thumb__img">
-                  <img src="https://www.bootdey.com/image/400x400/48D1CC/000000" class="img-responsive" alt="...">
-                </div>
-                <h5 class="shop-thumb__title">
-                  Product Title
-                </h5>
-                <div class="shop-thumb__price">
-                  $59.99
-                </div>
-              </a>
-            </div>
+                @foreach (var product in Model)
+                {
+                    <div class="col-sm-6 col-md-4">
+                        <div class="shop__thumb">
+                            <a href="#">
+                                <div class="shop-thumb__img">
+                                    <img src="@product.ImgUrl" class="img-responsive" alt="Product Image">
+                                </div>
+                                <h5 class="shop-thumb__title">
+                                    @product.Name
+                                </h5>
+                                <div class="shop-thumb__price">
+                                    <span class="shop-thumb-price_new">$@product.Price</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-sm-12">
-            <ul class="pagination pull-right">
-              <li class="disabled"><a href="#">«</a></li>
-              <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
-              <li><a href="#">»</a></li>
+
+        <style>
+            .pagination {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 20px;
+            }
+
+                .pagination .page-item {
+                    margin-left: 5px; /* تم تغيير margin-right إلى margin-left لوضعها في الزاوية اليمنى */
+                }
+
+                .pagination .page-link {
+                    color: black;
+                }
+        </style>
+
+        <nav aria-label="Page navigation example" style="padding-bottom: 5%">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="1">First Page</a></li>
+                 @if ((int)ViewData["pagenumber"]!=1)
+                 {
+                   <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="@((int)ViewData["pagenumber"]-1)">Previous</a></li>
+                 }
+
+                @for (var i = Math.Max((int)ViewData["pagenumber"]-9, 1); i <= Math.Min((int)ViewData["pagenumber"]+9,  (int)ViewData["LastPageNumber"]); i++)
+                {
+                    <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="@i">@i</a></li>
+                }
+                @if ((int)ViewData["pagenumber"]+9 < (int)ViewData["LastPageNumber"])
+                {
+                  <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="@((int)ViewData["pagenumber"]+1)">Next</a></li>
+                }
             </ul>
-          </div>
-        </div>
-      </div>
+        </nav>
     </div>
   </div>
 
