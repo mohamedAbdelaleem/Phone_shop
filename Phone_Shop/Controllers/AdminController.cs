@@ -27,7 +27,7 @@ namespace Phone_Shop.Controllers
         }
 
         [HttpGet]
-        public IActionResult ProductConfirmation(string id)
+        public IActionResult ProductConfirmation(int id)
         {
 
             var product = dbContext.Product.SingleOrDefault(p => p.Id == id);
@@ -47,7 +47,7 @@ namespace Phone_Shop.Controllers
 
         [HttpPost]
         [ActionName("ProductConfirmation")]
-        public IActionResult Confirm(string id) {
+        public IActionResult Confirm(int id) {
             var product = dbContext.Product.SingleOrDefault(p => p.Id == id);
             if (product == null || product.IsActive)
             {
@@ -61,7 +61,7 @@ namespace Phone_Shop.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
             var product = dbContext.Product.SingleOrDefault(p => p.Id == id);
             if (product == null || product.IsActive)

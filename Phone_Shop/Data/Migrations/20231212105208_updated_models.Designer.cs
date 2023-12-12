@@ -12,7 +12,7 @@ using Phone_Shop.Data;
 namespace Phone_Shop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231209095329_updated_models")]
+    [Migration("20231212105208_updated_models")]
     partial class updated_models
     {
         /// <inheritdoc />
@@ -304,8 +304,8 @@ namespace Phone_Shop.Data.Migrations
                     b.Property<int>("OrderID")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -354,8 +354,11 @@ namespace Phone_Shop.Data.Migrations
 
             modelBuilder.Entity("Phone_Shop.Models.Product", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");

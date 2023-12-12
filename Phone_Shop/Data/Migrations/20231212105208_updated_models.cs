@@ -120,7 +120,8 @@ namespace Phone_Shop.Data.Migrations
                 name: "Product",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     SellerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     StoreId = table.Column<int>(type: "int", nullable: false),
@@ -157,7 +158,7 @@ namespace Phone_Shop.Data.Migrations
                 columns: table => new
                 {
                     OrderID = table.Column<int>(type: "int", nullable: false),
-                    ProductID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProductID = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },

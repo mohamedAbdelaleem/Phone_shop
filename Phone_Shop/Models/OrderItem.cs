@@ -9,7 +9,7 @@ namespace Phone_Shop.Models
         public int OrderID { get; set; }
         
         [Required]
-        public string ProductID { get; set; }
+        public int ProductID { get; set; }
         
         [Required]
         public Order Order { get; set; }

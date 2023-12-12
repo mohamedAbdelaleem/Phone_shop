@@ -8,7 +8,7 @@ namespace Phone_Shop.Models
     public class Product
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [ForeignKey("Seller")]
