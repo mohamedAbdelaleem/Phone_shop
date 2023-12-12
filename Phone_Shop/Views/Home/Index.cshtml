@@ -106,9 +106,18 @@
         <div class="row">
                 @foreach (var product in Model)
                 {
+                    <style>
+                        .buttons {
+                            position: absolute;
+                            bottom: -150px
+                        }
+
+                        .card:hover .buttons {
+                            animation: buttons 500ms ease-in forwards
+                        }
+                    </style>
                     <div class="col-sm-6 col-md-4">
                         <div class="shop__thumb">
-                            <a href="#">
                                 <div class="shop-thumb__img">
                                     <img src="@product.ImgUrl" class="img-responsive" alt="Product Image">
                                 </div>
@@ -118,6 +127,8 @@
                                 <div class="shop-thumb__price">
                                     <span class="shop-thumb-price_new">$@product.Price</span>
                                 </div>
+                            <a href="#">
+                               <button class="btn btn-outline-danger w-100" onclick="/pivacy" style="padding-bottom:3px">View</button>
                             </a>
                         </div>
                     </div>
