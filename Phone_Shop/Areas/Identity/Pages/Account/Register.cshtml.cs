@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Phone_Shop.Data;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Phone_Shop.Areas.Identity.Pages.Account
 {
@@ -31,13 +32,15 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, ApplicationDbContext context)
+            IEmailSender emailSender, ApplicationDbContext context,
+            IWebHostEnvironment hostingEnvironment)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,6 +49,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         /// <summary>
@@ -112,7 +116,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [Display(Name = "Photo")]
-            public string Photo { get; set; }
+            public IFormFile Photo { get; set; }
             //
             [Required]
             public string Role { get; set; }
@@ -153,9 +157,8 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    AccountsController accountsController = new AccountsController(_context);
-                    accountsController.Create(user,Input.Name, Input.Photo);
-
+                    AccountsController accountsController = new AccountsController(_context, _hostingEnvironment);
+                    await accountsController.Create(user, Input.Name, Input.Photo);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
@@ -168,6 +171,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                         //
                         return LocalRedirect(returnUrl);
                     }
+
                 }
                 foreach (var error in result.Errors)
                 {
