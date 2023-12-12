@@ -16,20 +16,30 @@ namespace Phone_Shop.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int PageNumber=1)
+        public IActionResult Index(int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = 100000000)
         {
-            var Result = _context.Product.Where(product=>product.IsActive);
-            List<Product>result=new List<Product>();
-            ViewData["pagenumber"] = PageNumber;
-            ViewData["LastPageNumber"] = (int)Math.Ceiling((Result.Count()/9.0));
-            int ca = 0;
-            foreach (var product in Result)
+            if (LowestPrice < 0)
             {
+                var Result = _context.Product.Where(product => (product.IsActive ));
+                List<Product> result = new List<Product>();
+                ViewData["pagenumber"] = PageNumber;
+                ViewData["LastPageNumber"] = (int)Math.Ceiling((Result.Count() / 9.0));
+                int ca = 0;
+                foreach (var product in Result)
+                {
                     ca++;
                     if (ca >= 9 * (PageNumber - 1) + 1 && ca <= 9 * PageNumber)
                         result.Add(product);
+                }
+                return View(result);
             }
-            return View(result);
+            else
+            {
+                ViewData["pagenumber"] = 1;
+                ViewData["LastPageNumber"] = 1;
+                var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice));
+                return View(Result);
+            }
         }
 
         public IActionResult Privacy()
