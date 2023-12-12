@@ -8,16 +8,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Phone_Shop.Controllers
 {
     public class AccountsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public AccountsController(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        public AccountsController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Accounts
@@ -72,13 +74,32 @@ namespace Phone_Shop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(IdentityUser user,string name, string photo)
+        public async Task<IActionResult> Create(IdentityUser user,string name,IFormFile photo)
         {
             Account account = new Account();
+            if (photo != null && photo.Length > 0)
+            {
+                // Get the wwwroot path
+                string uploadPath = Path.Combine(_hostingEnvironment.WebRootPath, "imj");
+                Directory.CreateDirectory(uploadPath);
+
+                // Generate a unique filename for the uploaded file
+                string newfilename = $"{Guid.NewGuid().ToString()}{Path.GetExtension(photo.FileName)}";
+                string fileName = Path.Combine(uploadPath, newfilename);
+
+                // Save the file to the server
+                using (var fileStream = new FileStream(fileName, FileMode.Create))
+                {
+                    photo.CopyTo(fileStream);
+                }
+                account.Photo = $"/imj/{newfilename}";
+            }
+            else
+                account.Photo = "/imj/defult.jpg";
+            // Optionally, save the file path to a database or return it to the user
             account.Id = user.Id;
             account.Name = name;
             account.Email = user.Email;
-            account.Photo = photo;
             if (ModelState.IsValid)
             {
                 _context.Add(account);

@@ -8,7 +8,7 @@ namespace Phone_Shop.Models
     public class Product
     {
         [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required]
         [ForeignKey("Seller")]
@@ -26,7 +26,6 @@ namespace Phone_Shop.Models
 
         [Required]
         public string Description { get; set; }
-
         [Required]
         public string ImgUrl { get; set; }
 
