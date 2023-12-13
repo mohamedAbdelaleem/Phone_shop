@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
@@ -6,6 +7,7 @@ using Phone_Shop.Models;
 
 namespace Phone_Shop.Controllers
 {
+    [Authorize(Roles = "Seller")]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -36,7 +38,7 @@ namespace Phone_Shop.Controllers
         {
             var sellerId = _userManager.GetUserId(User);
             model.SellerId = sellerId;
-
+            model.CreatedAt= DateTime.Now;
             var file = HttpContext.Request.Form.Files;
 
             if (file.Count > 0)
