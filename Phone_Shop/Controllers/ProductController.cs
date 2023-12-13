@@ -57,6 +57,9 @@ namespace Phone_Shop.Controllers
                 model.ImgUrl = "/imj/defaultImage.jpg";
             }
 
+            model.CreatedAt = DateTime.Now;
+            Console.WriteLine(DateTime.Now);
+
             _context.Product.Add(model);
             _context.SaveChanges();
             return RedirectToAction("Index");
