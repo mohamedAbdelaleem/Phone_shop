@@ -25,8 +25,9 @@ namespace Phone_Shop.Controllers
         }
         public IActionResult Create()
         {
+            var sellerid = _userManager.GetUserId(User);
             ViewBag.Category = _context.Category.OrderBy(x => x.Name).ToList();
-            ViewBag.Store = _context.Store.OrderBy(x => x.Name).ToList();
+            ViewBag.Store = _context.Store.Where(p => p.SellerId == sellerid).OrderBy(x => x.Name).ToList();
             return View();
         }
 
@@ -38,7 +39,7 @@ namespace Phone_Shop.Controllers
         {
             var sellerId = _userManager.GetUserId(User);
             model.SellerId = sellerId;
-            model.CreatedAt= DateTime.Now;
+
             var file = HttpContext.Request.Form.Files;
 
             if (file.Count > 0)
@@ -58,7 +59,6 @@ namespace Phone_Shop.Controllers
             {
                 model.ImgUrl = "/imj/defaultImage.jpg";
             }
-
             model.CreatedAt = DateTime.Now;
             Console.WriteLine(DateTime.Now);
 
@@ -82,15 +82,16 @@ namespace Phone_Shop.Controllers
             var file = HttpContext.Request.Form.Files;
             if (file.Count > 0)
             {
+
                 string imageName = Guid.NewGuid().ToString() + Path.GetExtension(file[0].FileName);
-                var filePath = Path.Combine("wwwroot", "Images", imageName);
+                var filePath = Path.Combine("wwwroot", "imj", imageName);
 
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     file[0].CopyTo(fileStream); // Save in the Images folder
                 }
 
-                model.ImgUrl = imageName; // Save in the database
+                model.ImgUrl = $"/imj/{imageName}"; // Save in the database
             }
             else
             {
@@ -98,6 +99,9 @@ namespace Phone_Shop.Controllers
             }
             var sellerId = _userManager.GetUserId(User);
             model.SellerId = sellerId;
+            ;
+            model.CreatedAt = DateTime.Now;
+            Console.WriteLine(DateTime.Now);
             _context.Product.Update(model);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
