@@ -30,7 +30,7 @@ namespace Phone_Shop.Models
         public string ImgUrl { get; set; }
 
         [Required]
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         [Required]
         public DateTime CreatedAt { get; set; }

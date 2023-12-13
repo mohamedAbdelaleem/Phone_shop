@@ -17,7 +17,7 @@ namespace Phone_Shop.Models
         public Product Product { get; set; }
 
         [Required]
-        public int UnitPrice { get; set; }
+        public decimal UnitPrice { get; set; }
         [Required]
         public int Quantity { get; set; }
 
