@@ -20,7 +20,7 @@ namespace Phone_Shop.Models
         [Required]
         public DateTime OrderedAt { get; set; }
 
-        public int TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public bool Status { get; set; }
 
         public PickupAddress PickupAddress { get; set; }

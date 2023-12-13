@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Phone_Shop.Data;
 
 #nullable disable
 
-namespace WebApplication1.Data.Migrations
+namespace Phone_Shop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231212222829_addedCartModelAndModifyPricesToDecimal")]
+    partial class addedCartModelAndModifyPricesToDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,7 +245,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Account", (string)null);
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.CartItem", b =>
@@ -267,7 +270,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ShoppingCartItems", (string)null);
+                    b.ToTable("ShoppingCartItems");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Category", b =>
@@ -284,7 +287,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Order", b =>
@@ -318,7 +321,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.OrderItem", b =>
@@ -340,7 +343,7 @@ namespace WebApplication1.Data.Migrations
                     b.HasIndex("ProductID")
                         .IsUnique();
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.PickupAddress", b =>
@@ -371,7 +374,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PickupAddress", (string)null);
+                    b.ToTable("PickupAddress");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Product", b =>
@@ -421,7 +424,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Store", b =>
@@ -456,7 +459,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Store", (string)null);
+                    b.ToTable("Store");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
