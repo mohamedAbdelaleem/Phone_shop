@@ -1,5 +1,6 @@
 ﻿using Humanizer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
 using System.Diagnostics;
@@ -16,11 +17,15 @@ namespace Phone_Shop.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = 100000000)
+        public IActionResult Index(string? search, int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = 100000000)
         {
+            var Result = _context.Product.Where(product => (product.IsActive ));
+            if (search != null)
+            {
+                Result = SearchProducts(search);
+            }
             if (LowestPrice < 0)
             {
-                var Result = _context.Product.Where(product => (product.IsActive ));
                 List<Product> result = new List<Product>();
                 ViewData["pagenumber"] = PageNumber;
                 ViewData["LastPageNumber"] = (int)Math.Ceiling((Result.Count() / 9.0));
@@ -37,7 +42,7 @@ namespace Phone_Shop.Controllers
             {
                 ViewData["pagenumber"] = 1;
                 ViewData["LastPageNumber"] = 1;
-                var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice));
+                Result = Result.Where(product => (product.Price >= LowestPrice && product.Price <= MaxmiumPrice));
                 return View(Result);
             }
         }
@@ -52,5 +57,15 @@ namespace Phone_Shop.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IQueryable<Product> SearchProducts(string searchInput)
+        {
+            var products = _context.Product.Where(p => EF.Functions.FreeText(p.Name, searchInput)
+                                                        || EF.Functions.FreeText(p.Description, searchInput));
+            
+            return products;
+
+        }
+
     }
 }
