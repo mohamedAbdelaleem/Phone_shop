@@ -7,7 +7,7 @@ using Phone_Shop.Models;
 
 namespace Phone_Shop.Controllers
 {
-    [Authorize(Roles = "Seller")]
+    
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -17,12 +17,15 @@ namespace Phone_Shop.Controllers
             _context = context;
             _userManager = UserManager;
         }
+
+        [Authorize(Roles = "Seller")]
         public IActionResult Index()
         {
             var sellerid = _userManager.GetUserId(User);
             var result = _context.Product.Include(x => x.Category).Include(x => x.Store).Where(p => p.SellerId == sellerid).ToList();
             return View(result);
         }
+        [Authorize(Roles = "Seller")]
         public IActionResult Create()
         {
             var sellerid = _userManager.GetUserId(User);
@@ -33,6 +36,7 @@ namespace Phone_Shop.Controllers
 
 
 
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Product model)
@@ -67,6 +71,7 @@ namespace Phone_Shop.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Seller")]
         public IActionResult Edit(int? id)
         {
             ViewBag.Category = _context.Category.OrderBy(x => x.Name).ToList();
@@ -75,6 +80,8 @@ namespace Phone_Shop.Controllers
             return View("Create", result);
         }
 
+
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Product model)
@@ -108,6 +115,7 @@ namespace Phone_Shop.Controllers
 
         }
 
+        [Authorize(Roles = "Seller")]
         public IActionResult Delete(int? id)
         {
             var result = _context.Product.Find(id);
@@ -117,6 +125,24 @@ namespace Phone_Shop.Controllers
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ProductDetail(int id)
+        {
+
+            var product = _context.Product.SingleOrDefault(p => p.Id == id);
+            if (product == null || !product.IsActive)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
+            var account = _context.Account.SingleOrDefault(a => a.Id == product.SellerId);
+
+            ViewData["product"] = product;
+            ViewData["account"] = account;
+
+            return View();
         }
 
     }

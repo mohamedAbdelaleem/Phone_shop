@@ -44,9 +44,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Profile">My Profile</a>
-                        </li>
+                        @if (User.IsInRole("Customer") || User.IsInRole("Seller")) {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Profile">My Profile</a>
+                            </li>
+                        }
 
                         @if(User.IsInRole("Seller"))
                         

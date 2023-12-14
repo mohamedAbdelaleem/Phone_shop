@@ -165,10 +165,10 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
                         //
                         await _userManager.AddToRoleAsync(user, Input.Role);
                         //
+                        await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
 
