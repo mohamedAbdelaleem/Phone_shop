@@ -157,7 +157,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    AccountsController accountsController = new AccountsController(_context, _hostingEnvironment);
+                    AccountsController accountsController = new AccountsController(_context, _hostingEnvironment,_userManager);
                     await accountsController.Create(user, Input.Name, Input.Photo);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

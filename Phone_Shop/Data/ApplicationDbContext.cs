@@ -20,7 +20,7 @@ namespace Phone_Shop.Data
         public DbSet<PickupAddress> PickupAddress { get; set; }
         public DbSet<Store> Store { get; set; }
         public DbSet<Account> Account { get; set; }
-
+        public DbSet<CartItem> ShoppingCartItems { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -88,6 +88,11 @@ namespace Phone_Shop.Data
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<CartItem>()
+            .HasOne(o => o.Product)
+            .WithMany()
+            .HasForeignKey(o => o.ProductId)
+            .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

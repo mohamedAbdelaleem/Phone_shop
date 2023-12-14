@@ -16,11 +16,36 @@ namespace Phone_Shop.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        public AccountsController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment)
+        private readonly UserManager<IdentityUser> _userManager;
+
+
+        public AccountsController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
+            _userManager = userManager;
         }
+
+        public IActionResult profile()
+        {
+            var Userid = _userManager.GetUserId(User);
+            var result = _context.Account.Where(p => p.Id == Userid).ToList();
+            return View(result);
+        }
+
+        public IActionResult address()
+        {
+            var Userid = _userManager.GetUserId(User);
+            var result = _context.PickupAddress.Where(p => p.UserId == Userid).ToList();
+            return View(result);
+        }
+
+
+
+
+
+
+
 
         // GET: Accounts
         public async Task<IActionResult> Index()
