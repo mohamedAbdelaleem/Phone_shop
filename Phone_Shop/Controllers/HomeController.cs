@@ -17,34 +17,37 @@ namespace Phone_Shop.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string? search, int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = 100000000)
+        public IActionResult Index(string? search, int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = int.MaxValue,bool Des=false)
         {
-            var Result = _context.Product.Where(product => (product.IsActive ));
+            var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice));
+            if (Des)
+                Result = Result.OrderByDescending(p => p.Price);
+            else
+                Result = Result.OrderBy(p => p.Price);
             if (search != null)
             {
                 Result = SearchProducts(search);
             }
-            if (LowestPrice < 0)
+            List<Product> result = new List<Product>();
+            ViewData["LastPageNumber"] = (int)Math.Ceiling(Result.Count() / 9.0);
+            ViewData["pagenumber"] = PageNumber;
+            ViewData["MaxmiumPrice"] = MaxmiumPrice;
+            ViewData["LowestPrice"] = LowestPrice;
+            ViewData["Des"] = Des;
+            int ca = 0;
+            foreach (var product in Result)
             {
-                List<Product> result = new List<Product>();
-                ViewData["pagenumber"] = PageNumber;
-                ViewData["LastPageNumber"] = (int)Math.Ceiling((Result.Count() / 9.0));
-                int ca = 0;
-                foreach (var product in Result)
-                {
-                    ca++;
-                    if (ca >= 9 * (PageNumber - 1) + 1 && ca <= 9 * PageNumber)
-                        result.Add(product);
-                }
-                return View(result);
+                ca++;
+                if (ca >= 9 * (PageNumber - 1) + 1 && ca <= 9 * PageNumber )
+                    result.Add(product);
             }
+            if (Des)
+                return View(result.OrderByDescending(p=>p.Price));
+              
             else
-            {
-                ViewData["pagenumber"] = 1;
-                ViewData["LastPageNumber"] = 1;
-                Result = Result.Where(product => (product.Price >= LowestPrice && product.Price <= MaxmiumPrice));
-                return View(Result);
-            }
+                return View(result.OrderBy(p => p.Price));
+
+         
         }
 
         public IActionResult Privacy()

@@ -34,24 +34,9 @@
           <h3 class="headline">
             <span>Price</span>
           </h3>
-          <div class="radio">
-                    <a asp-route-LowestPrice="0" asp-route-MaxmiumPrice="25">
-                        Under $25
-                    </a>
-          </div>
-          <div class="radio">
-                    <a asp-route-LowestPrice="25" asp-route-MaxmiumPrice="50">
-                        $25 to $50
-                    </a>
-          </div>
-          <div class="radio">
-                    <a asp-route-LowestPrice="50" asp-route-MaxmiumPrice="100">
-                        $50 to $100
-                    </a>
-          </div>
           <p>Custom</p>
           <div class="radio">
-                    <form id="priceForm" method="post">
+                    <form id="priceForm" method="post" asp-route-Des="@ViewData["Des"]" asp-route-PageNumber="1">
                         <label for="LowestPrice">Lowest Price:</label>
                         <input type="number" id="LowestPrice" name="LowestPrice" step="0.01" required>
                         <br>
@@ -94,10 +79,14 @@
         <ul class="shop__sorting">
           @* <li class="active"><a href="#">Popular</a></li>
           <li><a href="#">Newest</a></li>
-          <li><a href="#">Bestselling</a></li>
-          <li><a href="#">Price (low)</a></li>
-                <li><a href="#">Price (high)</a></li> *@
-        </ul>
+                <li><a href="#">Bestselling</a></li>*@
+             <a asp-route-Des="true" asp-route-PageNumber="1" asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]" asp-route-LowestPrice="@ViewData["LowestPrice"]" style="padding-right:5px">
+             Price (high)
+            </a>
+                <a asp-route-Des="false" asp-route-PageNumber="1" asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]" asp-route-LowestPrice="@ViewData["LowestPrice"]">
+                Price (low)
+            </a>
+       </ul>
         <div class="row">
                 @foreach (var product in Model)
                 {
@@ -150,15 +139,26 @@
 
         <nav aria-label="Page navigation example" style="padding-bottom: 5%">
             <ul class="pagination">
-                <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="1">First Page</a></li>
+                <li class="page-item">
+                    <a class="page-link" asp-action="index" asp-route-PageNumber="1" asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]"
+                       asp-route-LowestPrice="@ViewData["LowestPrice"]"
+                       asp-route-Des="@ViewData["Des"]">First Page</a>
+                </li>
                  @if ((int)ViewData["pagenumber"]!=1)
                  {
-                   <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="@((int)ViewData["pagenumber"]-1)">Previous</a></li>
+                   <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="@((int)ViewData["pagenumber"]-1)"
+                           asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]"
+                           asp-route-LowestPrice="@ViewData["LowestPrice"]"
+                           asp-route-Des="@ViewData["Des"]">Previous</a>
+                    </li>
                  }
 
                 @for (var i = Math.Max((int)ViewData["pagenumber"]-9, 1); i <= Math.Min((int)ViewData["pagenumber"]+9,  (int)ViewData["LastPageNumber"]); i++)
                 {
-                    <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="@i">@i</a></li>
+                    <li class="page-item"><a class="page-link" asp-action="index" asp-route-PageNumber="@i"
+                        asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]"
+                        asp-route-LowestPrice="@ViewData["LowestPrice"]"
+                        asp-route-Des="@ViewData["Des"]">@i</a></li>
                 }
                 @if ((int)ViewData["pagenumber"]+9 < (int)ViewData["LastPageNumber"])
                 {
