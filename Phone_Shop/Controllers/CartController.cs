@@ -22,7 +22,6 @@ namespace Phone_Shop.Controllers
         {
             var cart = ShoppingCart.GetCart(this.HttpContext,_db);
 
-            // Set up our ViewModel
             var viewModel = new ShoppingCartViewModel
             {
                 CartItems = cart.GetCartItems(),
@@ -30,38 +29,28 @@ namespace Phone_Shop.Controllers
             };
             return View(viewModel);
         }
-        //
-        // GET: /Store/AddToCart/5
-        public ActionResult AddToCart(int id)
+        
+        public ActionResult AddToCart(int Id)
         {
-            // Retrieve the product from the database
             var addedProduct = _db.Product
-                .Single(product => product.Id == id);
+                .Single(product => product.Id == Id);
 
-            // Add it to the shopping cart
             var cart = ShoppingCart.GetCart(this.HttpContext,_db);
 
             cart.AddToCart(addedProduct);
 
-            // Go back to the main store page for more shopping
-            return RedirectToAction("Index");
+            return RedirectToAction("ProductDetail", "Product", new {id=1});
         }
-        //
-        // AJAX: /ShoppingCart/RemoveFromCart/5
         [HttpPost]
         public ActionResult RemoveFromCart(int id)
         {
-            // Remove the item from the cart
             var cart = ShoppingCart.GetCart(this.HttpContext, _db);
 
-            // Get the name of the product to display confirmation
             string productName = _db.ShoppingCartItems
                 .Single(item => item.ItemId == id).Product.Name;
 
-            // Remove from cart
             int itemCount = cart.RemoveFromCart(id);
 
-            // Display the confirmation message
             var results = new ShoppingCartRemoveViewModel
             {
                 Message = productName +
@@ -73,8 +62,6 @@ namespace Phone_Shop.Controllers
             };
             return Json(results);
         }
-        //
-        // GET: /ShoppingCart/CartSummary
         [System.Web.Mvc.ChildActionOnly]
         public ActionResult CartSummary()
         {

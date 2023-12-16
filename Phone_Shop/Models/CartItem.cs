@@ -6,6 +6,7 @@ namespace Phone_Shop.Models
     public class CartItem
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ItemId { get; set; }
 
         public string CartId { get; set; }

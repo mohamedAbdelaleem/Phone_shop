@@ -33,6 +33,8 @@ namespace Phone_Shop.Models
         public decimal Price { get; set; }
 
         [Required]
+        public int Amount { get; set; }
+        [Required]
         public DateTime CreatedAt { get; set; }
 
         public bool IsActive { get; set; } = false;

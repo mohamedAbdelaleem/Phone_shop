@@ -20,3 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+#cart-icon {
+    position: relative;
+    margin-right: 20px; 
+}
+
+#cart-icon img {
+    width: 30px; 
+    height: auto; 
+    cursor: pointer;
+}
