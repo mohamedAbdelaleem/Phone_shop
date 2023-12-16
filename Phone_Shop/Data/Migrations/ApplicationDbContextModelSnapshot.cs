@@ -8,7 +8,7 @@ using Phone_Shop.Data;
 
 #nullable disable
 
-namespace WebApplication1.Data.Migrations
+namespace Phone_Shop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -242,13 +242,16 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Account", (string)null);
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.CartItem", b =>
                 {
-                    b.Property<string>("ItemId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
 
                     b.Property<string>("CartId")
                         .IsRequired()
@@ -267,7 +270,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ShoppingCartItems", (string)null);
+                    b.ToTable("ShoppingCartItems");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Category", b =>
@@ -284,7 +287,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Order", b =>
@@ -318,7 +321,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.OrderItem", b =>
@@ -340,7 +343,7 @@ namespace WebApplication1.Data.Migrations
                     b.HasIndex("ProductID")
                         .IsUnique();
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.PickupAddress", b =>
@@ -371,7 +374,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PickupAddress", (string)null);
+                    b.ToTable("PickupAddress");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Product", b =>
@@ -381,6 +384,9 @@ namespace WebApplication1.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -421,7 +427,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Store", b =>
@@ -456,7 +462,7 @@ namespace WebApplication1.Data.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Store", (string)null);
+                    b.ToTable("Store");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
