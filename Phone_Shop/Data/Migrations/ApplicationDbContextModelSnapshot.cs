@@ -242,7 +242,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Account");
+                    b.ToTable("Account", (string)null);
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.CartItem", b =>
@@ -270,7 +270,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ShoppingCartItems");
+                    b.ToTable("ShoppingCartItems", (string)null);
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Category", b =>
@@ -287,7 +287,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Order", b =>
@@ -321,7 +321,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.OrderItem", b =>
@@ -343,7 +343,7 @@ namespace Phone_Shop.Data.Migrations
                     b.HasIndex("ProductID")
                         .IsUnique();
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItem", (string)null);
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.PickupAddress", b =>
@@ -374,7 +374,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PickupAddress");
+                    b.ToTable("PickupAddress", (string)null);
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Product", b =>
@@ -427,7 +427,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Store", b =>
@@ -462,7 +462,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Store");
+                    b.ToTable("Store", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

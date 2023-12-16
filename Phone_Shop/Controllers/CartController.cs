@@ -11,7 +11,6 @@ namespace Phone_Shop.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public string ShoppingCartId { get; set; }
 
         public const string CartSessionKey = "CartId";
         public CartController(ApplicationDbContext db)
@@ -29,7 +28,14 @@ namespace Phone_Shop.Controllers
             };
             return View(viewModel);
         }
-        
+        public ActionResult Checkout()
+        {
+            var cart = ShoppingCart.GetCart(this.HttpContext, _db);
+            Order order = new Order();
+            cart.CreateOrder(order);
+
+            return RedirectToAction("OrderConfirmation");
+        }
         public ActionResult AddToCart(int Id)
         {
             var addedProduct = _db.Product
@@ -39,28 +45,25 @@ namespace Phone_Shop.Controllers
 
             cart.AddToCart(addedProduct);
 
-            return RedirectToAction("ProductDetail", "Product", new {id=1});
+            return RedirectToAction("ProductDetail", "Product", new {id=Id});
         }
         [HttpPost]
-        public ActionResult RemoveFromCart(int id)
+        public ActionResult RemoveFromCart(int ProductId)
         {
             var cart = ShoppingCart.GetCart(this.HttpContext, _db);
-
-            string productName = _db.ShoppingCartItems
-                .Single(item => item.ItemId == id).Product.Name;
-
-            int itemCount = cart.RemoveFromCart(id);
-
-            var results = new ShoppingCartRemoveViewModel
+            var removedItem = _db.ShoppingCartItems
+                .SingleOrDefault(item => item.ProductId == ProductId && item.CartId==cart.ShoppingCartId);
+            if (removedItem != null)
             {
-                Message = productName +
-                    " has been removed from your shopping cart.",
-                CartTotal = cart.GetTotal(),
-                CartCount = cart.GetCount(),
-                ItemCount = itemCount,
-                DeleteId = id
+                _db.ShoppingCartItems.Remove(removedItem);
+                _db.SaveChanges();
+            }
+
+            var jsonData = new
+            {
+                Message = "Item removed from cart."
             };
-            return Json(results);
+            return Json(jsonData);
         }
         [System.Web.Mvc.ChildActionOnly]
         public ActionResult CartSummary()
