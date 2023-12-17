@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phone_Shop.Data;
+using System.Security.Cryptography;
 
 namespace Phone_Shop.Models
 {
@@ -37,32 +38,18 @@ namespace Phone_Shop.Models
                     context.Session.SetString(CartSessionKey, tempCartId.ToString());
                 }
             }
-            return context.Session.GetString(CartSessionKey);
-        }
-        public int RemoveFromCart(int id)
-        {
-
-            var cartItem = _db.ShoppingCartItems.Single(
-                cart => cart.CartId == ShoppingCartId
-                && cart.ItemId == id);
-
-            int itemCount = 0;
-
-            if (cartItem != null)
+            else
             {
-                if (cartItem.Quantity > 1)
+                if(!string.IsNullOrWhiteSpace(context.User.Identity.Name)&&
+                    context.Session.GetString(CartSessionKey)!= context.User.Identity.Name)
                 {
-                    cartItem.Quantity--;
-                    itemCount = cartItem.Quantity;
+                    MigrateCart(context.User.Identity.Name);
+                    context.Session.SetString(CartSessionKey, context.User.Identity.Name);
+                    ShoppingCartId = context.Session.GetString(CartSessionKey);
                 }
-                else
-                {
-                    _db.ShoppingCartItems.Remove(cartItem);
-                }
-                _db.SaveChanges();
-            }
-            return itemCount;
 
+            }
+            return context.Session.GetString(CartSessionKey);
         }
         public void AddToCart(Product product)
         {
@@ -77,7 +64,6 @@ namespace Phone_Shop.Models
                     ProductId = product.Id,
                     CartId = ShoppingCartId,
                     Quantity = 1,
-                    Product = product,
                     DateCreated = DateTime.Now
                 };
                 _db.ShoppingCartItems.Add(cartItem);
@@ -153,8 +139,13 @@ namespace Phone_Shop.Models
         }
         public List<CartItem> GetCartItems()
         {
-            return _db.ShoppingCartItems.Where(
+            List<CartItem> CartItems = _db.ShoppingCartItems.Where(
                 cart => cart.CartId == ShoppingCartId).ToList();
+            foreach (var item in CartItems)
+            {
+                item.Product = _db.Product.Single(x => x.Id == item.ProductId);
+            }
+            return CartItems;
         }
     }
 }
