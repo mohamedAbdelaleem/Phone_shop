@@ -37,18 +37,26 @@
         <strong>Total: @Model.CartTotal.ToString("C")</strong>
     </div>
 
-    <div class="row mt-3">
-        <div class="col-md-6">
-            @Html.ActionLink("Continue Shopping", "Index", "Home", null, new { @class = "btn btn-primary" })
+    <form id="clearCartForm" asp-controller="Cart" asp-action="ClearCart" method="post">
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <a class="btn btn-primary" href="@Url.Action("Index", "Home")">Continue Shopping</a>
+            </div>
+            <div class="col-md-4 text-center">
+                <button class="btn btn-danger" onclick="confirmClearCart()">Clear Cart</button>
+            </div>
+            <div class="col-md-4 text-right">
+                <a class="btn btn-success" href="@Url.Action("Index", "Order")">Check Out</a>
+            </div>
         </div>
-        <div class="col-md-6 text-right">
-            @Html.ActionLink("Checkout", "Checkout", "Cart", null, new { @class = "btn btn-success" })
-        </div>
-    </div>
+    </form>
 }
 else
 {
     <p>Your shopping cart is empty.</p>
+    <div class="col-md-4">
+        <a class="btn btn-primary" href="@Url.Action("Index", "Home")">Continue Shopping</a>
+    </div>
 }
 
 @section scripts {
@@ -69,8 +77,18 @@ else
                     alert(data.Message);
 
                     location.reload();
+                },
+                error: function (error) {
+                    console.error('Error:', error);
                 }
             });
         }
     </script>
 }
+<script>
+    function confirmClearCart() {
+        if (confirm('Are you sure you want to clear the cart?')) {
+            document.getElementById('clearCartForm').submit();
+        }
+    }
+</script>

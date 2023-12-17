@@ -1,0 +1,72 @@
+﻿@model Phone_Shop.ViewModel.CheckoutViewModel
+
+<h2>Checkout</h2>
+
+@using (Html.BeginForm("Confirmation", "Order", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Address.PhoneNumber)
+        @Html.TextBoxFor(m => m.Address.PhoneNumber, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Address.PhoneNumber, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Address.GovernorateId)
+        @Html.DropDownListFor(m => m.Address.GovernorateId, new SelectList(Model.Governorates, "Id", "governorate_name_ar"), "-- Select Governorate --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Address.GovernorateId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Address.CityId)
+        @Html.DropDownListFor(m => m.Address.CityId, new SelectList(Enumerable.Empty<SelectListItem>(), "id", "city_name_ar"), "-- Select City --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Address.CityId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Address.Description)
+        @Html.TextAreaFor(m => m.Address.Description, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Address.Description, "", new { @class = "text-danger" })
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+        <div class="col-md-4 text-right">
+            <a class="btn btn-success" href="@Url.Action("Index", "Cart")">Cancle</a>
+        </div>
+    </div>
+}  
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var governorateDropdown = $("#Address_GovernorateId");
+            var cityDropdown = $("#Address_CityId");
+
+            governorateDropdown.change(function () {
+                var selectedGovernorateId = governorateDropdown.val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Order/GetCities",  
+                    data: { governorateId: selectedGovernorateId },
+                    success: function (cities) {
+                        cityDropdown.empty();
+
+                        $.each(cities, function (i, city) {
+                            cityDropdown.append(
+                                $('<option></option>').val(city.CityId).html(city.city_name_ar)
+                            );
+                        });
+                    },
+                    error: function () {
+                        // Handle error if needed
+                        console.log("Error fetching cities");
+                    }
+                });
+            });
+        });
+    </script>
+}
