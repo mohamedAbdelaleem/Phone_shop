@@ -8,7 +8,7 @@ using Phone_Shop.Data;
 
 #nullable disable
 
-namespace WebApplication1.Data.Migrations
+namespace Phone_Shop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -247,8 +247,11 @@ namespace WebApplication1.Data.Migrations
 
             modelBuilder.Entity("Phone_Shop.Models.CartItem", b =>
                 {
-                    b.Property<string>("ItemId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
 
                     b.Property<string>("CartId")
                         .IsRequired()
@@ -381,6 +384,9 @@ namespace WebApplication1.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");

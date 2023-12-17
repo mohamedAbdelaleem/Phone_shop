@@ -11,7 +11,6 @@ namespace Phone_Shop.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public string ShoppingCartId { get; set; }
 
         public const string CartSessionKey = "CartId";
         public CartController(ApplicationDbContext db)
@@ -22,7 +21,6 @@ namespace Phone_Shop.Controllers
         {
             var cart = ShoppingCart.GetCart(this.HttpContext,_db);
 
-            // Set up our ViewModel
             var viewModel = new ShoppingCartViewModel
             {
                 CartItems = cart.GetCartItems(),
@@ -30,51 +28,43 @@ namespace Phone_Shop.Controllers
             };
             return View(viewModel);
         }
-        //
-        // GET: /Store/AddToCart/5
-        public ActionResult AddToCart(int id)
+        public ActionResult Checkout()
         {
-            // Retrieve the product from the database
-            var addedProduct = _db.Product
-                .Single(product => product.Id == id);
+            var cart = ShoppingCart.GetCart(this.HttpContext, _db);
+            Order order = new Order();
+            cart.CreateOrder(order);
 
-            // Add it to the shopping cart
+            return RedirectToAction("OrderConfirmation");
+        }
+        public ActionResult AddToCart(int Id)
+        {
+            var addedProduct = _db.Product
+                .Single(product => product.Id == Id);
+
             var cart = ShoppingCart.GetCart(this.HttpContext,_db);
 
             cart.AddToCart(addedProduct);
 
-            // Go back to the main store page for more shopping
-            return RedirectToAction("Index");
+            return RedirectToAction("ProductDetail", "Product", new {id=Id});
         }
-        //
-        // AJAX: /ShoppingCart/RemoveFromCart/5
         [HttpPost]
-        public ActionResult RemoveFromCart(int id)
+        public ActionResult RemoveFromCart(int ProductId)
         {
-            // Remove the item from the cart
             var cart = ShoppingCart.GetCart(this.HttpContext, _db);
-
-            // Get the name of the product to display confirmation
-            string productName = _db.ShoppingCartItems
-                .Single(item => item.ItemId == id).Product.Name;
-
-            // Remove from cart
-            int itemCount = cart.RemoveFromCart(id);
-
-            // Display the confirmation message
-            var results = new ShoppingCartRemoveViewModel
+            var removedItem = _db.ShoppingCartItems
+                .SingleOrDefault(item => item.ProductId == ProductId && item.CartId==cart.ShoppingCartId);
+            if (removedItem != null)
             {
-                Message = productName +
-                    " has been removed from your shopping cart.",
-                CartTotal = cart.GetTotal(),
-                CartCount = cart.GetCount(),
-                ItemCount = itemCount,
-                DeleteId = id
+                _db.ShoppingCartItems.Remove(removedItem);
+                _db.SaveChanges();
+            }
+
+            var jsonData = new
+            {
+                Message = "Item removed from cart."
             };
-            return Json(results);
+            return Json(jsonData);
         }
-        //
-        // GET: /ShoppingCart/CartSummary
         [System.Web.Mvc.ChildActionOnly]
         public ActionResult CartSummary()
         {
