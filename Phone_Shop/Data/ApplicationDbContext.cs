@@ -21,6 +21,8 @@ namespace Phone_Shop.Data
         public DbSet<Store> Store { get; set; }
         public DbSet<Account> Account { get; set; }
         public DbSet<CartItem> ShoppingCartItems { get; set; }
+        public DbSet<Review> Review { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -36,8 +38,8 @@ namespace Phone_Shop.Data
 
             modelBuilder.Entity<OrderItem>()
             .HasOne(oi => oi.Product)
-            .WithOne()
-            .HasForeignKey<OrderItem>(oi => oi.ProductID)
+            .WithMany()
+            .HasForeignKey(oi => oi.ProductID)
             .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -93,6 +95,23 @@ namespace Phone_Shop.Data
             .WithMany()
             .HasForeignKey(o => o.ProductId)
             .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Review>()
+                .HasKey(r => new { r.CustomerId, r.ProductID });
+
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.Product)
+            .WithMany()
+            .HasForeignKey(r => r.ProductID)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.Customer)
+            .WithMany()
+            .HasForeignKey(r => r.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
