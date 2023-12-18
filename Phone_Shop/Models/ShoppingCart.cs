@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phone_Shop.Data;
 using System.Security.Cryptography;
+using System.Web.Helpers;
 
 namespace Phone_Shop.Models
 {
@@ -38,18 +39,7 @@ namespace Phone_Shop.Models
                     context.Session.SetString(CartSessionKey, tempCartId.ToString());
                 }
             }
-            else
-            {
-                if(!string.IsNullOrWhiteSpace(context.User.Identity.Name)&&
-                    context.Session.GetString(CartSessionKey)!= context.User.Identity.Name)
-                {
-                    MigrateCart(context.User.Identity.Name);
-                    context.Session.SetString(CartSessionKey, context.User.Identity.Name);
-                    ShoppingCartId = context.Session.GetString(CartSessionKey);
-                }
-
-            }
-            return context.Session.GetString(CartSessionKey);
+            return ShoppingCartId=context.Session.GetString(CartSessionKey);
         }
         public void AddToCart(Product product)
         {
@@ -101,9 +91,14 @@ namespace Phone_Shop.Models
 
             return total ?? decimal.Zero;
         }
-        public int CreateOrder(Order order)
+        public Order CreateOrder()
         {
             decimal orderTotal = 0;
+            Order order = new Order
+            {
+                UserId = ShoppingCartId,
+                OrderedAt = DateTime.Now,
+            };
 
             var cartItems = GetCartItems();
             foreach (var item in cartItems)
@@ -121,10 +116,9 @@ namespace Phone_Shop.Models
 
             }
             order.TotalPrice = orderTotal;
-
             _db.SaveChanges();
             EmptyCart();
-            return order.Id;
+            return order;
         }
         public void MigrateCart(string userName)
         {

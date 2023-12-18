@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Phone_Shop.Data;
 
@@ -11,13 +12,14 @@ using Phone_Shop.Data;
 namespace Phone_Shop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231217152306_AddedCityAndGovernorate")]
+    partial class AddedCityAndGovernorate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseCollation("Arabic_CI_AS")
                 .HasAnnotation("ProductVersion", "7.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -301,7 +303,6 @@ namespace Phone_Shop.Data.Migrations
 
                     b.Property<string>("city_name_ar")
                         .IsRequired()
-                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("city_name_en")
@@ -328,7 +329,6 @@ namespace Phone_Shop.Data.Migrations
 
                     b.Property<string>("governorate_name_ar")
                         .IsRequired()
-                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("governorate_name_en")
@@ -404,17 +404,27 @@ namespace Phone_Shop.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressId"));
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GovernorateId")
-                        .HasColumnType("int");
+                    b.Property<string>("Governace")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -423,10 +433,6 @@ namespace Phone_Shop.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("AddressId");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("GovernorateId");
 
                     b.HasIndex("UserId");
 
@@ -645,27 +651,11 @@ namespace Phone_Shop.Data.Migrations
 
             modelBuilder.Entity("Phone_Shop.Models.PickupAddress", b =>
                 {
-                    b.HasOne("Phone_Shop.Models.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Phone_Shop.Models.Governorate", "Governorate")
-                        .WithMany()
-                        .HasForeignKey("GovernorateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("City");
-
-                    b.Navigation("Governorate");
 
                     b.Navigation("User");
                 });
