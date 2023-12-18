@@ -6,7 +6,7 @@ namespace Phone_Shop.Models
     public class City
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Required]
         [ForeignKey("Governorate")]
         public int governorate_id { get; set; }
