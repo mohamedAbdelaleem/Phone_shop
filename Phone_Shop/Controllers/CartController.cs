@@ -5,6 +5,7 @@ using Phone_Shop.ViewModel;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text.Encodings.Web;
 using Grpc.Core;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 namespace Phone_Shop.Controllers
 {
 
@@ -28,13 +29,12 @@ namespace Phone_Shop.Controllers
             };
             return View(viewModel);
         }
-        public ActionResult Checkout()
+        [HttpPost]
+        public IActionResult ClearCart()
         {
             var cart = ShoppingCart.GetCart(this.HttpContext, _db);
-            Order order = new Order();
-            cart.CreateOrder(order);
-
-            return RedirectToAction("OrderConfirmation");
+            cart.EmptyCart();
+            return RedirectToAction("Index");
         }
         public ActionResult AddToCart(int Id)
         {
