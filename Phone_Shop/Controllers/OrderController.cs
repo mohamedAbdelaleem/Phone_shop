@@ -27,8 +27,10 @@ public class OrderController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(CheckoutViewModel ViewModel)
     {
+        Console.WriteLine($"CityId: {ViewModel.Address.CityId}");
         if (ModelState.IsValid)
         {
+            ViewModel.Address.UserId = HttpContext.User.Identity.Name;
             var cart = ShoppingCart.GetCart(this.HttpContext, _db);
             Order order = cart.CreateOrder();
             order.PickupAddressId = ViewModel.Address.AddressId;
