@@ -21,6 +21,9 @@ namespace Phone_Shop.Models
         [Required]
         public string Comment { get; set; }
 
+        [Required]
+        public DateTime CreatedAt { get; set; }
+
         public Product Product { get; set; }
         public IdentityUser Customer { get; set; }
 

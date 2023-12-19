@@ -12,8 +12,8 @@ using Phone_Shop.Data;
 namespace Phone_Shop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231219065027_Edit in order model")]
-    partial class Editinordermodel
+    [Migration("20231219214658_updated_database")]
+    partial class updated_database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -499,6 +499,9 @@ namespace Phone_Shop.Migrations
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
