@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
 using Microsoft.AspNetCore.Hosting;
+using System.Security.Claims;
 
 namespace Phone_Shop.Controllers
 {
@@ -17,6 +18,9 @@ namespace Phone_Shop.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
+
+
+
 
 
         public AccountsController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment, UserManager<IdentityUser> userManager)
@@ -30,20 +34,9 @@ namespace Phone_Shop.Controllers
         {
             var Userid = _userManager.GetUserId(User);
             var result = _context.Account.Where(p => p.Id == Userid).ToList();
+            ViewData["PhoneNumber"]=_context.Users.SingleOrDefault(u=>(u.Id==Userid)).PhoneNumber;
             return View(result);
         }
-
-        public IActionResult address()
-        {
-            var Userid = _userManager.GetUserId(User);
-            var result = _context.PickupAddress.Where(p => p.UserId == Userid).ToList();
-            return View(result);
-        }
-
-
-
-
-
 
 
 
@@ -134,16 +127,19 @@ namespace Phone_Shop.Controllers
             ViewData["Id"] = new SelectList(_context.Users, "Id", "Id", account.Id);
             return View(account);
         }
-
         // GET: Accounts/Edit/5
+        
         public async Task<IActionResult> Edit(string id)
+
         {
+
+            var account = await _context.Account.FindAsync(id);
+
             if (id == null || _context.Account == null)
             {
                 return NotFound();
             }
 
-            var account = await _context.Account.FindAsync(id);
             if (account == null)
             {
                 return NotFound();
@@ -151,21 +147,21 @@ namespace Phone_Shop.Controllers
             ViewData["Id"] = new SelectList(_context.Users, "Id", "Id", account.Id);
             return View(account);
         }
-
+        
         // POST: Accounts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Email,Photo")] Account account)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Email,Photo,Phone")] Account account)
         {
             if (id != account.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+           // if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(account);
@@ -181,12 +177,16 @@ namespace Phone_Shop.Controllers
                     {
                         throw;
                     }
-                }
+        //        }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Id"] = new SelectList(_context.Users, "Id", "Id", account.Id);
             return View(account);
         }
+
+
+
+
 
         // GET: Accounts/Delete/5
         public async Task<IActionResult> Delete(string id)
