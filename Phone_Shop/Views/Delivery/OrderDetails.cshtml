@@ -1,0 +1,103 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var order = ViewData["order"] as Order;
+    var account = ViewData["account"] as Account;
+    var PickupAddress = ViewData["PickupAddress"] as PickupAddress;
+}
+
+
+
+
+@* <meta name="viewport" content="width=device-width, initial-scale=1"> *@
+<link rel="stylesheet" href="~/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/product_detail.css" />
+
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+<div class="container">
+
+    <div class="product-content product-wrap clearfix product-deatil">
+        <div class="row">
+            <div class="col-md-5 col-sm-12 col-xs-12">
+                <div class="product-image">
+                    <div id="myCarousel-2" class="carousel slide">
+                        <!-- <ol class="carousel-indicators">
+
+                        </ol> -->
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6 col-md-offset-1 col-sm-12 col-xs-12">
+                <h2 class="name">
+                    <small>Product by <a href="javascript:void(0);"> @account.Name </a></small>
+                </h2>
+                <hr />
+                <h3 class="price-container">
+                    @order.TotalPrice
+                </h3>
+                <hr />
+                <div class="description description-tabs">
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade active in" id="more-information">
+                            <br />
+                            <strong>PickupAddress Title</strong>
+                            <p>
+                                @PickupAddress.Governorate  @PickupAddress.City  @PickupAddress.Description
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                @if (order.Status == "UnChecked")
+                                {
+                                    <form method="post" asp-controller="Delivery" asp-action="ChangeStatusToChecked" asp-route-id="@order.Id">
+                                        <button type="submit" class="btn btn-success btn-lg">Checked</button>
+                                    </form>
+                                }
+
+                                @if (order.Status == "Checked")
+                                {
+                                    <form method="post" asp-controller="Delivery" asp-action="ChangeStatusTodelivered" asp-route-id="@order.Id">
+                                        <button type="submit" class="btn btn-success btn-lg">delivered</button>
+                                    </form>
+                                }
+                            </div>
+
+                            <div class="col-sm-4">
+                                <a asp-controller="Delivery" asp-action="Home" class="btn btn-warning btn-lg">Back</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="btn-group pull-right">
+                            <!-- version2 -->
+                            <!-- <button class="btn btn-white btn-default"><i class="fa fa-star"></i> Add to
+                                wishlist</button> -->
+                            <!-- <button class="btn btn-white btn-default"><i class="fa fa-envelope"></i> Contact
+                                Seller</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+</script>
+
