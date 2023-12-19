@@ -21,7 +21,7 @@ namespace Phone_Shop.Models
         public DateTime OrderedAt { get; set; }
 
         public decimal TotalPrice { get; set; }
-        public bool Status { get; set; }
+        public string Status { get; set; }
 
         public PickupAddress PickupAddress { get; set; }
         public IdentityUser User { get; set; }
