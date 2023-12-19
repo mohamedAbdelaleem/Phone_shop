@@ -36,6 +36,8 @@ namespace Phone_Shop
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            //builder.Services.AddScoped<IReviewSerivce, ReviewService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

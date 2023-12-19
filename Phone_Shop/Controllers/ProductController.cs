@@ -12,6 +12,7 @@ namespace Phone_Shop.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+
         public ProductController(ApplicationDbContext context, UserManager<IdentityUser> UserManager)
         {
             _context = context;
@@ -139,10 +140,45 @@ namespace Phone_Shop.Controllers
 
             var account = _context.Account.SingleOrDefault(a => a.Id == product.SellerId);
 
+            bool canMakeReview = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                string userId = _userManager.GetUserId(User);
+                canMakeReview = CanMakeReview(userId, id);
+            }
+            
+
+
             ViewData["product"] = product;
             ViewData["account"] = account;
+            ViewData["canMakeReview"] = canMakeReview;
 
             return View();
+        }
+
+        public bool CanMakeReview(string userId, int productId)
+        {
+
+            var review = _context.Review.SingleOrDefault(r => r.CustomerId == userId
+                                                               && r.ProductID == productId);
+
+            if (review != null)
+            {
+                return false;
+            }
+            var orderItem = _context.Order.Where(o => o.UserId == userId).Join(_context.OrderItem,
+                                                                        o => o.Id,
+                                                                        oItem => oItem.OrderID,
+                                                                        (o, oItem) => oItem)
+                                                                        .Where(oItem => oItem.ProductID == productId)
+                                                                        .FirstOrDefault();
+
+            if (orderItem == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
     }
