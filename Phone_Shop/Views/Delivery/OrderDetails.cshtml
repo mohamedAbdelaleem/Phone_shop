@@ -2,9 +2,9 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    var product = ViewData["product"] as Product;
+    var order = ViewData["order"] as Order;
     var account = ViewData["account"] as Account;
-
+    var PickupAddress = ViewData["PickupAddress"] as PickupAddress;
 }
 
 
@@ -26,14 +26,6 @@
                         <!-- <ol class="carousel-indicators">
 
                         </ol> -->
-                        <div class="carousel-inner">
-
-                            <div class="item active">
-                                <img src="@product.ImgUrl"
-                                     class="img-responsive" alt />
-                            </div>
-
-                        </div>
 
                     </div>
                 </div>
@@ -42,41 +34,20 @@
 
             <div class="col-md-6 col-md-offset-1 col-sm-12 col-xs-12">
                 <h2 class="name">
-
-                    @product.Name
-
                     <small>Product by <a href="javascript:void(0);"> @account.Name </a></small>
-
                 </h2>
                 <hr />
                 <h3 class="price-container">
-                    @product.Price
+                    @order.TotalPrice
                 </h3>
-                <div class="certified">
-                    <ul>
-                        <li>
-                            <a href="javascript:void(0);">Delivery time<span>5 Working Days</span></a>
-                        </li>
-
-                    </ul>
-                </div>
                 <hr />
                 <div class="description description-tabs">
-                    <ul id="myTab" class="nav nav-pills">
-                        <li class="active">
-                            <a href="#more-information" data-toggle="tab" class="no-margin">
-                                Product
-                                Description
-                            </a>
-                        </li>
-
-                    </ul>
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane fade active in" id="more-information">
                             <br />
-                            <strong>Description Title</strong>
+                            <strong>PickupAddress Title</strong>
                             <p>
-                                @product.Description
+                                @PickupAddress.Governorate  @PickupAddress.City  @PickupAddress.Description
                             </p>
                         </div>
 
@@ -84,12 +55,30 @@
                 </div>
                 <hr />
                 <div class="row">
-                    <td>
-                        <form method="post" asp-action="AddToCart" asp-controller="Cart">
-                            <input type="hidden" Name="Id" value="@product.Id" />
-                            <button type="submit" class="btn btn-primary">Add to Cart</button>
-                        </form>
-                    </td>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                @if (order.Status == "UnChecked")
+                                {
+                                    <form method="post" asp-controller="Delivery" asp-action="ChangeStatusToChecked" asp-route-id="@order.Id">
+                                        <button type="submit" class="btn btn-success btn-lg">Checked</button>
+                                    </form>
+                                }
+
+                                @if (order.Status == "Checked")
+                                {
+                                    <form method="post" asp-controller="Delivery" asp-action="ChangeStatusTodelivered" asp-route-id="@order.Id">
+                                        <button type="submit" class="btn btn-success btn-lg">delivered</button>
+                                    </form>
+                                }
+                            </div>
+
+                            <div class="col-sm-4">
+                                <a asp-controller="Delivery" asp-action="Home" class="btn btn-warning btn-lg">Back</a>
+                            </div>
+
+                        </div>
+                    </div>
 
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="btn-group pull-right">

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Phone_Shop.Data.Migrations
+namespace Phone_Shop.Migrations
 {
     /// <inheritdoc />
-    public partial class database : Migration
+    public partial class updated_database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -61,6 +61,20 @@ namespace Phone_Shop.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Governorates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    governorate_name_ar = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    governorate_name_en = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Governorates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,28 +204,6 @@ namespace Phone_Shop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PickupAddress",
-                columns: table => new
-                {
-                    AddressId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Governace = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PickupAddress", x => x.AddressId);
-                    table.ForeignKey(
-                        name: "FK_PickupAddress_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Store",
                 columns: table => new
                 {
@@ -235,30 +227,23 @@ namespace Phone_Shop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "Cities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PickupAddressId = table.Column<int>(type: "int", nullable: false),
-                    OrderedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    governorate_id = table.Column<int>(type: "int", nullable: false),
+                    city_name_ar = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    city_name_en = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Order", x => x.Id);
+                    table.PrimaryKey("PK_Cities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Order_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_Cities_Governorates_governorate_id",
+                        column: x => x.governorate_id,
+                        principalTable: "Governorates",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Order_PickupAddress_PickupAddressId",
-                        column: x => x.PickupAddressId,
-                        principalTable: "PickupAddress",
-                        principalColumn: "AddressId");
                 });
 
             migrationBuilder.CreateTable(
@@ -300,25 +285,60 @@ namespace Phone_Shop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderItem",
+                name: "PickupAddress",
                 columns: table => new
                 {
-                    OrderID = table.Column<int>(type: "int", nullable: false),
-                    ProductID = table.Column<int>(type: "int", nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
+                    AddressId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    GovernorateId = table.Column<int>(type: "int", nullable: false),
+                    CityId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItem", x => new { x.OrderID, x.ProductID });
+                    table.PrimaryKey("PK_PickupAddress", x => x.AddressId);
                     table.ForeignKey(
-                        name: "FK_OrderItem_Order_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "Order",
+                        name: "FK_PickupAddress_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItem_Product_ProductID",
+                        name: "FK_PickupAddress_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PickupAddress_Governorates_GovernorateId",
+                        column: x => x.GovernorateId,
+                        principalTable: "Governorates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Review",
+                columns: table => new
+                {
+                    ProductID = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Review", x => new { x.CustomerId, x.ProductID });
+                    table.ForeignKey(
+                        name: "FK_Review_AspNetUsers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Review_Product_ProductID",
                         column: x => x.ProductID,
                         principalTable: "Product",
                         principalColumn: "Id",
@@ -344,6 +364,59 @@ namespace Phone_Shop.Data.Migrations
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PickupAddressId = table.Column<int>(type: "int", nullable: false),
+                    OrderedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Order_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Order_PickupAddress_PickupAddressId",
+                        column: x => x.PickupAddressId,
+                        principalTable: "PickupAddress",
+                        principalColumn: "AddressId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItem",
+                columns: table => new
+                {
+                    OrderID = table.Column<int>(type: "int", nullable: false),
+                    ProductID = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItem", x => new { x.OrderID, x.ProductID });
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Order_OrderID",
+                        column: x => x.OrderID,
+                        principalTable: "Order",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Product_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -386,6 +459,11 @@ namespace Phone_Shop.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cities_governorate_id",
+                table: "Cities",
+                column: "governorate_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Order_PickupAddressId",
                 table: "Order",
                 column: "PickupAddressId",
@@ -399,8 +477,17 @@ namespace Phone_Shop.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItem_ProductID",
                 table: "OrderItem",
-                column: "ProductID",
-                unique: true);
+                column: "ProductID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PickupAddress_CityId",
+                table: "PickupAddress",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PickupAddress_GovernorateId",
+                table: "PickupAddress",
+                column: "GovernorateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PickupAddress_UserId",
@@ -421,6 +508,11 @@ namespace Phone_Shop.Data.Migrations
                 name: "IX_Product_StoreId",
                 table: "Product",
                 column: "StoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Review_ProductID",
+                table: "Review",
+                column: "ProductID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingCartItems_ProductId",
@@ -458,6 +550,9 @@ namespace Phone_Shop.Data.Migrations
                 name: "OrderItem");
 
             migrationBuilder.DropTable(
+                name: "Review");
+
+            migrationBuilder.DropTable(
                 name: "ShoppingCartItems");
 
             migrationBuilder.DropTable(
@@ -479,7 +574,13 @@ namespace Phone_Shop.Data.Migrations
                 name: "Store");
 
             migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Governorates");
         }
     }
 }

@@ -21,13 +21,19 @@ namespace Phone_Shop.Data
         public DbSet<Store> Store { get; set; }
         public DbSet<Account> Account { get; set; }
         public DbSet<CartItem> ShoppingCartItems { get; set; }
+
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Governorate> Governorates { get; set; }
+        public DbSet<Review> Review { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<OrderItem>()
                 .HasKey(o => new { o.OrderID, o.ProductID });
-
+            modelBuilder.UseCollation("Arabic_CI_AS"); // Set collation if needed
+            modelBuilder.Entity<City>().Property(e => e.city_name_ar).IsUnicode(true);
+            modelBuilder.Entity<Governorate>().Property(e => e.governorate_name_ar).IsUnicode(true);
             modelBuilder.Entity<Account>()
            .HasOne(A => A.User)
            .WithOne()
@@ -36,8 +42,8 @@ namespace Phone_Shop.Data
 
             modelBuilder.Entity<OrderItem>()
             .HasOne(oi => oi.Product)
-            .WithOne()
-            .HasForeignKey<OrderItem>(oi => oi.ProductID)
+            .WithMany()
+            .HasForeignKey(oi => oi.ProductID)
             .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -93,6 +99,29 @@ namespace Phone_Shop.Data
             .WithMany()
             .HasForeignKey(o => o.ProductId)
             .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<City>()
+           .HasOne(o => o.Governorate)
+           .WithMany()
+           .HasForeignKey(o => o.governorate_id)
+           .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Review>()
+                .HasKey(r => new { r.CustomerId, r.ProductID });
+
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.Product)
+            .WithMany()
+            .HasForeignKey(r => r.ProductID)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.Customer)
+            .WithMany()
+            .HasForeignKey(r => r.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

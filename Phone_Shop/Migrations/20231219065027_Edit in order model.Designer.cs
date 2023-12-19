@@ -3,21 +3,25 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Phone_Shop.Data;
 
 #nullable disable
 
-namespace Phone_Shop.Data.Migrations
+namespace Phone_Shop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231219065027_Edit in order model")]
+    partial class Editinordermodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .UseCollation("Arabic_CI_AS")
+                .HasAnnotation("ProductVersion", "7.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -290,6 +294,55 @@ namespace Phone_Shop.Data.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("Phone_Shop.Models.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("city_name_ar")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("city_name_en")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("governorate_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("governorate_id");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.Governorate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("governorate_name_ar")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("governorate_name_en")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Governorates");
+                });
+
             modelBuilder.Entity("Phone_Shop.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -304,8 +357,9 @@ namespace Phone_Shop.Data.Migrations
                     b.Property<int>("PickupAddressId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -340,8 +394,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasKey("OrderID", "ProductID");
 
-                    b.HasIndex("ProductID")
-                        .IsUnique();
+                    b.HasIndex("ProductID");
 
                     b.ToTable("OrderItem");
                 });
@@ -354,23 +407,28 @@ namespace Phone_Shop.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressId"));
 
-                    b.Property<string>("City")
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Governace")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("GovernorateId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Street")
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("AddressId");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("GovernorateId");
 
                     b.HasIndex("UserId");
 
@@ -428,6 +486,28 @@ namespace Phone_Shop.Data.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.Review", b =>
+                {
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("CustomerId", "ProductID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Store", b =>
@@ -538,6 +618,17 @@ namespace Phone_Shop.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Phone_Shop.Models.City", b =>
+                {
+                    b.HasOne("Phone_Shop.Models.Governorate", "Governorate")
+                        .WithMany()
+                        .HasForeignKey("governorate_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Governorate");
+                });
+
             modelBuilder.Entity("Phone_Shop.Models.Order", b =>
                 {
                     b.HasOne("Phone_Shop.Models.PickupAddress", "PickupAddress")
@@ -566,8 +657,8 @@ namespace Phone_Shop.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Phone_Shop.Models.Product", "Product")
-                        .WithOne()
-                        .HasForeignKey("Phone_Shop.Models.OrderItem", "ProductID")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -578,11 +669,26 @@ namespace Phone_Shop.Data.Migrations
 
             modelBuilder.Entity("Phone_Shop.Models.PickupAddress", b =>
                 {
+                    b.HasOne("Phone_Shop.Models.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Phone_Shop.Models.Governorate", "Governorate")
+                        .WithMany()
+                        .HasForeignKey("GovernorateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("City");
+
+                    b.Navigation("Governorate");
 
                     b.Navigation("User");
                 });
@@ -612,6 +718,25 @@ namespace Phone_Shop.Data.Migrations
                     b.Navigation("Seller");
 
                     b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.Review", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Phone_Shop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Store", b =>
