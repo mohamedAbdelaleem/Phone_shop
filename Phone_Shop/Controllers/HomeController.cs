@@ -19,7 +19,7 @@ namespace Phone_Shop.Controllers
 
         public IActionResult Index(string? search, int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = int.MaxValue,bool Des=false)
         {
-            var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice));
+            var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice && product.Amount > 0));
             if (Des)
                 Result = Result.OrderByDescending(p => p.Price);
             else
