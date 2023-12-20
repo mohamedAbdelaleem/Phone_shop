@@ -1,4 +1,4 @@
-﻿INSERT INTO governorates (governorate_name_ar, governorate_name_en) VALUES
+﻿INSERT INTO [phoneShopDB].[dbo].[governorates] (governorate_name_ar, governorate_name_en) VALUES
 ('القاهرة', 'Cairo'),
 ('الجيزة', 'Giza'),
 ('الأسكندرية', 'Alexandria'),
@@ -28,7 +28,7 @@
 ('سوهاج', 'Sohag');
 
 
-INSERT INTO cities (governorate_id, city_name_ar, city_name_en) VALUES
+INSERT INTO [phoneShopDB].[dbo].[cities] (governorate_id, city_name_ar, city_name_en) VALUES
 
 /* Start Cairo ID:1 */
 (1, '15 مايو', '15 May'),

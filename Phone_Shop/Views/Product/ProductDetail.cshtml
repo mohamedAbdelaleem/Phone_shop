@@ -4,6 +4,8 @@
 @{
     var product = ViewData["product"] as Product;
     var account = ViewData["account"] as Account;
+    var canReivew = ViewData["canReviewProduct"];
+    var reviews = ViewData["reviews"] as IEnumerable<dynamic>;
 
 }
 
@@ -83,44 +85,58 @@
 
                         <div class="tab-pane fade" id="reviews">
                             <br />
-                               
-                            <div class="mb-3">
-                                <a class="btn btn-sm btn-primary">
-                                    Add Review
-                                </a>
-                            </div>
+                            
+                            @if ((bool)canReivew)
+                            {
+                                <div class="mb-3">
+                                    <a  asp-action="ReviewProduct" asp-controller="Product" asp-route-id="@product.Id" class="btn btn-sm btn-primary">
+                                        Add Review
+                                    </a>
+                                </div>
+                            }
+                            
                                
                             <div class="chat-body no-padding profile-message">
                                 <ul>
-                                    <li class="message">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                                             class="online" />
-                                        <span class="message-text">
-                                            <a href="javascript:void(0);" class="username">
-                                                Alisha Molly
+                                    @foreach(var review in reviews)
+                                    {
+                                        
+                                        <li class="message">
+                                            
+                                            <div class="username">
+                                                <img src="@review.account.Photo"
+                                                     class="online" />
+                                                @review.account.Name
                                                 <span class="badge">Purchase Verified</span>
                                                 <span class="pull-right">
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-primary"></i>
-                                                    <i class="fa fa-star fa-2x text-muted"></i>
-                                                </span>
-                                            </a>
-                                            Can't divide were divide fish forth fish to. Was can't form the, living
-                                            life grass darkness very image let unto fowl isn't in blessed fill life
-                                            yielding above all moved
-                                        </span>
-                                        <ul class="list-inline font-xs">
-                                            
-                                            <li class="pull-right">
-                                                <small class="text-muted pull-right ultra-light">
-                                                    Posted 1 year ago
-                                                </small>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                                    @for(int i=0; i < review.rev.Rating; i++)
+                                                    {
+                                                        <i class="fa fa-star fa-2x text-primary"></i>
+                                                    }
 
+                                                    @for (int i = 0; i < 5-review.rev.Rating; i++)
+                                                    {
+                                                        <i class="fa fa-star fa-2x text-muted"></i>
+                                                    }
+                                                    
+                                                </span>
+                                            </div>
+                                            <span class="message-text">
+                                                
+                                               @review.rev.Comment
+                                            </span>
+                                            <ul class="list-inline font-xs">
+
+                                                <li class="pull-right">
+                                                    <small class="text-muted pull-right ultra-light">
+                                                        @review.rev.CreatedAt
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                    }
+                                    
                                 </ul>
                             </div>
                         </div>

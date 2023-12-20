@@ -1,0 +1,62 @@
+﻿@model Phone_Shop.Models.Review
+
+@{
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <!-- Product Review Form -->
+            <form method="post" asp-action="AddReviewProduct" asp-controller="Product" asp-route-id ="@ViewData["productId"]">
+
+                <!-- Star Rating Input -->
+                <div class="mb-3">
+                    <label for="starRating" class="form-label">Rating</label>
+                    <div class="d-flex">
+                        <!-- Use data-value attribute to store the actual rating value -->
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                        <input type="hidden" asp-for="Rating" id="rating" value="0"> <!-- Hidden input to store the selected rating -->
+                    </div>
+                </div>
+
+                <!-- Comment Text Area -->
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Comments</label>
+                    <textarea required class="form-control" asp-for="Comment" id="comment" rows="4"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = parseInt(star.getAttribute('data-value'));
+                ratingInput.value = value;
+
+                // Highlight all preceding stars
+                stars.forEach(s => {
+                    const sValue = parseInt(s.getAttribute('data-value'));
+                    s.classList.toggle('text-warning', sValue <= value);
+                });
+            });
+        });
+    });
+</script>
+
