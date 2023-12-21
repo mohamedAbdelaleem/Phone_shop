@@ -24,13 +24,13 @@ namespace Phone_Shop.Controllers
             var result = _context.Store.Where(p => p.SellerId == sellerid).ToList();
             return View(result);
         }
-
         [Authorize(Roles = "Seller")]
         public IActionResult Create()
         {
-            var governoratesInEgypt = _context.Governorates.ToList();
-
+            var governoratesInEgypt = _context.Governorates;
+            var cityInEgypt = _context.Cities;
             ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+            ViewBag.cityInEgypt = cityInEgypt;
             return View();
         }
 
@@ -49,10 +49,11 @@ namespace Phone_Shop.Controllers
             }
             catch
             {
-                var governoratesInEgypt = _context.Governorates.ToList();
+                var governoratesInEgypt = _context.Governorates;
+                var cityInEgypt = _context.Cities;
                 return View();
             }
-           
+
         }
 
         [Authorize(Roles = "Seller")]
