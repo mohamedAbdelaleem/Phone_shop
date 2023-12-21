@@ -28,37 +28,7 @@ namespace Phone_Shop.Controllers
         [Authorize(Roles = "Seller")]
         public IActionResult Create()
         {
-            var governoratesInEgypt = new List<string>
-        {
-        "Cairo",
-        "Alexandria",
-        "Giza",
-      "Dakahlia",
-       "Red Sea",
-        "Beheira",
-        "Fayoum",
-       "Gharbiya",
-       "Ismailia",
-        "Menofia",
-         "Minya",
-        "Qaliubiya",
-       "New Valley",
-        "Suez",
-        "Aswan",
-        "Assiut",
-        "Beni Suef",
-       "Port Said",
-     "Damietta",
-     "Sharkia",
-     "South Sinai",
-      "Kafr Al sheikh",
-      "Matrouh",
-       "Luxor",
-       "Qena",
-      "North Sinai",
-        "Sohag"
-
-        };
+            var governoratesInEgypt = _context.Governorates.ToList();
 
             ViewBag.GovernoratesInEgypt = governoratesInEgypt;
             return View();
@@ -79,38 +49,7 @@ namespace Phone_Shop.Controllers
             }
             catch
             {
-                var governoratesInEgypt = new List<string>
-        {
-        "Cairo",
-        "Alexandria",
-        "Giza",
-      "Dakahlia",
-       "Red Sea",
-        "Beheira",
-        "Fayoum",
-       "Gharbiya",
-       "Ismailia",
-        "Menofia",
-         "Minya",
-        "Qaliubiya",
-       "New Valley",
-        "Suez",
-        "Aswan",
-        "Assiut",
-        "Beni Suef",
-       "Port Said",
-     "Damietta",
-     "Sharkia",
-     "South Sinai",
-      "Kafr Al sheikh",
-      "Matrouh",
-       "Luxor",
-       "Qena",
-      "North Sinai",
-        "Sohag"
-
-        };
-                ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+                var governoratesInEgypt = _context.Governorates;
                 return View();
             }
             

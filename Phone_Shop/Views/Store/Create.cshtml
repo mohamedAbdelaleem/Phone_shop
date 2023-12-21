@@ -28,19 +28,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="Governace" class="control-label">Governorate:</label>
+                                <label asp-for="Governace" class="control-label">City:</label>
                             <select asp-for="Governace" class="form-control">
                                 <option value="">Select Governorate</option>
                                 @foreach (var governorate in ViewBag.GovernoratesInEgypt)
                                 {
-                                    <option value="@governorate">@governorate</option>
+                                        <option value="@governorate">@governorate.governorate_name_en</option>
                                 }
                             </select>
                             <span asp-validation-for="Governace" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="City" class="control-label">City:</label>
+                                <label asp-for="City" class="control-label">Governorate:</label>
                             <input asp-for="City" class="form-control" />
                             <span asp-validation-for="City" class="text-danger"></span>
                         </div>
