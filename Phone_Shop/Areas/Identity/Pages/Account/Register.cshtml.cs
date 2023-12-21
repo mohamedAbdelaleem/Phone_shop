@@ -93,6 +93,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
 
             [Required]
             [Phone]
+            [StringLength(11, MinimumLength = 11)]
             [Display(Name = "Phone")]
             public string Phone { get; set; }
 
