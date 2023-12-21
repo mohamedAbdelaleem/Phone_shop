@@ -153,8 +153,13 @@ namespace Phone_Shop.Controllers
                                                                              account => account.Id,
                                                                              (rev, account) => new {rev, account});
 
-            var averageReviews = reviews.Average(r => r.rev.Rating);
             var numOfReviews = reviews.Count();
+            double averageReviews = 0.0;
+            if (numOfReviews >= 1)
+            {
+               averageReviews = reviews.Average(r => r.rev.Rating);
+
+            }
 
             ViewData["product"] = product;
             ViewData["seller"] = seller;
