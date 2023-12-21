@@ -1,0 +1,74 @@
+﻿@model Phone_Shop.Models.Review
+
+@{
+    int starsCounter = 0;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <!-- Product Review Form -->
+            <form method="post" asp-action="EditReview" asp-controller="Product" asp-route-productId="@ViewData["productId"]">
+
+                <!-- Star Rating Input -->
+                <div class="mb-3">
+                    <label for="starRating" class="form-label">Rating</label>
+                    <div class="d-flex">
+                        <!-- Use data-value attribute to store the actual rating value -->
+                        @for (starsCounter = 1; starsCounter < @Model.Rating +1; starsCounter++)
+                        {
+                            <span class="star text-warning" data-value="@starsCounter">&#9733;</span>
+                        }
+
+                        @for (int i = 0; i < 5 - @Model.Rating; i++)
+                        {
+                            <span class="star" data-value="@starsCounter">&#9733;</span>
+                            starsCounter += 1;
+                        }
+                        
+                        
+                        <input type="hidden" asp-for="@Model.Rating" id="rating"> <!-- Hidden input to store the selected rating -->
+                    </div>
+                </div>
+
+                <!-- Comment Text Area -->
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Comments</label>
+                    <textarea required asp-for="@Model.Comment" class="form-control" id="comment" rows="4"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+
+            </form>
+
+            <div>
+                <a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@Model.ProductID" class="btn btn-success">Back</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = parseInt(star.getAttribute('data-value'));
+                ratingInput.value = value;
+
+                // Highlight all preceding stars
+                stars.forEach(s => {
+                    const sValue = parseInt(s.getAttribute('data-value'));
+                    s.classList.toggle('text-warning', sValue <= value);
+                });
+            });
+        });
+    });
+</script>
+

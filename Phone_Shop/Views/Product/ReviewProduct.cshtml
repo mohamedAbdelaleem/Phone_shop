@@ -8,7 +8,7 @@
         <div class="col-md-6">
 
             <!-- Product Review Form -->
-            <form method="post" asp-action="AddReviewProduct" asp-controller="Product" asp-route-id ="@ViewData["productId"]">
+            <form method="post" asp-action="AddReviewProduct" asp-controller="Product" asp-route-id="@ViewData["productId"]">
 
                 <!-- Star Rating Input -->
                 <div class="mb-3">
@@ -20,20 +20,25 @@
                         <span class="star" data-value="3">&#9733;</span>
                         <span class="star" data-value="4">&#9733;</span>
                         <span class="star" data-value="5">&#9733;</span>
-                        <input type="hidden" asp-for="Rating" id="rating" value="0"> <!-- Hidden input to store the selected rating -->
+                        <input type="hidden" id="rating" asp-for="Rating" value="0"> <!-- Hidden input to store the selected rating -->
                     </div>
                 </div>
 
                 <!-- Comment Text Area -->
                 <div class="mb-3">
                     <label for="comment" class="form-label">Comments</label>
-                    <textarea required class="form-control" asp-for="Comment" id="comment" rows="4"></textarea>
+                    <textarea class="form-control" asp-for="Comment" id="comment" name="comment" rows="4" required></textarea>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary">Submit Review</button>
+                <button type="submit" class="btn btn-primary" id="submit-btn">Submit Review</button>
 
             </form>
+
+
+            <div>
+                <a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@ViewData["productId"]" class="btn btn-success">Back</a>
+            </div>
 
         </div>
     </div>
@@ -42,6 +47,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const submitButton = document.getElementById('submit-btn');
         const stars = document.querySelectorAll('.star');
         const ratingInput = document.getElementById('rating');
 
@@ -56,6 +62,19 @@
                     s.classList.toggle('text-warning', sValue <= value);
                 });
             });
+        });
+
+        submitButton.addEventListener('click', function (event) {
+            const ratingValue = parseInt(ratingInput.value);
+
+            // Check if the rating is 0
+            if (ratingValue === 0) {
+                // Prevent the default button click behavior
+                event.preventDefault();
+
+                // Optionally, you can display an error message or take other actions
+                alert('Please choose a rating before submitting the form.');
+            }
         });
     });
 </script>

@@ -3,9 +3,12 @@
 *@
 @{
     var product = ViewData["product"] as Product;
-    var account = ViewData["account"] as Account;
+    var seller = ViewData["seller"] as Account;
     var canReivew = ViewData["canReviewProduct"];
     var reviews = ViewData["reviews"] as IEnumerable<dynamic>;
+    var userId = (string)ViewData["userId"];
+    var averageReviews = (double)ViewData["averageReviews"];
+    var numOfReviews = (int)ViewData["numOfReviews"];
 
 }
 
@@ -15,6 +18,32 @@
 @* <meta name="viewport" content="width=device-width, initial-scale=1"> *@
 <link rel="stylesheet" href="~/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/product_detail.css" />
+<style>
+    .star-rating {
+        font-size: 24px;
+    }
+
+    .star-filled {
+        color: gold; /* Change the color to match your star color */
+    }
+
+        /* Style for the partially filled star */
+        .star.partial {
+            position: relative;
+            display: inline-block;
+            
+        }
+
+            .star.partial:after {
+                content: '\2605'; /* Unicode character for a filled star */
+                color: gold; /* Change the color to match your star color */
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 50%; /* Adjust the width based on the partial rating */
+                overflow: hidden;
+            }
+</style>
 
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
@@ -47,7 +76,14 @@
 
                     @product.Name
 
-                    <small>Product by <a href="javascript:void(0);"> @account.Name </a></small>
+                    <small>Product by <a href="javascript:void(0);"> @seller.Name </a></small>
+                    <div class="star-rating" style="display: inline-block;">
+                        
+                    </div>
+                    <span class="fa fa-2x">
+                        <h4>(@numOfReviews) Reviews</h4>
+                    </span>
+
 
                 </h2>
                 <hr />
@@ -120,6 +156,21 @@
                                                     }
                                                     
                                                 </span>
+                                                
+                                                @if (userId != null && (string)review.account.Id == userId)
+                                                {
+                                                    <div style="display: inline-block;">
+                                                        <a asp-action="EditReviewProduct" asp-controller="Product" asp-route-productId="@product.Id" class="btn btn-success btn-sm">Edit</a>
+                                                    </div>
+
+                                                    <div style="display: inline-block; margin-left: 5px;">
+                                                        <form asp-action="DeleteReview" asp-controller="Product" asp-route-productId="@product.Id" method="post">
+                                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        </form>
+                                                    </div>
+
+                                                    
+                                                }
                                             </div>
                                             <span class="message-text">
                                                 
@@ -171,7 +222,36 @@
 </div>
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="~/js/bootstrap.min.js"></script>
-<script type="text/javascript">
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const starRating = document.querySelector('.star-rating');
+        const partialRating = @averageReviews; // Replace with your actual rating
 
+        // Add filled stars
+        for (let i = 1; i <= Math.floor(partialRating); i++) {
+            const star = document.createElement('span');
+            star.className = 'star-filled';
+            star.innerHTML = '&#9733;'; // Set the star character
+            starRating.appendChild(star);
+        }
+
+        // Add partially filled star
+        if (partialRating % 1 !== 0) {
+            const partialStar = document.createElement('span');
+            partialStar.className = 'star partial';
+            partialStar.style.width = (partialRating % 1) * 20 + ' px';
+            partialStar.innerHTML = '&#9733;'; // Set the star character
+            starRating.appendChild(partialStar);
+        }
+
+        // Add unfilled stars
+        for (let i = Math.ceil(partialRating) + 1; i <= 5; i++) {
+            const unfilledStar = document.createElement('span');
+            unfilledStar.className = 'star';
+            unfilledStar.innerHTML = '&#9733;'; // Set the star character
+            starRating.appendChild(unfilledStar);
+        }
+    });
 </script>
+
 

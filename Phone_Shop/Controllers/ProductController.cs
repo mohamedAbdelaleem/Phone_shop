@@ -138,12 +138,13 @@ namespace Phone_Shop.Controllers
             }
 
 
-            var account = _context.Account.SingleOrDefault(a => a.Id == product.SellerId);
+            var seller = _context.Account.SingleOrDefault(a => a.Id == product.SellerId);
 
             bool canReviewProduct = false;
+            string? userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                string userId = _userManager.GetUserId(User);
+                userId = _userManager.GetUserId(User);
                 canReviewProduct = CanReviewProduct(userId, id);
             }
 
@@ -152,14 +153,22 @@ namespace Phone_Shop.Controllers
                                                                              account => account.Id,
                                                                              (rev, account) => new {rev, account});
 
+            var averageReviews = reviews.Average(r => r.rev.Rating);
+            var numOfReviews = reviews.Count();
+
             ViewData["product"] = product;
-            ViewData["account"] = account;
+            ViewData["seller"] = seller;
             ViewData["canReviewProduct"] = canReviewProduct;
             ViewData["reviews"] = reviews;
+            ViewData["averageReviews"] = averageReviews;
+            ViewData["numOfReviews"] = numOfReviews;
+            ViewData["userId"] = userId;
 
             return View();
         }
 
+
+        // Reviews
 
         public bool CanReviewProduct(string userId, int productId)
         {
@@ -231,6 +240,61 @@ namespace Phone_Shop.Controllers
 
 
             return RedirectToAction("ProductDetail", "Product", new { id = id });
+        }
+
+        [Authorize(Roles = "Seller,Customer")]
+        public IActionResult EditReviewProduct(int productId)
+        {
+
+            string userId = _userManager.GetUserId(User);
+            var review = _context.Review.SingleOrDefault(r => r.ProductID == productId && r.CustomerId == userId);
+            if (review == null) {
+                return RedirectToAction("ProductDetail", "Product", new { id = productId });
+            }
+
+            
+
+            ViewData["productId"] = productId;
+            return View(review);
+        }
+
+        [Authorize(Roles = "Seller,Customer")]
+        [HttpPost]
+        public IActionResult EditReview(int productId, Review editedReview)
+        {
+
+            string userId = _userManager.GetUserId(User);
+            var review = _context.Review.SingleOrDefault(r => r.ProductID == productId && r.CustomerId == userId);
+            if (review == null)
+            {
+                return RedirectToAction("ProductDetail", "Product", new { id = productId });
+            }
+
+            review.Rating = editedReview.Rating;
+            review.Comment = editedReview.Comment;
+            _context.SaveChanges();
+
+
+
+            return RedirectToAction("ProductDetail", "Product", new { id = productId });
+        }
+
+        [Authorize(Roles = "Seller,Customer")]
+        [HttpPost]
+        public IActionResult DeleteReview(int productId)
+        {
+
+            string userId = _userManager.GetUserId(User);
+            var review = _context.Review.SingleOrDefault(r => r.ProductID == productId && r.CustomerId == userId);
+            if (review == null)
+            {
+                return RedirectToAction("ProductDetail", "Product", new { id = productId });
+            }
+
+            _context.Review.Remove(review);
+            _context.SaveChanges();
+
+            return RedirectToAction("ProductDetail", "Product", new { id = productId });
         }
 
     }
