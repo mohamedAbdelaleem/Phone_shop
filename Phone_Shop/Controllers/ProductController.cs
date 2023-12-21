@@ -12,6 +12,7 @@ namespace Phone_Shop.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+
         public ProductController(ApplicationDbContext context, UserManager<IdentityUser> UserManager)
         {
             _context = context;
@@ -139,10 +140,97 @@ namespace Phone_Shop.Controllers
 
             var account = _context.Account.SingleOrDefault(a => a.Id == product.SellerId);
 
+            bool canReviewProduct = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                string userId = _userManager.GetUserId(User);
+                canReviewProduct = CanReviewProduct(userId, id);
+            }
+
+            var reviews = _context.Review.Where(r => r.ProductID == id).Join(_context.Account,
+                                                                             rev => rev.CustomerId,
+                                                                             account => account.Id,
+                                                                             (rev, account) => new {rev, account});
+
             ViewData["product"] = product;
             ViewData["account"] = account;
+            ViewData["canReviewProduct"] = canReviewProduct;
+            ViewData["reviews"] = reviews;
 
             return View();
+        }
+
+
+        public bool CanReviewProduct(string userId, int productId)
+        {
+
+            var review = _context.Review.SingleOrDefault(r => r.CustomerId == userId
+                                                               && r.ProductID == productId);
+
+            if (review != null)
+            {
+                return false;
+            }
+            var orderItem = _context.Order.Where(o => o.UserId == userId).Join(_context.OrderItem,
+                                                                        o => o.Id,
+                                                                        oItem => oItem.OrderID,
+                                                                        (o, oItem) => oItem)
+                                                                        .Where(oItem => oItem.ProductID == productId)
+                                                                        .FirstOrDefault();
+            
+            if (orderItem == null)
+            {
+                return false;
+            }
+            var order = _context.Order.SingleOrDefault(o => o.Id == orderItem.OrderID);
+
+            if (order.Status != "delivered")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        [Authorize(Roles = "Seller,Customer")]
+        public IActionResult ReviewProduct(int id)
+        {
+           
+            string userId = _userManager.GetUserId(User);
+            bool canReviewProduct = CanReviewProduct(userId, id);
+            
+            if (!canReviewProduct)
+            {
+                return RedirectToAction("ProductDetail", "Product", new { id = id });
+            }
+
+            ViewData["productId"] = id;
+            return View();
+        }
+
+
+        [Authorize(Roles = "Seller,Customer")]
+        [HttpPost]
+        public IActionResult AddReviewProduct(int id, Review model)
+        {
+
+            string userId = _userManager.GetUserId(User);
+            bool canReviewProduct = CanReviewProduct(userId, id);
+
+            if (!canReviewProduct)
+            {
+                return RedirectToAction("ProductDetail", "Product", new { id = id });
+            }
+
+            model.ProductID = id;
+            model.CustomerId = userId;
+            model.CreatedAt = DateTime.Now;
+
+            _context.Review.Add(model);
+            _context.SaveChanges();
+
+
+            return RedirectToAction("ProductDetail", "Product", new { id = id });
         }
 
     }

@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Phone_Shop.Data;
 
 #nullable disable
 
-namespace Phone_Shop.Data.Migrations
+namespace Phone_Shop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231217170546_AddCityAndGovernateInAddress")]
-    partial class AddCityAndGovernateInAddress
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -296,11 +293,11 @@ namespace Phone_Shop.Data.Migrations
 
             modelBuilder.Entity("Phone_Shop.Models.City", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("city_name_ar")
                         .IsRequired()
@@ -314,7 +311,7 @@ namespace Phone_Shop.Data.Migrations
                     b.Property<int>("governorate_id")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("governorate_id");
 
@@ -357,8 +354,9 @@ namespace Phone_Shop.Data.Migrations
                     b.Property<int>("PickupAddressId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -393,8 +391,7 @@ namespace Phone_Shop.Data.Migrations
 
                     b.HasKey("OrderID", "ProductID");
 
-                    b.HasIndex("ProductID")
-                        .IsUnique();
+                    b.HasIndex("ProductID");
 
                     b.ToTable("OrderItem");
                 });
@@ -421,16 +418,7 @@ namespace Phone_Shop.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("AddressId");
@@ -495,6 +483,31 @@ namespace Phone_Shop.Data.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.Review", b =>
+                {
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("CustomerId", "ProductID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Store", b =>
@@ -644,8 +657,8 @@ namespace Phone_Shop.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Phone_Shop.Models.Product", "Product")
-                        .WithOne()
-                        .HasForeignKey("Phone_Shop.Models.OrderItem", "ProductID")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -671,8 +684,7 @@ namespace Phone_Shop.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("City");
 
@@ -706,6 +718,25 @@ namespace Phone_Shop.Data.Migrations
                     b.Navigation("Seller");
 
                     b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("Phone_Shop.Models.Review", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Phone_Shop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Store", b =>

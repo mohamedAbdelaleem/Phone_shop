@@ -16,5 +16,6 @@ namespace Phone_Shop.Models
 
         public String? Photo { get; set; }
         public IdentityUser User { get; set; }
+
     }
 }
