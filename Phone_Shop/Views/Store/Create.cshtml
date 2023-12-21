@@ -41,7 +41,13 @@
 
                             <div class="form-group">
                                 <label asp-for="City" class="control-label">City:</label>
-                                <input asp-for="City" class="form-control" />
+                                <select asp-for="City" class="form-control">
+                                    <option value="">Select City</option>
+                                    @foreach (var city in ViewBag.cityInEgypt)
+                                    {
+                                        <option value="@city">@city.city_name_en</option>
+                                    }
+                                </select>
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
 
