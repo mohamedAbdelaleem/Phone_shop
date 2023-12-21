@@ -1,0 +1,17 @@
+﻿@model Phone_Shop.Models.Store
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2></h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+<div>
+    <a asp-action="Index">Your Stores</a>
+</div>

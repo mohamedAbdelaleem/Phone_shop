@@ -161,6 +161,18 @@ namespace Phone_Shop.Controllers
 
             }
 
+            bool canReviewProduct = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                string userId = _userManager.GetUserId(User);
+                canReviewProduct = CanReviewProduct(userId, id);
+            }
+
+            var reviews = _context.Review.Where(r => r.ProductID == id).Join(_context.Account,
+                                                                             rev => rev.CustomerId,
+                                                                             account => account.Id,
+                                                                             (rev, account) => new {rev, account});
+
             ViewData["product"] = product;
             ViewData["seller"] = seller;
             ViewData["canReviewProduct"] = canReviewProduct;
@@ -222,6 +234,37 @@ namespace Phone_Shop.Controllers
             return View();
         }
 
+
+        public bool CanReviewProduct(string userId, int productId)
+        {
+
+            var review = _context.Review.SingleOrDefault(r => r.CustomerId == userId
+                                                               && r.ProductID == productId);
+
+            if (review != null)
+            {
+                return false;
+            }
+            var orderItem = _context.Order.Where(o => o.UserId == userId).Join(_context.OrderItem,
+                                                                        o => o.Id,
+                                                                        oItem => oItem.OrderID,
+                                                                        (o, oItem) => oItem)
+                                                                        .Where(oItem => oItem.ProductID == productId)
+                                                                        .FirstOrDefault();
+            
+            if (orderItem == null)
+            {
+                return false;
+            }
+            var order = _context.Order.SingleOrDefault(o => o.Id == orderItem.OrderID);
+
+            if (order.Status != "delivered")
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         [Authorize(Roles = "Seller,Customer")]
         [HttpPost]

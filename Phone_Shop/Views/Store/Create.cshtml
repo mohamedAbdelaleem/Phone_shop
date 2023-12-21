@@ -1,0 +1,66 @@
+﻿@model Phone_Shop.Models.Store
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <p class="font-weight-bold">Free Palestine</p>
+        </div>
+    </div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center">Add Store</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label">Store Name:</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Governace" class="control-label">Governorate:</label>
+                            <select asp-for="Governace" class="form-control">
+                                <option value="">Select Governorate</option>
+                                @foreach (var governorate in ViewBag.GovernoratesInEgypt)
+                                {
+                                    <option value="@governorate">@governorate</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Governace" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="City" class="control-label">City:</label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Street" class="control-label">Street:</label>
+                            <input asp-for="Street" class="form-control" />
+                            <span asp-validation-for="Street" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success btn-block">Add Store</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-3">
+        <a asp-action="Index" class="btn btn-primary">Your Stores</a>
+    </div>
+</div>

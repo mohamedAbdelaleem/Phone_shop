@@ -1,46 +1,52 @@
 ﻿@model Phone_Shop.Models.Product
 
-
 @{
-    ViewData["Title"] = Model == null ? "Create":"Edit" ;
+    ViewData["Title"] = Model == null ? "Create" : "Edit";
 }
 
-<h1>@ViewData["Title"] Product</h1
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="@ViewData["Title"]" enctype="multipart/form-data">
+<h1 class="text-center mt-4" style="color: #3498db;">@ViewData["Title"] Product</h1>
+<hr style="border-color: #3498db;" />
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-action="@ViewData["Title"]" enctype="multipart/form-data" style="background-color: #ecf0f1; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Category, "Id", "Name"))">
+                <label asp-for="CategoryId" class="control-label" style="color: #3498db;">Category:</label>
+                <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Category, "Id", "Name"))" style="color: #3498db;">
                     <option value="">Select Category Name...</option>
                 </select>
             </div>
+
             <div class="form-group">
-                <label asp-for="Store" class="control-label"></label>
-                <select asp-for="StoreId" class="form-control" asp-items="@(new SelectList(ViewBag.Store, "Id", "Name"))">
+                <label asp-for="StoreId" class="control-label" style="color: #3498db;">Store:</label>
+                <select asp-for="StoreId" class="form-control" asp-items="@(new SelectList(ViewBag.Store, "Id", "Name"))" style="color: #3498db;">
                     <option value="">Select Store Name...</option>
                 </select>
             </div>
+
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <label asp-for="Name" class="control-label" style="color: #3498db;">Product Name:</label>
+                <input asp-for="Name" class="form-control" style="color: #3498db;" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <label asp-for="Description" class="control-label" style="color: #3498db;">Description:</label>
+                <input asp-for="Description" class="form-control" style="color: #3498db;" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="ImgUrl" class="control-label"></label>
-                <input type="file" asp-for="ImgUrl" class="form-control" />
+                <label asp-for="ImgUrl" class="control-label" style="color: #3498db;">Image:</label>
+                <input type="file" asp-for="ImgUrl" class="form-control" style="color: #3498db;" />
                 <span asp-validation-for="ImgUrl" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
+                <label asp-for="Price" class="control-label" style="color: #3498db;">Price:</label>
+                <input asp-for="Price" class="form-control" style="color: #3498db;" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
              <div class="form-group">
@@ -50,16 +56,24 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Add" class="btn btn-primary" />
+                <label asp-for="Amount" class="control-label" style="color: #3498db;">Amount:</label>
+                <input asp-for="Amount" class="form-control" style="color: #3498db;" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary" style="background-color: #3498db; border-color: #3498db;">@ViewData["Title"] Product</button>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="text-center mt-3">
+    <a asp-action="Index" class="btn btn-secondary" style="background-color: #e74c3c; border-color: #e74c3c;">Your Products</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

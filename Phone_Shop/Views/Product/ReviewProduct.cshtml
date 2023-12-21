@@ -8,7 +8,7 @@
         <div class="col-md-6">
 
             <!-- Product Review Form -->
-            <form method="post" asp-action="AddReviewProduct" asp-controller="Product" asp-route-id="@ViewData["productId"]">
+            <form method="post" asp-action="AddReviewProduct" asp-controller="Product" asp-route-id ="@ViewData["productId"]">
 
                 <!-- Star Rating Input -->
                 <div class="mb-3">
@@ -20,6 +20,7 @@
                         <span class="star" data-value="3">&#9733;</span>
                         <span class="star" data-value="4">&#9733;</span>
                         <span class="star" data-value="5">&#9733;</span>
+
                         <input type="hidden" id="rating" asp-for="Rating" value="0"> <!-- Hidden input to store the selected rating -->
                     </div>
                 </div>
@@ -27,6 +28,7 @@
                 <!-- Comment Text Area -->
                 <div class="mb-3">
                     <label for="comment" class="form-label">Comments</label>
+
                     <textarea class="form-control" asp-for="Comment" id="comment" name="comment" rows="4" required></textarea>
                 </div>
 
@@ -47,6 +49,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
         const submitButton = document.getElementById('submit-btn');
         const stars = document.querySelectorAll('.star');
         const ratingInput = document.getElementById('rating');
