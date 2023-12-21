@@ -1,7 +1,7 @@
 ﻿@model Phone_Shop.Models.Store
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = Model == null ? "Create" : "Edit";
 }
 <div class="container mt-5">
     <div class="row">
@@ -15,10 +15,10 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="text-center">Add Store</h2>
+                        <h2 class="text-center">@ViewData["Title"] Store</h2>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Create">
+                        <form asp-action="@ViewData["Title"]" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="form-group">
@@ -27,29 +27,23 @@
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
 
-                            <div class="form-group">
-                                <label asp-for="Governace" class="control-label">Governorate:</label>
-                                <select asp-for="Governace" class="form-control">
-                                    <option value="">Select Governorate</option>
-                                    @foreach (var governorate in ViewBag.GovernoratesInEgypt)
-                                    {
+                        <div class="form-group">
+                            <label asp-for="Governace" class="control-label">Governorate:</label>
+                            <select asp-for="Governace" class="form-control">
+                                <option value="">Select Governorate</option>
+                                @foreach (var governorate in ViewBag.GovernoratesInEgypt)
+                                {
                                         <option value="@governorate.governorate_name_en">@governorate.governorate_name_en</option>
-                                    }
-                                </select>
-                                <span asp-validation-for="Governace" class="text-danger"></span>
-                            </div>
+                                }
+                            </select>
+                            <span asp-validation-for="Governace" class="text-danger"></span>
+                        </div>
 
-                            <div class="form-group">
-                                <label asp-for="City" class="control-label">City:</label>
-                                <select asp-for="City" class="form-control">
-                                    <option value="">Select City</option>
-                                    @foreach (var city in ViewBag.cityInEgypt)
-                                    {
-                                        <option value="@city">@city.city_name_en</option>
-                                    }
-                                </select>
-                                <span asp-validation-for="City" class="text-danger"></span>
-                            </div>
+                        <div class="form-group">
+                            <label asp-for="City" class="control-label">City:</label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
 
                         <div class="form-group">
                             <label asp-for="Street" class="control-label">Street:</label>
@@ -58,7 +52,7 @@
                         </div>
 
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-success btn-block">Add Store</button>
+                                <button type="submit" class="btn btn-success btn-block">@ViewData["Title"]</button>
                         </div>
                     </form>
                 </div>
