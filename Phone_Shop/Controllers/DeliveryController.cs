@@ -29,7 +29,7 @@ namespace Phone_Shop.Controllers
         public IActionResult OrderDetails(int id)
         {
 
-            var order = _context.Order.SingleOrDefault(p => p.Id == id);
+            var order = _context.Order.SingleOrDefault(o => o.Id == id);
             if (order == null || order.Status=="Checked")
             {
                 return RedirectToAction("Home", "Delivery");
@@ -43,7 +43,7 @@ namespace Phone_Shop.Controllers
             ViewData["account"] = account;
             ViewData["PhoneNumber"] = _context.Users.SingleOrDefault(u=>u.Id== account.Id).PhoneNumber;
             ViewData["PickupAddress"] = PickupAddress;
-            ViewData["TotalPrice"] = _context.OrderItem.Select(oi=>oi.UnitPrice*oi.Quantity).Sum();
+            ViewData["TotalPrice"] = _context.OrderItem.Where(oi => oi.OrderID==id).Select(oi=>oi.UnitPrice*oi.Quantity).Sum();
             return View(_context.OrderItem.Where(oi => oi.OrderID == id).ToList());
         }
 
