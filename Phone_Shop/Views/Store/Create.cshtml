@@ -33,7 +33,7 @@
                                 <option value="">Select Governorate</option>
                                 @foreach (var governorate in ViewBag.GovernoratesInEgypt)
                                 {
-                                    <option value="@governorate">@governorate</option>
+                                        <option value="@governorate">@governorate.governorate_name_en</option>
                                 }
                             </select>
                             <span asp-validation-for="Governace" class="text-danger"></span>
