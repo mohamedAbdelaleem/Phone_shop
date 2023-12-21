@@ -38,6 +38,7 @@
                     <td>@Html.DisplayFor(modelItem => item.Street)</td>
                     <td>
                         <a href="#" class="btn btn-danger delete-link" data-id="@item.Id">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
                     </td>
                 </tr>
             }
@@ -69,6 +70,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var deleteLinks = document.querySelectorAll(".delete-link");
+            var editLinks = document.querySelectorAll(".edit-link");
 
             deleteLinks.forEach(function (link) {
                 link.addEventListener("click", function (event) {
@@ -79,6 +81,14 @@
                     $("#confirmDelete").on("click", function () {
                         window.location.href = "/Store/Delete?id=" + storeId;
                     });
+                });
+            });
+
+            editLinks.forEach(function (link) {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    var storeId = this.getAttribute("data-id");
+                    window.location.href = "/Store/Edit?id=" + storeId;
                 });
             });
 

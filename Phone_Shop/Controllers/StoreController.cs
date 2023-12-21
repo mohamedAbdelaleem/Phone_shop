@@ -49,16 +49,47 @@ namespace Phone_Shop.Controllers
             }
             catch
             {
-                var governoratesInEgypt = _context.Governorates;
+                var governoratesInEgypt = _context.Governorates.ToList();
                 return View();
             }
-            
-          
-
            
         }
 
         [Authorize(Roles = "Seller")]
+        public IActionResult Edit(int? id)
+        {
+            var governoratesInEgypt = _context.Governorates.ToList();
+            ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+            var result = _context.Store.Find(id);
+            return View("Create", result);
+        }
+
+
+        [Authorize(Roles = "Seller")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Store model)
+        {
+
+            var sellerId = _userManager.GetUserId(User);
+            model.SellerId = sellerId;
+
+            try
+            {
+                _context.Store.Update(model);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                var governoratesInEgypt = _context.Governorates.ToList();
+                ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+                return View();
+            }
+
+        }
+
+            [Authorize(Roles = "Seller")]
         public IActionResult Delete(int? id)
         {
             var result = _context.Store.Find(id);
