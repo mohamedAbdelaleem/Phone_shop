@@ -50,7 +50,8 @@ namespace Phone_Shop.Controllers
             catch
             {
                 var governoratesInEgypt = _context.Governorates;
-                var cityInEgypt = _context.Cities;
+                ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+                ViewBag.CitiesInEgypt = new List<City>();
                 return View();
             }
 
@@ -59,8 +60,9 @@ namespace Phone_Shop.Controllers
         [Authorize(Roles = "Seller")]
         public IActionResult Edit(int? id)
         {
-            var governoratesInEgypt = _context.Governorates.ToList();
+            var governoratesInEgypt = _context.Governorates;
             ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+            ViewBag.CitiesInEgypt = new List<City>();
             var result = _context.Store.Find(id);
             return View("Create", result);
         }
@@ -83,8 +85,9 @@ namespace Phone_Shop.Controllers
             }
             catch
             {
-                var governoratesInEgypt = _context.Governorates.ToList();
+                var governoratesInEgypt = _context.Governorates;
                 ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+                ViewBag.CitiesInEgypt = new List<City>();
                 return View();
             }
 
@@ -114,7 +117,6 @@ namespace Phone_Shop.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
         [HttpGet]
         public IActionResult GetCitiesByGovernorate(string governorateName)
         {
