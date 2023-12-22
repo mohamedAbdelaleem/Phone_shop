@@ -1,0 +1,79 @@
+﻿@model Phone_Shop.Models.Store
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2 class="text-center mt-3" style="color: #007bff;">Edit Store</h2>
+<hr />
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Edit" class="border p-4 rounded" style="background-color: #f8f9fa; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label" style="color: #007bff;">Store Name:</label>
+                    <input asp-for="Name" class="form-control" style="border-color: #007bff;" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Governace" class="control-label" style="color: #007bff;">Governorate:</label>
+                    <select id="governorateDropdown" asp-for="Governace" class="form-control" style="border-color: #007bff;">
+                        <option value="">Select Governorate</option>
+                        @foreach (var governorate in ViewBag.GovernoratesInEgypt)
+                        {
+                            <option value="@governorate.governorate_name_en">@governorate.governorate_name_en</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Governace" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="City" class="control-label" style="color: #007bff;">City:</label>
+                    <select asp-for="City" class="form-control" id="cityDropdown" style="border-color: #007bff;">
+                        <option value="">Select City</option>
+                    </select>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Street" class="control-label" style="color: #007bff;">Street:</label>
+                    <input asp-for="Street" class="form-control" style="border-color: #007bff;" />
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center">
+                    <input type="submit" value="Edit" class="btn btn-success btn-block" style="background-color: #28a745; border-color: #28a745;" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <a asp-action="Index" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Your Products</a>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Populate cities based on the selected governorate
+            $("#governorateDropdown").change(function () {
+                var governorateName = $(this).val();
+                $.getJSON("/Store/GetCitiesByGovernorate", { governorateName: governorateName }, function (data) {
+                    var cityDropdown = $("#cityDropdown");
+                    cityDropdown.empty();
+                    cityDropdown.append('<option value="">Select City</option>');
+                    $.each(data, function (index, item) {
+                        cityDropdown.append('<option value="' + item.name + '">' + item.name + '</option>');
+                    });
+                });
+            });
+        });
+    </script>
+}
