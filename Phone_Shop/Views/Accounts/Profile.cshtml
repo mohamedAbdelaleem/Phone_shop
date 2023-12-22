@@ -418,10 +418,26 @@
                             <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c7a3a2bea3a2be87b3afa282aaa6aeabe9a4a8aa">@user.Email</a></p>
                           </div>
                     <ul class="nav nav-pills nav-stacked">
-                        <li class="active"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
-                            <li><a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"> <i class="fa fa-edit"></i> Edit Your Password</a></li>
-                          <li><a asp-controller="Accounts" asp-action="Edit" asp-route-id="@user.Id"> <i class="fa fa-edit"></i> Edit profile</a></li>
-                    </ul>
+                        <li class="active col-lg-12"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
+                        <li class="col-lg-12"><a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"> <i class="fa fa-edit"></i> Edit profile</a></li>
+                            <li class="col-lg-12"><a asp-area="Identity" asp-page=""> <i class="fa fa-"></i> Order History</a></li>
+
+                            @if (User.IsInRole("Seller"))
+                            {
+                                <li class="col-lg-12">
+                                    <a asp-area="Identity" asp-page="">
+                                        <i class="fa fa-"></i> My Stores
+                                    </a>
+                                </li>
+                                <li class="col-lg-12">
+                                    <a asp-area="Identity" asp-page="">
+                                        <i class="fa fa-"></i> My Products
+                                    </a>
+                                </li>
+                            }
+
+                            
+                        </ul>
                 </div>
             </div>
             <div class="profile-info col-md-9">
@@ -443,10 +459,7 @@
                                 <p><span>Email </span>: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f79d849a9e839fb7919b96839b9695d994989a">@user.Email</a></p>
                             </div>
                            
-                                <div class="bio-row">
-                                   
-                                    <p><span>Country </span>:</p>
-                                </div>
+                               
                         </div>
                     </div>
                 </div>

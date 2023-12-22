@@ -39,6 +39,8 @@ namespace Phone_Shop.Controllers
         }
 
 
+   
+
 
         // GET: Accounts
         public async Task<IActionResult> Index()
