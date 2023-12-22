@@ -40,13 +40,13 @@
 
             <div class="form-group">
                 <label asp-for="Input.Photo" class="control-label"></label>
-                <input asp-for="Input.Photo" type="file" name="Input.Photo" class="form-control" autocomplete="Photo" aria-required="true" placeholder="Photo" />
+                <input asp-for="Input.Photo" type="file" name="Input.Photo" class="form-control" autocomplete="Photo" aria-required="true" placeholder="Photo" style="margin-bottom:20px" />
                 <span asp-validation-for="Input.Photo" class="text-danger"></span>
             </div>
 
             <div>
-                <label asp-for="Input.Role" for="selectField">Select a Role:</label>
-                <select id="selectField" asp-for="Input.Role" class="form-select" aria-label="Default select example">
+                <label asp-for="Input.Role" for="selectField" >Select a Role:</label>
+                <select id="selectField" asp-for="Input.Role" style="margin-bottom:20px" class="form-select" aria-label="Default select example">
                     <option selected value="Customer">Customer</option>
                     <option value="Seller">Seller</option>
 
