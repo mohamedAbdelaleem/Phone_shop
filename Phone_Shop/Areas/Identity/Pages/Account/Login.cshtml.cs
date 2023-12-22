@@ -126,6 +126,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                     var isDelivery = await _userManager.IsInRoleAsync(user, "Delivery");
                     var cart = ShoppingCart.GetCart(this.HttpContext, _context);
                     cart.MigrateCart(user.Email);
+                    HttpContext.Session.SetString("CartId", user.Email);
                     if (isAdmin)
                     {
                         return RedirectToAction("Home", "Admin");

@@ -163,6 +163,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                     await accountsController.Create(user, Input.Name, Input.Photo);
                     var cart = ShoppingCart.GetCart(this.HttpContext, _context);
                     cart.MigrateCart(user.Email);
+                    HttpContext.Session.SetString("CartId", user.Email);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
