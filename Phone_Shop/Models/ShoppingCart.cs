@@ -7,23 +7,23 @@ namespace Phone_Shop.Models
 {
     public class ShoppingCart
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _context;
         public string ShoppingCartId { get; set; }
 
         public const string CartSessionKey = "CartId";
-        public ShoppingCart(ApplicationDbContext db)
+        public ShoppingCart(ApplicationDbContext context)
         {
-            _db = db;
+            _context = context;
         }
-        public static ShoppingCart GetCart(HttpContext context, ApplicationDbContext db)
+        public static ShoppingCart GetCart(HttpContext Httpcontext, ApplicationDbContext context)
         {
-            var cart = new ShoppingCart(db);
-            cart.ShoppingCartId = cart.GetCartId(context);
+            var cart = new ShoppingCart(context);
+            cart.ShoppingCartId = cart.GetCartId(Httpcontext);
             return cart;
         }
-        public static ShoppingCart GetCart(Controller controller, ApplicationDbContext db)
+        public static ShoppingCart GetCart(Controller controller, ApplicationDbContext context)
         {
-            return GetCart(controller.HttpContext, db);
+            return GetCart(controller.HttpContext, context);
         }
         public string GetCartId(HttpContext context)
         {
@@ -43,7 +43,7 @@ namespace Phone_Shop.Models
         }
         public void AddToCart(Product product,int qty)
         {
-            var cartItem = _db.ShoppingCartItems.SingleOrDefault(
+            var cartItem = _context.ShoppingCartItems.SingleOrDefault(
                 c => c.CartId == ShoppingCartId
                 && c.ProductId == product.Id);
 
@@ -56,17 +56,17 @@ namespace Phone_Shop.Models
                     Quantity = qty,
                     DateCreated = DateTime.Now
                 };
-                _db.ShoppingCartItems.Add(cartItem);
+                _context.ShoppingCartItems.Add(cartItem);
             }
             else
             {
                 cartItem.Quantity=Math.Min(product.Amount, cartItem.Quantity+qty);
             }
-            _db.SaveChanges();
+            _context.SaveChanges();
         }
         public void UpdateCart(Product product, int qty)
         {
-            var cartItem = _db.ShoppingCartItems.SingleOrDefault(
+            var cartItem = _context.ShoppingCartItems.SingleOrDefault(
                 c => c.CartId == ShoppingCartId
                 && c.ProductId == product.Id);
 
@@ -79,35 +79,35 @@ namespace Phone_Shop.Models
                     Quantity = qty,
                     DateCreated = DateTime.Now
                 };
-                _db.ShoppingCartItems.Add(cartItem);
+                _context.ShoppingCartItems.Add(cartItem);
             }
             else
             {
                 cartItem.Quantity = qty;
             }
-            _db.SaveChanges();
+            _context.SaveChanges();
         }
         public void EmptyCart()
         {
-            var cartItems = _db.ShoppingCartItems.Where(
+            var cartItems = _context.ShoppingCartItems.Where(
                 cart => cart.CartId == ShoppingCartId);
 
             foreach (var cartItem in cartItems)
             {
-                _db.ShoppingCartItems.Remove(cartItem);
+                _context.ShoppingCartItems.Remove(cartItem);
             }
-            _db.SaveChanges();
+            _context.SaveChanges();
         }
         public int GetCount()
         {
-            int? count = (from cartItems in _db.ShoppingCartItems
+            int? count = (from cartItems in _context.ShoppingCartItems
                           where cartItems.CartId == ShoppingCartId
                           select (int?)cartItems.Quantity).Sum();
             return count ?? 0;
         }
         public decimal GetTotal()
         {
-            decimal? total = (from cartItems in _db.ShoppingCartItems
+            decimal? total = (from cartItems in _context.ShoppingCartItems
                               where cartItems.CartId == ShoppingCartId
                               select (int?)cartItems.Quantity *
                               cartItems.Product.Price).Sum();
@@ -129,32 +129,33 @@ namespace Phone_Shop.Models
                 };
                 orderTotal += (item.Quantity * item.Product.Price);
 
-                _db.OrderItem.Add(orderItem);
+                _context.OrderItem.Add(orderItem);
 
             }
             order.TotalPrice = orderTotal;
-            _db.SaveChanges();
+            _context.SaveChanges();
             EmptyCart();
         }
         public void MigrateCart(string userName)
         {
-            var shoppingCart = _db.ShoppingCartItems.Where(
+            var shoppingCart = _context.ShoppingCartItems.Where(
                 c => c.CartId == ShoppingCartId);
 
             foreach (CartItem item in shoppingCart)
             {
                 item.CartId = userName;
             }
+            
             ShoppingCartId = userName;
-            _db.SaveChanges();
+            _context.SaveChanges();
         }
         public List<CartItem> GetCartItems()
         {
-            List<CartItem> CartItems = _db.ShoppingCartItems.Where(
+            List<CartItem> CartItems = _context.ShoppingCartItems.Where(
                 cart => cart.CartId == ShoppingCartId).ToList();
             foreach (var item in CartItems)
             {
-                item.Product = _db.Product.Single(x => x.Id == item.ProductId);
+                item.Product = _context.Product.Single(x => x.Id == item.ProductId);
             }
             return CartItems;
         }
