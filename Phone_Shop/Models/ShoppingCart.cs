@@ -8,7 +8,7 @@ namespace Phone_Shop.Models
     public class ShoppingCart
     {
         private readonly ApplicationDbContext _context;
-        public string ShoppingCartId { get; set; }
+        public static string ShoppingCartId { get; set; }
 
         public const string CartSessionKey = "CartId";
         public ShoppingCart(ApplicationDbContext context)
@@ -18,7 +18,8 @@ namespace Phone_Shop.Models
         public static ShoppingCart GetCart(HttpContext Httpcontext, ApplicationDbContext context)
         {
             var cart = new ShoppingCart(context);
-            cart.ShoppingCartId = cart.GetCartId(Httpcontext);
+            if(ShoppingCart.ShoppingCartId==null)
+            ShoppingCart.ShoppingCartId = cart.GetCartId(Httpcontext);
             return cart;
         }
         public static ShoppingCart GetCart(Controller controller, ApplicationDbContext context)
@@ -39,7 +40,7 @@ namespace Phone_Shop.Models
                     context.Session.SetString(CartSessionKey, tempCartId.ToString());
                 }
             }
-            return ShoppingCartId=context.Session.GetString(CartSessionKey);
+            return context.Session.GetString(CartSessionKey);
         }
         public void AddToCart(Product product,int qty)
         {

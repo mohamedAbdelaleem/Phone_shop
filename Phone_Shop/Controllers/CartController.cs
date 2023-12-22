@@ -11,16 +11,14 @@ namespace Phone_Shop.Controllers
 
     public class CartController : Controller
     {
-        private readonly ApplicationDbContext _db;
-
-        public const string CartSessionKey = "CartId";
-        public CartController(ApplicationDbContext db)
+        private readonly ApplicationDbContext _context;
+        public CartController(ApplicationDbContext context)
         {
-            _db = db;
+            _context = context;
         }
         public ActionResult Index()
         {
-            var cart = ShoppingCart.GetCart(this.HttpContext,_db);
+            var cart = ShoppingCart.GetCart(this.HttpContext,_context);
 
             var viewModel = new ShoppingCartViewModel
             {
@@ -32,7 +30,7 @@ namespace Phone_Shop.Controllers
         [HttpPost]
         public IActionResult ClearCart()
         {
-            var cart = ShoppingCart.GetCart(this.HttpContext, _db);
+            var cart = ShoppingCart.GetCart(this.HttpContext, _context);
             cart.EmptyCart();
             var jsonData = new
             {
@@ -42,12 +40,12 @@ namespace Phone_Shop.Controllers
         }
         public ActionResult AddToCart(int Id, int qty)
         {
-            var addedProduct = _db.Product
+            var addedProduct = _context.Product
                 .Single(product => product.Id == Id);
 
             if (qty > 0 && qty <= addedProduct.Amount)
             {
-                var cart = ShoppingCart.GetCart(this.HttpContext, _db);
+                var cart = ShoppingCart.GetCart(this.HttpContext, _context);
                 cart.AddToCart(addedProduct,qty);
                 TempData["AddToCartMessage"] = "Product added to cart successfully!";
             }
@@ -60,23 +58,22 @@ namespace Phone_Shop.Controllers
         }
         public ActionResult UpdateCart(int Id, int qty)
         {
-            var addedProduct = _db.Product
+            var addedProduct = _context.Product
                 .Single(product => product.Id == Id);
 
-              var cart = ShoppingCart.GetCart(this.HttpContext, _db);
+              var cart = ShoppingCart.GetCart(this.HttpContext, _context);
               cart.UpdateCart(addedProduct, qty);
             return RedirectToAction("Index");
         }
         [HttpPost]
         public ActionResult RemoveFromCart(int ProductId)
         {
-            var cart = ShoppingCart.GetCart(this.HttpContext, _db);
-            var removedItem = _db.ShoppingCartItems
-                .SingleOrDefault(item => item.ProductId == ProductId && item.CartId==cart.ShoppingCartId);
+            var removedItem = _context.ShoppingCartItems
+                .SingleOrDefault(item => item.ProductId == ProductId && item.CartId==ShoppingCart.ShoppingCartId);
             if (removedItem != null)
             {
-                _db.ShoppingCartItems.Remove(removedItem);
-                _db.SaveChanges();
+                _context.ShoppingCartItems.Remove(removedItem);
+                _context.SaveChanges();
             }
 
             var jsonData = new
@@ -88,7 +85,7 @@ namespace Phone_Shop.Controllers
         [System.Web.Mvc.ChildActionOnly]
         public ActionResult CartSummary()
         {
-            var cart = ShoppingCart.GetCart(this.HttpContext,_db);
+            var cart = ShoppingCart.GetCart(this.HttpContext,_context);
 
             ViewData["CartCount"] = cart.GetCount();
             return PartialView("CartSummary");
