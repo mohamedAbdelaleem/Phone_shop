@@ -33,7 +33,7 @@ public class OrderController : Controller
         if (ModelState.IsValid)
         {
             var cart = ShoppingCart.GetCart(this.HttpContext, _db);
-            var user = _db.Users.Single(u => u.Email == cart.ShoppingCartId);
+            var user = _db.Users.SingleOrDefault(u => u.Email == cart.ShoppingCartId);
             ViewModel.Address.UserId = user.Id;
             ViewModel.Address.User = user;
             _db.PickupAddress.Add(ViewModel.Address);
@@ -43,7 +43,7 @@ public class OrderController : Controller
                 UserId = user.Id,
                 OrderedAt = DateTime.Now,
                 PickupAddressId=ViewModel.Address.AddressId,
-                Status="Confirmed",
+                Status= "UnChecked",
                 PickupAddress=ViewModel.Address,
                 User=user
             };
