@@ -15,7 +15,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
+        private  ApplicationDbContext context;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
@@ -30,6 +30,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
             ILogger<RegisterModel> logger,
             IWebHostEnvironment hostingEnvironment)
         {
+            context = context;
             _userManager = userManager;
             _userStore = userStore;
             _signInManager = signInManager;
@@ -69,7 +70,13 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "Name")]
+            public string Name { get; set; }
+            [Display(Name = "Photo")]
+            public IFormFile Photo { get; set; }
         }
+
+
 
         private async Task LoadAsync(IdentityUser user)
         {

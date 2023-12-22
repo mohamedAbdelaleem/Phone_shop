@@ -403,79 +403,82 @@
 <body>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <div class="container bootstrap snippets bootdey">
-                         @foreach (var user in Model)
-                         {
-        <div class="row" style="margin-bottom:50px">
-            <div class="profile-nav col-md-3">
-                <div class="panel">
-                    <div class="user-heading round">
-                        <a href="#">
-                            <img src="@user.Photo" alt>
-                        </a>
-                       
+        @foreach (var user in Model)
+        {
+            <div class="row" style="margin-bottom:50px">
+                <div class="profile-nav col-md-3">
+                    <div class="panel">
+                        <div class="user-heading round">
+                            <a href="#">
+                                <img src="@user.Photo" alt>
+                            </a>
+
 
                             <h1>@user.Name</h1>
                             <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c7a3a2bea3a2be87b3afa282aaa6aeabe9a4a8aa">@user.Email</a></p>
-                          </div>
-                    <ul class="nav nav-pills nav-stacked">
-                        <li class="active col-lg-12"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
-                        <li class="col-lg-12"><a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"> <i class="fa fa-edit"></i> Edit profile</a></li>
+                        </div>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li class="active col-lg-12"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
+                            <li class="col-lg-12"><a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"> <i class="fa fa-edit"></i> Edit profile</a></li>
                             <li class="col-lg-12"><a asp-area="Identity" asp-page=""> <i class="fa fa-"></i> Order History</a></li>
 
                             @if (User.IsInRole("Seller"))
                             {
+
                                 <li class="col-lg-12">
-                                    <a asp-area="Identity" asp-page="">
+                                    <a asp-controller="Store" asp-action="Index" asp-route-id="@user.Id">
                                         <i class="fa fa-"></i> My Stores
                                     </a>
                                 </li>
                                 <li class="col-lg-12">
-                                    <a asp-area="Identity" asp-page="">
+                                    <a asp-controller="Product" asp-action="Index" asp-route-id="@user.Id">
                                         <i class="fa fa-"></i> My Products
                                     </a>
                                 </li>
+
                             }
 
-                            
+
                         </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="profile-info col-md-9">
-              
-                <div class="panel">
-                   
-                    <div class="panel-body bio-graph-info">
+                <div class="profile-info col-md-9">
+
+                    <div class="panel">
+
+                        <div class="panel-body bio-graph-info">
                             <h1>Account Information</h1><br>
-                        <div class="row">
-                            <div class="bio-row">
-                                <p><span> Name </span>:@user.Name</p>
-                            </div>
+                            <div class="row">
+                                <div class="bio-row">
+                                    <p><span> Name </span>:@user.Name</p>
+                                </div>
 
                                 <div class="bio-row">
                                     <p><span>Mobile </span>: @ViewData["PhoneNumber"]</p>
                                 </div>
 
-                            <div class="bio-row">
-                                <p><span>Email </span>: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f79d849a9e839fb7919b96839b9695d994989a">@user.Email</a></p>
+                                <div class="bio-row">
+                                    <p><span>Email </span>: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f79d849a9e839fb7919b96839b9695d994989a">@user.Email</a></p>
+                                </div>
+
+
                             </div>
-                           
-                               
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="row">
-                     
-                        <div class="col-md-6">
-                            <div class="panel">
-                                <div class="panel-body">
-                                    <div class="bio-chart">
-                                        <div style="display:inline;width:100px;height:100px;"><canvas width="100" height="100px"></canvas><input class="knob" data-width="100" data-height="100" data-displayprevious="true" data-thickness=".2" value="" data-fgcolor="#cba4db" data-bgcolor="#e8e8e8" style="width: 54px; height: 33px; position: absolute; vertical-align: middle; margin-top: 33px; margin-left: -77px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 20px; line-height: normal; font-family: Arial; text-align: center; color: rgb(203, 164, 219); padding: 0px; -webkit-appearance: none; background: none;"></div>
-                                    </div>
-                                    <div class="bio-desk">
-                                        <h4 class="purple">My Orders</h4>
-                                        
-                                     
+                    <div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <div class="bio-chart">
+                                            <div style="display:inline;width:100px;height:100px;"><canvas width="100" height="100px"></canvas><input class="knob" data-width="100" data-height="100" data-displayprevious="true" data-thickness=".2" value="" data-fgcolor="#cba4db" data-bgcolor="#e8e8e8" style="width: 54px; height: 33px; position: absolute; vertical-align: middle; margin-top: 33px; margin-left: -77px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 20px; line-height: normal; font-family: Arial; text-align: center; color: rgb(203, 164, 219); padding: 0px; -webkit-appearance: none; background: none;"></div>
+                                        </div>
+                                        <div class="bio-desk">
+                                            <h4 class="purple">My Orders</h4>
+
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -483,8 +486,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    }</div>
+        }
+    </div>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
