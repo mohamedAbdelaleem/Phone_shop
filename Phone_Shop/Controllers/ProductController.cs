@@ -187,7 +187,7 @@ namespace Phone_Shop.Controllers
             {
                 return false;
             }
-            var orderItem = _context.Order.Where(o => o.UserId == userId).Join(_context.OrderItem,
+            var orderItem = _context.Order.Where(o => o.UserId == userId).OrderBy(o => o.OrderedAt).Join(_context.OrderItem,
                                                                         o => o.Id,
                                                                         oItem => oItem.OrderID,
                                                                         (o, oItem) => oItem)
