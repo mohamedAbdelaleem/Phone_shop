@@ -1,5 +1,6 @@
 ﻿using Humanizer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
@@ -58,10 +59,24 @@ namespace Phone_Shop.Controllers
 
         public IQueryable<Product> SearchProducts(string searchInput)
         {
-            var products = _context.Product.Where(p => EF.Functions.FreeText(p.Name, searchInput)
-                                                        || EF.Functions.FreeText(p.Description, searchInput));
-            
-            return products;
+            // using FreeText function require a full-text index to be configured.
+            try
+            {
+                var products = _context.Product.Where(p => EF.Functions.FreeText(p.Name, searchInput)
+                                                            || EF.Functions.FreeText(p.Description, searchInput));
+
+                products.Count();
+
+                return products;
+            }
+            catch (SqlException ex)
+            {
+                
+                var products = _context.Product.Where(p => p.Name.Contains(searchInput)
+                                                            || p.Description.Contains(searchInput));
+                return products;
+
+            }
 
         }
 
