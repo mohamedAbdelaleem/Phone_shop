@@ -34,18 +34,38 @@ namespace Phone_Shop.Controllers
         {
             var cart = ShoppingCart.GetCart(this.HttpContext, _db);
             cart.EmptyCart();
-            return RedirectToAction("Index");
+            var jsonData = new
+            {
+                Message = "Cart cleared successfully."
+            };
+            return Json(jsonData);
         }
-        public ActionResult AddToCart(int Id)
+        public ActionResult AddToCart(int Id, int qty)
         {
             var addedProduct = _db.Product
                 .Single(product => product.Id == Id);
 
-            var cart = ShoppingCart.GetCart(this.HttpContext,_db);
-
-            cart.AddToCart(addedProduct);
+            if (qty > 0 && qty <= addedProduct.Amount)
+            {
+                var cart = ShoppingCart.GetCart(this.HttpContext, _db);
+                cart.AddToCart(addedProduct,qty);
+                TempData["AddToCartMessage"] = "Product added to cart successfully!";
+            }
+            else
+            {
+                TempData["AddToCartMessage"] = "Invalid quantity. Please choose a valid quantity.";
+            }
 
             return RedirectToAction("ProductDetail", "Product", new {id=Id});
+        }
+        public ActionResult UpdateCart(int Id, int qty)
+        {
+            var addedProduct = _db.Product
+                .Single(product => product.Id == Id);
+
+              var cart = ShoppingCart.GetCart(this.HttpContext, _db);
+              cart.UpdateCart(addedProduct, qty);
+            return RedirectToAction("Index");
         }
         [HttpPost]
         public ActionResult RemoveFromCart(int ProductId)

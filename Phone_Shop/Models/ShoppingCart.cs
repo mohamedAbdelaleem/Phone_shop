@@ -41,7 +41,7 @@ namespace Phone_Shop.Models
             }
             return ShoppingCartId=context.Session.GetString(CartSessionKey);
         }
-        public void AddToCart(Product product)
+        public void AddToCart(Product product,int qty)
         {
             var cartItem = _db.ShoppingCartItems.SingleOrDefault(
                 c => c.CartId == ShoppingCartId
@@ -53,14 +53,37 @@ namespace Phone_Shop.Models
                 {
                     ProductId = product.Id,
                     CartId = ShoppingCartId,
-                    Quantity = 1,
+                    Quantity = qty,
                     DateCreated = DateTime.Now
                 };
                 _db.ShoppingCartItems.Add(cartItem);
             }
             else
             {
-                cartItem.Quantity++;
+                cartItem.Quantity=Math.Min(product.Amount, cartItem.Quantity+qty);
+            }
+            _db.SaveChanges();
+        }
+        public void UpdateCart(Product product, int qty)
+        {
+            var cartItem = _db.ShoppingCartItems.SingleOrDefault(
+                c => c.CartId == ShoppingCartId
+                && c.ProductId == product.Id);
+
+            if (cartItem == null)
+            {
+                cartItem = new CartItem
+                {
+                    ProductId = product.Id,
+                    CartId = ShoppingCartId,
+                    Quantity = qty,
+                    DateCreated = DateTime.Now
+                };
+                _db.ShoppingCartItems.Add(cartItem);
+            }
+            else
+            {
+                cartItem.Quantity = qty;
             }
             _db.SaveChanges();
         }
@@ -91,15 +114,9 @@ namespace Phone_Shop.Models
 
             return total ?? decimal.Zero;
         }
-        public Order CreateOrder()
+        public void CreateOrder(Order order)
         {
             decimal orderTotal = 0;
-            Order order = new Order
-            {
-                UserId = ShoppingCartId,
-                OrderedAt = DateTime.Now,
-            };
-
             var cartItems = GetCartItems();
             foreach (var item in cartItems)
             {
@@ -118,7 +135,6 @@ namespace Phone_Shop.Models
             order.TotalPrice = orderTotal;
             _db.SaveChanges();
             EmptyCart();
-            return order;
         }
         public void MigrateCart(string userName)
         {
@@ -129,6 +145,7 @@ namespace Phone_Shop.Models
             {
                 item.CartId = userName;
             }
+            ShoppingCartId = userName;
             _db.SaveChanges();
         }
         public List<CartItem> GetCartItems()

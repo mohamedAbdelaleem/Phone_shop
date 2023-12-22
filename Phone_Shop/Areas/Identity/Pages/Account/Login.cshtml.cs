@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using Phone_Shop.Models;
+using Phone_Shop.Data;
 
 namespace Phone_Shop.Areas.Identity.Pages.Account
 {
@@ -22,13 +25,14 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly UserManager<IdentityUser> _userManager;
-
+        private readonly ApplicationDbContext _context;
         public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger
-                            , UserManager<IdentityUser> userManager)
+                            , UserManager<IdentityUser> userManager, ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
+            _context = context;
         }
 
         /// <summary>
@@ -120,6 +124,8 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
                     var isDelivery = await _userManager.IsInRoleAsync(user, "Delivery");
+                    var cart = ShoppingCart.GetCart(this.HttpContext, _context);
+                    cart.MigrateCart(user.Email);
                     if (isAdmin)
                     {
                         return RedirectToAction("Home", "Admin");

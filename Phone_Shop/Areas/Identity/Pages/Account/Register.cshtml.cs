@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Phone_Shop.Data;
 using Microsoft.AspNetCore.Hosting;
+using Phone_Shop.Models;
 
 namespace Phone_Shop.Areas.Identity.Pages.Account
 {
@@ -160,6 +161,8 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                     AccountsController accountsController = new AccountsController(_context, _hostingEnvironment,_userManager);
                     await accountsController.Create(user, Input.Name, Input.Photo);
+                    var cart = ShoppingCart.GetCart(this.HttpContext, _context);
+                    cart.MigrateCart(user.Email);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
