@@ -17,8 +17,8 @@ namespace Phone_Shop.Models
         public int GovernorateId { get; set; }
         [Required(ErrorMessage = "City is required"),ForeignKey("City"), DisplayName("City")]
         public int CityId { get; set; }
-        [Required(ErrorMessage = "Address Description is required"), DisplayName("Description")]
-        public string Description { get; set; }
+        [Required(ErrorMessage = "Address Additional Information is required"), DisplayName("Additional Information")]
+        public string AdditionalInfo { get; set; }
         [Required(ErrorMessage = "Please enter a valid phone number."), DisplayName("Phone Number")]
         [RegularExpression(@"^01[0-9]{9}$", ErrorMessage = "Please enter a valid Egyptian phone number.")]
         public string PhoneNumber { get; set; }

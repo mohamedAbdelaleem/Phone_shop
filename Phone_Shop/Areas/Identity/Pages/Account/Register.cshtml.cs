@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Phone_Shop.Data;
 using Microsoft.AspNetCore.Hosting;
+using Phone_Shop.Models;
 
 namespace Phone_Shop.Areas.Identity.Pages.Account
 {
@@ -150,6 +151,9 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var cart = ShoppingCart.GetCart(this.HttpContext, _context);
+                    string email = _context.Account.Single(a => a.Id == userId).Email;
+                    cart.MigrateCart(email);
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,

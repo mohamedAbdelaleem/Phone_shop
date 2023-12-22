@@ -1,69 +1,107 @@
 ﻿@model Phone_Shop.ViewModel.CheckoutViewModel
 
-<h2>Checkout</h2>
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-@using (Html.BeginForm("Index", "Order", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Address.PhoneNumber)
-        @Html.TextBoxFor(m => m.Address.PhoneNumber, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Address.PhoneNumber, "", new { @class = "text-danger" })
-    </div>
+    .container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-top: 50px;
+    }
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Address.GovernorateId)
-        @Html.DropDownListFor(m => m.Address.GovernorateId, new SelectList(Model.Governorates, "Id", "governorate_name_ar"), "-- Select Governorate --", new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Address.GovernorateId, "", new { @class = "text-danger" })
-    </div>
+    h2 {
+        color: #007bff;
+    }
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Address.CityId)
-        @Html.DropDownListFor(m => m.Address.CityId, new SelectList(Model.Cities, "Id", "city_name_ar"), "-- Select City --", new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Address.CityId, "", new { @class = "text-danger" })
-    </div>
+    .form-group {
+        margin-bottom: 20px;
+    }
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Address.Description)
-        @Html.TextAreaFor(m => m.Address.Description, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Address.Description, "", new { @class = "text-danger",placeholder = "من فضلك ادخل بيانات لتحديد مكانك بشكل افضل مثل اسم الشارع او اسم القرية الخ ....." })
-    </div>
-    <div class="row mt-2">
-        <div class="col-md-4">
-            <button type="submit" class="btn btn-primary">Confirm</button>
+    label {
+        font-weight: bold;
+        color: #495057;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .text-danger {
+        color: #dc3545;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2 class="text-center mb-4">Checkout</h2>
+            <form asp-action="Index" method="post">
+                <!-- Dropdown for Governorates -->
+                <div class="form-group">
+                    <label asp-for="Address.GovernorateId" class="control-label">Governorate:</label>
+                    <select asp-for="Address.GovernorateId" asp-items="new SelectList(Model.Governorates, nameof(Phone_Shop.Models.Governorate.Id), nameof(Phone_Shop.Models.Governorate.governorate_name_en))" class="form-control" id="governorateDropdown">
+                        <option value="">Select Governorate</option>
+                    </select>
+                    <span asp-validation-for="Address.GovernorateId" class="text-danger"></span>
+                </div>
+                <!-- Dropdown for Cities -->
+                <div class="form-group">
+                    <label asp-for="Address.CityId" class="control-label">City:</label>
+                    <select asp-for="Address.CityId" class="form-control" id="cityDropdown">
+                        <option value="">Select City</option>
+                    </select>
+                    <span asp-validation-for="Address.CityId" class="text-danger"></span>
+                </div>
+                <!-- Display pickup address form fields -->
+                <div class="form-group">
+                    <label asp-for="Address.AdditionalInfo" class="control-label">Additional Information:</label>
+                    <input asp-for="Address.AdditionalInfo" class="form-control" placeholder="Enter additional information like your street or village" />
+                    <span asp-validation-for="Address.AdditionalInfo" class="text-danger"></span>
+                </div>
+                <!-- Display pickup address form fields -->
+                <div class="form-group">
+                    <label asp-for="Address.PhoneNumber" class="control-label">Phone Number:</label>
+                    <input asp-for="Address.PhoneNumber" class="form-control" placeholder="Enter phone number" />
+                    <span asp-validation-for="Address.PhoneNumber" class="text-danger"></span>
+                </div>
+                <!-- Submit button -->
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Place Order</button>
+                </div>
+            </form>
         </div>
-        <div class="col-md-4 text-right">
-            <a class="btn btn-success" href="@Url.Action("Index", "Cart")">Cancel</a>
-        </div>
     </div>
-}  
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</div>
+
 @section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         $(document).ready(function () {
-            var governorateDropdown = $("#Address_GovernorateId");
-            var cityDropdown = $("#Address_CityId");
-
-            governorateDropdown.change(function () {
-                var selectedGovernorateId = governorateDropdown.val();
-
-                $.ajax({
-                    type: "GET",
-                    url: "/Order/GetCities",  
-                    data: { governorateId: selectedGovernorateId },
-                    success: function (cities) {
-                        cityDropdown.empty();
-
-                        $.each(cities, function (i, city) {
-                            cityDropdown.append(
-                                $('<option></option>').val(city.CityId).html(city.city_name_ar)
-                            );
-                        });
-                    },
-                    error: function () {
-                        console.log("Error fetching cities");
-                    }
+            // Populate cities based on the selected governorate
+            $("#governorateDropdown").change(function () {
+                var governorateId = $(this).val();
+                $.getJSON("/Order/GetCities", { governorateId: governorateId }, function (data) {
+                    var cityDropdown = $("#cityDropdown");
+                    cityDropdown.empty();
+                    cityDropdown.append('<option value="">Select City</option>');
+                    $.each(data, function (index, item) {
+                        cityDropdown.append('<option value="' + item.id + '">' + item.city_name_en + '</option>');
+                    });
                 });
             });
         });

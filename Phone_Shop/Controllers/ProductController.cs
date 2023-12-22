@@ -35,7 +35,7 @@ namespace Phone_Shop.Controllers
             return View();
         }
 
-
+            
 
         [Authorize(Roles = "Seller")]
         [HttpPost]
