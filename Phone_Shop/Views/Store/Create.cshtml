@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = Model == null ? "Create" : "Edit";
 }
+
 <div class="container mt-5">
     <div class="row">
         <div class="col-12">
@@ -10,63 +11,81 @@
         </div>
     </div>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
                         <h2 class="text-center">@ViewData["Title"] Store</h2>
-                </div>
-                <div class="card-body">
+                    </div>
+                    <div class="card-body">
                         <form asp-action="@ViewData["Title"]" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="form-group">
-                            <label asp-for="Name" class="control-label">Store Name:</label>
-                            <input asp-for="Name" class="form-control" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label">Store Name:</label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
 
-                        <div class="form-group">
-                            <label asp-for="Governace" class="control-label">Governorate:</label>
-                            <select asp-for="Governace" class="form-control">
-                                <option value="">Select Governorate</option>
-                                @foreach (var governorate in ViewBag.GovernoratesInEgypt)
-                                {
-                                        <option value="@governorate.governorate_name_en">@governorate.governorate_name_en</option>
-                                }
-                            </select>
-                            <span asp-validation-for="Governace" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label asp-for="City" class="control-label">City:</label>
-                                <select asp-for="City" class="form-control">
-                                    <option value="">Select City</option>
-                                    @foreach (var city in ViewBag.cityInEgypt)
+                            <div class="form-group">
+                                <label asp-for="Governace" class="control-label">Governorate:</label>
+                                <select id="governorateDropdown" asp-for="Governace" class="form-control">
+                                    <option value="">Select Governorate</option>
+                                    @foreach (var governorate in ViewBag.GovernoratesInEgypt)
                                     {
-                                        <option value="@city">@city.city_name_en</option>
+                                        <option value="@governorate.governorate_name_en">@governorate.governorate_name_en</option>
                                     }
                                 </select>
-                            <span asp-validation-for="City" class="text-danger"></span>
-                        </div>
+                                <span asp-validation-for="Governace" class="text-danger"></span>
+                            </div>
 
-                        <div class="form-group">
-                            <label asp-for="Street" class="control-label">Street:</label>
-                            <input asp-for="Street" class="form-control" />
-                            <span asp-validation-for="Street" class="text-danger"></span>
-                        </div>
+                            <div class="form-group">
+                                <label asp-for="City" class="control-label">City:</label>
+                                <select asp-for="City" class="form-control" id="cityDropdown">
+                                    <option value="">Select City</option>
+                                </select>
+                                <span asp-validation-for="City" class="text-danger"></span>
+                            </div>
 
-                        <div class="form-group text-center">
+                            <div class="form-group">
+                                <label asp-for="Street" class="control-label">Street:</label>
+                                <input asp-for="Street" class="form-control" />
+                                <span asp-validation-for="Street" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group text-center">
                                 <button type="submit" class="btn btn-success btn-block">@ViewData["Title"]</button>
-                        </div>
-                    </form>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="text-center mt-3">
-        <a asp-action="Index" class="btn btn-primary">Your Stores</a>
+        <div class="text-center mt-3">
+            <a asp-action="Index" class="btn btn-primary">Your Stores</a>
+        </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Populate cities based on the selected governorate
+            $("#governorateDropdown").change(function () {
+                var governorateName = $(this).val();
+                $.getJSON("/Store/GetCitiesByGovernorate", { governorateName: governorateName }, function (data) {
+                    var cityDropdown = $("#cityDropdown");
+                    cityDropdown.empty();
+                    cityDropdown.append('<option value="">Select City</option>');
+                    $.each(data, function (index, item) {
+                        cityDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    });
+                });
+            });
+        });
+    </script>
+}
