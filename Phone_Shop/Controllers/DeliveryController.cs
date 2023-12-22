@@ -25,16 +25,14 @@ namespace Phone_Shop.Controllers
 
         }
 
-        [HttpGet]
         public IActionResult OrderDetails(int id)
         {
 
             var order = _context.Order.SingleOrDefault(o => o.Id == id);
-            if (order == null || order.Status=="Checked")
+            if (order == null)
             {
                 return RedirectToAction("Home", "Delivery");
             }
-
 
             var account = _context.Account.SingleOrDefault(a => a.Id == order.UserId);
             var PickupAddress = _context.PickupAddress.SingleOrDefault(p => p.AddressId == order.PickupAddressId);
@@ -43,8 +41,11 @@ namespace Phone_Shop.Controllers
             ViewData["account"] = account;
             ViewData["PhoneNumber"] = _context.Users.SingleOrDefault(u=>u.Id== account.Id).PhoneNumber;
             ViewData["PickupAddress"] = PickupAddress;
+            ViewData["Governorate"] = _context.Governorates.SingleOrDefault(g=>g.Id==PickupAddress.GovernorateId).governorate_name_en;
+            ViewData["City"] = _context.Cities.SingleOrDefault(c=>c.Id==PickupAddress.CityId).city_name_en;
             ViewData["TotalPrice"] = _context.OrderItem.Where(oi => oi.OrderID==id).Select(oi=>oi.UnitPrice*oi.Quantity).Sum();
-            return View(_context.OrderItem.Where(oi => oi.OrderID == id).ToList());
+            var orderitem = _context.OrderItem.Where(oi => oi.OrderID == id).Select(oi=>oi.ProductID).ToList();
+            return View("OrderDetails",_context.Product.Where(p=>orderitem.Contains(p.Id)));
         }
 
         [HttpPost]
