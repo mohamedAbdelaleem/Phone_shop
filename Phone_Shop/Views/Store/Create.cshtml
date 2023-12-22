@@ -27,25 +27,6 @@
                                 <input asp-for="Name" class="form-control" />
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
-
-<<<<<<< HEAD
-                        <div class="form-group">
-                            <label asp-for="Governace" class="control-label">Governorate:</label>
-                                <select asp-for="Governace" class="form-control" id="governorateDropdown">
-                                <option value="">Select Governorate</option>
-                                @foreach (var governorate in ViewBag.GovernoratesInEgypt)
-                                {
-                                        <option value="@governorate.governorate_name_en">@governorate.governorate_name_en</option>
-                                }
-                            </select>
-                            <span asp-validation-for="Governace" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label asp-for="City" class="control-label">City:</label>
-                                <select asp-for="City" class="form-control" id="cityDropdown">
-                                    <option value="">Select City</option>
-=======
                             <div class="form-group">
                                 <label asp-for="Governace" class="control-label">Governorate:</label>
                                 <select id="governorateDropdown" asp-for="Governace" class="form-control">
@@ -54,7 +35,6 @@
                                     {
                                         <option value="@governorate.governorate_name_en">@governorate.governorate_name_en</option>
                                     }
->>>>>>> 350b14fd68e93c36418952e6fb90eedcb0966f0b
                                 </select>
                                 <span asp-validation-for="Governace" class="text-danger"></span>
                             </div>
@@ -87,29 +67,6 @@
         </div>
     </div>
 </div>
-<<<<<<< HEAD
-    @section scripts {
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                // Populate cities based on the selected governorate
-                $("#governorateDropdown").change(function () {
-                    var governorateId = $(this).val();
-                    $.getJSON("/Order/GetCities", { governorateId: governorateId }, function (data) {
-                        var cityDropdown = $("#cityDropdown");
-                        cityDropdown.empty();
-                        cityDropdown.append('<option value="">Select City</option>');
-                        $.each(data, function (index, item) {
-                            cityDropdown.append('<option value="' + item.id + '">' + item.city_name_en + '</option>');
-                        });
-                    });
-                });
-            });
-        </script>
-    }
-=======
-
-
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
@@ -129,4 +86,3 @@
         });
     </script>
 }
->>>>>>> 350b14fd68e93c36418952e6fb90eedcb0966f0b
