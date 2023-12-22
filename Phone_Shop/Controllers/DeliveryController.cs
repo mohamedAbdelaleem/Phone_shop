@@ -76,9 +76,17 @@ namespace Phone_Shop.Controllers
             order.Status = "delivered";
             _context.SaveChanges();
 
-            return RedirectToAction("Home", "Delivery");
+            return RedirectToAction ("Home", "Delivery");
 
         }
-
+        public IActionResult DeliveryReport()
+        {
+            var deliveryData = _context.Order.Where(o=>o.Status== "delivered").ToList();
+            foreach (var item in deliveryData)
+            {
+                item.User = _context.Users.Single(u => u.Id == item.UserId);
+            }
+            return View(deliveryData);
+        }
     }
 }
