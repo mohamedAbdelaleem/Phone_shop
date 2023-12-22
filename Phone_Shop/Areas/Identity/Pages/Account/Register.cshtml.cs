@@ -151,9 +151,6 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var cart = ShoppingCart.GetCart(this.HttpContext, _context);
-                    string email = _context.Account.Single(a => a.Id == userId).Email;
-                    cart.MigrateCart(email);
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
@@ -164,6 +161,8 @@ namespace Phone_Shop.Areas.Identity.Pages.Account
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                     AccountsController accountsController = new AccountsController(_context, _hostingEnvironment,_userManager);
                     await accountsController.Create(user, Input.Name, Input.Photo);
+                    var cart = ShoppingCart.GetCart(this.HttpContext, _context);
+                    cart.MigrateCart(user.Email);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });

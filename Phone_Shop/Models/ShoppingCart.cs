@@ -145,6 +145,7 @@ namespace Phone_Shop.Models
             {
                 item.CartId = userName;
             }
+            ShoppingCartId = userName;
             _db.SaveChanges();
         }
         public List<CartItem> GetCartItems()

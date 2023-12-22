@@ -1,5 +1,4 @@
 ﻿@model Phone_Shop.ViewModel.ShoppingCartViewModel
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,15 +25,6 @@
             border-radius: 10px;
         }
 
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            margin: 50px auto;
-            max-width: 800px;
-        }
-
         h2 {
             color: #007bff;
         }
@@ -52,8 +42,8 @@
         }
 
         .cart-item img {
-            max-width: 80px; /* Adjust the size as needed */
-            max-height: 80px; /* Adjust the size as needed */
+            max-width: 80px;
+            max-height: 80px;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
@@ -95,13 +85,13 @@
             background-color: #dc3545;
         }
 
-            .btn-continue-shopping:hover,
-            .btn-clear-cart:hover,
-            .btn-checkout:hover,
-            .btn-remove-from-cart:hover,
-            .btn-update-quantity:hover {
-                background-color: #218838;
-            }
+        .btn-continue-shopping:hover,
+        .btn-clear-cart:hover,
+        .btn-checkout:hover,
+        .btn-remove-from-cart:hover,
+        .btn-update-quantity:hover {
+            background-color: #218838;
+        }
 
         .alert-message {
             margin-top: 20px;
@@ -187,9 +177,9 @@
         <!-- Cart Actions -->
         <div class="cart-actions">
             <button class="btn btn-continue-shopping" onclick="continueShopping()">Continue Shopping</button>
-            <button class="btn btn-clear-cart" onclick="clearCart()">Clear Cart</button>
             @if (Model.CartItems.Any())
             {
+                <button class="btn btn-clear-cart" onclick="clearCart()">Clear Cart</button>    
                 <a href="/Order/Index" class="btn btn-checkout">Checkout</a>
             }
         </div>
@@ -224,6 +214,7 @@
                 });
             }
         }
+
         function showRemoveSuccessMessage() {
             var alertMessage = $('.alert-message');
             alertMessage.text('Product removed from cart successfully!').show();
@@ -231,6 +222,7 @@
                 alertMessage.hide();
             }, 3000);
         }
+
         function clearCart() {
             if (confirm('Are you sure you want to clear the cart?')) {
                 $.ajax({
@@ -247,6 +239,7 @@
                 });
             }
         }
+
         function updateCartTotal(cartTotal) {
             if (cartTotal !== undefined) {
                 $('.cart-summary p').text('Total: $' + cartTotal.toFixed(2));
