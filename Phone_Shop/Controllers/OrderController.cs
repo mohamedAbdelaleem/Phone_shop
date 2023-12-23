@@ -10,19 +10,19 @@ using System.Linq;
 
 public class OrderController : Controller
 {
-    private readonly ApplicationDbContext _db;
+    private readonly ApplicationDbContext _context;
 
-    public OrderController(ApplicationDbContext db)
+    public OrderController(ApplicationDbContext context)
     {
-        _db = db;
+        _context = context;
     }
     [Authorize]
     public ActionResult Index()
     {
         var ViewModel = new CheckoutViewModel
         {
-            Governorates = _db.Governorates.ToList(),
-            Cities = _db.Cities.ToList(),
+            Governorates = _context.Governorates.ToList(),
+            Cities = _context.Cities.ToList(),
             Address=new PickupAddress()
         };
         return View(ViewModel);
@@ -32,12 +32,14 @@ public class OrderController : Controller
     {
         if (ModelState.IsValid)
         {
-            var cart = ShoppingCart.GetCart(this.HttpContext, _db);
-            var user = _db.Users.SingleOrDefault(u => u.Email == cart.ShoppingCartId);
+            var user = _context.Users.SingleOrDefault(u => u.Email == ShoppingCart.ShoppingCartId);
             ViewModel.Address.UserId = user.Id;
             ViewModel.Address.User = user;
-            _db.PickupAddress.Add(ViewModel.Address);
-            _db.SaveChanges();
+            ViewModel.Address.Governorate = _context.Governorates.SingleOrDefault(g => g.Id == ViewModel.Address.GovernorateId);
+            ViewModel.Address.City = _context.Cities.SingleOrDefault(c => c.Id == ViewModel.Address.CityId);
+            ViewModel.Address.User = user;
+            _context.PickupAddress.Add(ViewModel.Address);
+            _context.SaveChanges();
             Order order = new Order
             {
                 UserId = user.Id,
@@ -47,25 +49,26 @@ public class OrderController : Controller
                 PickupAddress=ViewModel.Address,
                 User=user
             };
-            _db.Order.Add(order);
-            _db.SaveChanges();
+            _context.Order.Add(order);
+            _context.SaveChanges();
+            var cart = ShoppingCart.GetCart(this.HttpContext, _context);
             cart.CreateOrder(order);
             order.PickupAddressId = ViewModel.Address.AddressId;
-            _db.ShoppingCartItems.RemoveRange(_db.ShoppingCartItems.Where(ci => ci.CartId == cart.ShoppingCartId));
+            _context.ShoppingCartItems.RemoveRange(_context.ShoppingCartItems.Where(ci => ci.CartId == ShoppingCart.ShoppingCartId));
             await UpdateProductQuantities(order.Id);
-            await _db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Confirmation");
         }
-        ViewModel.Governorates = _db.Governorates.ToList();
-        ViewModel.Cities = _db.Cities.ToList();
+        ViewModel.Governorates = _context.Governorates.ToList();
+        ViewModel.Cities = _context.Cities.ToList();
         return View(ViewModel);
     }
     private async Task UpdateProductQuantities(int id)
     {
-        List<OrderItem> orderItems = _db.OrderItem.Where(ot => ot.OrderID == id).ToList();
+        List<OrderItem> orderItems = _context.OrderItem.Where(ot => ot.OrderID == id).ToList();
         foreach (var orderItem in orderItems)
         {
-            var product = _db.Product.Find(orderItem.ProductID);
+            var product = _context.Product.Find(orderItem.ProductID);
 
             if (product != null)
             {
@@ -84,12 +87,12 @@ public class OrderController : Controller
             }
         }
 
-        await _db.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 [HttpGet]
     public IActionResult GetCities(int governorateId)
     {
-        var cities = _db.Cities.Where(c=>c.governorate_id==governorateId);
+        var cities = _context.Cities.Where(c=>c.governorate_id==governorateId);
         return Json(cities);
     }
     [HttpGet]

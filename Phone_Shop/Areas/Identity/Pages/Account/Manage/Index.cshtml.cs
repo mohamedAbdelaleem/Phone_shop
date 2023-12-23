@@ -4,6 +4,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
-        private  ApplicationDbContext context;
+        private  ApplicationDbContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
@@ -24,14 +25,15 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
         private readonly IWebHostEnvironment _hostingEnvironment;
 
         public IndexModel(
+            ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IWebHostEnvironment hostingEnvironment)
         {
-            context = context;
-            _userManager = userManager;
+            _context = context;
+            _userManager = userManager; 
             _userStore = userStore;
             _signInManager = signInManager;
             _logger = logger;
@@ -73,7 +75,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Name")]
             public string Name { get; set; }
             [Display(Name = "Photo")]
-            public IFormFile Photo { get; set; }
+            public string Photo { get; set; }
         }
 
 
@@ -82,13 +84,21 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var userId = await _userManager.GetUserIdAsync(user);
+
+            var account =  _context.Account.Single(x => x.Id == userId); 
+
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+               Name = account.Name,
+               Photo = account.Photo
+
             };
+
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -118,6 +128,10 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var userId = await _userManager.GetUserIdAsync(user);
+
+            var account = _context.Account.Single(x => x.Id == userId);
+
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
@@ -126,6 +140,16 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+            if (Input.Name != account.Name)
+            {
+                account.Name = Input.Name; 
+                _context.SaveChanges();
+            }
+            if (Input.Photo != account.Photo)
+            {
+                account.Photo = Input.Photo;
+                _context.SaveChanges();
             }
 
             await _signInManager.RefreshSignInAsync(user);

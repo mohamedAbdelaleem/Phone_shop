@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
 
@@ -28,9 +29,8 @@ namespace Phone_Shop.Controllers
         public IActionResult Create()
         {
             var governoratesInEgypt = _context.Governorates;
-            var cityInEgypt = _context.Cities;
             ViewBag.GovernoratesInEgypt = governoratesInEgypt;
-            ViewBag.cityInEgypt = cityInEgypt;
+            ViewBag.CitiesInEgypt = new List<City>();
             return View();
         }
 
@@ -50,7 +50,8 @@ namespace Phone_Shop.Controllers
             catch
             {
                 var governoratesInEgypt = _context.Governorates;
-                var cityInEgypt = _context.Cities;
+                ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+                ViewBag.CitiesInEgypt = new List<City>();
                 return View();
             }
 
@@ -59,8 +60,9 @@ namespace Phone_Shop.Controllers
         [Authorize(Roles = "Seller")]
         public IActionResult Edit(int? id)
         {
-            var governoratesInEgypt = _context.Governorates.ToList();
+            var governoratesInEgypt = _context.Governorates;
             ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+            ViewBag.CitiesInEgypt = new List<City>();
             var result = _context.Store.Find(id);
             return View("Create", result);
         }
@@ -83,36 +85,53 @@ namespace Phone_Shop.Controllers
             }
             catch
             {
-                var governoratesInEgypt = _context.Governorates.ToList();
+                var governoratesInEgypt = _context.Governorates;
                 ViewBag.GovernoratesInEgypt = governoratesInEgypt;
+                ViewBag.CitiesInEgypt = new List<City>();
                 return View();
             }
 
         }
 
-            [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "Seller")]
         public IActionResult Delete(int? id)
         {
             var result = _context.Store.Find(id);
 
             if (result != null)
             {
-               var associatedProducts = _context.Product.Where(p => p.StoreId == id).ToList();
+                var associatedProducts = _context.Product.Where(p => p.StoreId == id).ToList();
 
                 if (associatedProducts.Count > 0)
                 {
                     ViewBag.ErrorMessage = "You must delete the associated products before deleting the store.";
                     return View();
                 }
-                
 
-                    _context.Store.Remove(result);
-                    _context.SaveChanges();
-                
+
+                _context.Store.Remove(result);
+                _context.SaveChanges();
+
             }
+
 
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public IActionResult GetCitiesByGovernorate(string governorateName)
+        {
+            var governorate = _context.Governorates.FirstOrDefault(g => g.governorate_name_en == governorateName);
+
+            if (governorate != null)
+            {
+                var cities = _context.Cities.Where(c => c.governorate_id == governorate.Id).Select(c => new { Id = c.Id, Name = c.city_name_en }).ToList();
+                return Json(cities);
+            }
+
+            return Json(new List<object>()); // Return an empty list if governorate not found
+        }
 
     }
+
+
 }

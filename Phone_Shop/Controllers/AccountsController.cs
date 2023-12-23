@@ -38,8 +38,14 @@ namespace Phone_Shop.Controllers
             return View(result);
         }
 
+        public IActionResult Oreders()
+        {
+            var Userid = _userManager.GetUserId(User);
+            var result = _context.Order.Where(p => p.UserId == Userid).ToList();
+            return View(result);
+        }
 
-   
+
 
 
         // GET: Accounts
