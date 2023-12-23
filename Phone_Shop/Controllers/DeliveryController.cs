@@ -48,6 +48,18 @@ namespace Phone_Shop.Controllers
             return View("OrderDetails",_context.Product.Where(p=>orderitem.Contains(p.Id)));
         }
 
+        public IActionResult StoreDetails(int id)
+        {
+
+            var store = _context.Store.SingleOrDefault(s => s.Id == id);
+            if (store == null)
+            {
+                return RedirectToAction("Home", "Delivery");
+            }
+            return View(store);
+        }
+
+
         [HttpPost]
         public IActionResult ChangeStatusToShipped(int id)
         {
