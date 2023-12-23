@@ -35,7 +35,7 @@
           </h3>
           <p>Custom</p>
           <div class="radio">
-                <form id="priceForm" name="PriceForm" method="post" asp-route-Des="@ViewData["Des"]" asp-route-PageNumber="1">
+                <form id="priceForm" name="PriceForm" method="post" asp-route-Des="@ViewData["Des"]" asp-route-PageNumber="1" asp-route-search="@ViewData["search"]">
                         <label for="LowestPrice">Lowest Price:</label>
                         <input type="number" id="LowestPrice" name="LowestPrice" step="0.01" required>
                         <br>
@@ -45,7 +45,7 @@
                         <br>
 
                         <input type="submit" value="Submit">
-                    </form>
+                 </form>
           </div>
 
          @* <h3 class="headline">
@@ -78,10 +78,10 @@
           @* <li class="active"><a href="#">Popular</a></li>
           <li><a href="#">Newest</a></li>
                 <li><a href="#">Bestselling</a></li>*@
-             <a asp-route-Des="true" asp-route-PageNumber="1" asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]" asp-route-LowestPrice="@ViewData["LowestPrice"]" style="padding-right:5px">
+                <a asp-route-Des="true" asp-route-PageNumber="1" asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]" asp-route-LowestPrice="@ViewData["LowestPrice"]" asp-route-search="@ViewData["search"]" style="padding-right:5px">
              Price (high)
             </a>
-                <a asp-route-Des="false" asp-route-PageNumber="1" asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]" asp-route-LowestPrice="@ViewData["LowestPrice"]">
+                <a asp-route-Des="false" asp-route-PageNumber="1" asp-route-MaxmiumPrice="@ViewData["MaxmiumPrice"]" asp-route-LowestPrice="@ViewData["LowestPrice"]" asp-route-search="@ViewData["search"]">
                 Price (low)
             </a>
        </ul>

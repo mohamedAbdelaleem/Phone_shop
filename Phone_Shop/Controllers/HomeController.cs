@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Phone_Shop.Controllers
 {
@@ -27,7 +28,11 @@ namespace Phone_Shop.Controllers
                 Result = Result.OrderBy(p => p.Price);
             if (search != null)
             {
-                Result = SearchProducts(Result, search);
+                if (Des)
+                    Result = SearchProducts(Result, search).OrderByDescending(p=>p.Price);
+                else
+                    Result = SearchProducts(Result, search).OrderBy(p => p.Price);
+
             }
             List<Product> result = new List<Product>();
             ViewData["LastPageNumber"] = (int)Math.Ceiling(Result.Count() / 9.0);
@@ -35,6 +40,7 @@ namespace Phone_Shop.Controllers
             ViewData["MaxmiumPrice"] = MaxmiumPrice;
             ViewData["LowestPrice"] = LowestPrice;
             ViewData["Des"] = Des;
+            ViewData["search"] = search;
             int ca = 0;
             foreach (var product in Result)
             {
