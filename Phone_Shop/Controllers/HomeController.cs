@@ -27,7 +27,7 @@ namespace Phone_Shop.Controllers
                 Result = Result.OrderBy(p => p.Price);
             if (search != null)
             {
-                Result = SearchProducts(search);
+                Result = SearchProducts(Result, search);
             }
             List<Product> result = new List<Product>();
             ViewData["LastPageNumber"] = (int)Math.Ceiling(Result.Count() / 9.0);
@@ -57,24 +57,24 @@ namespace Phone_Shop.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IQueryable<Product> SearchProducts(string searchInput)
+        public IQueryable<Product> SearchProducts(IQueryable<Product> products, string searchInput)
         {
             // using FreeText function require a full-text index to be configured.
             try
             {
-                var products = _context.Product.Where(p => EF.Functions.FreeText(p.Name, searchInput)
+                var result = products.Where(p => EF.Functions.FreeText(p.Name, searchInput)
                                                             || EF.Functions.FreeText(p.Description, searchInput));
 
-                products.Count();
+                result.Count();
 
-                return products;
+                return result;
             }
             catch (SqlException ex)
             {
                 
-                var products = _context.Product.Where(p => p.Name.Contains(searchInput)
+                var result = products.Where(p => p.Name.Contains(searchInput)
                                                             || p.Description.Contains(searchInput));
-                return products;
+                return result;
 
             }
 
