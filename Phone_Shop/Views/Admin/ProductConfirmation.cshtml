@@ -44,22 +44,19 @@
                     <h2 class="name">
                         
                         @product.Name
-                        
-                        <small>Product by <a href="javascript:void(0);"> @account.Name </a></small>
+
+                    <small>Product by  <strong>@account.Name </strong> </small>
                        
                     </h2>
                     <hr />
                     <h3 class="price-container">
-                        @product.Price
+                        Price: $@product.Price
                     </h3>
-                    <div class="certified">
-                        <ul>
-                            <li>
-                                <a href="javascript:void(0);">Delivery time<span>5 Working Days</span></a>
-                            </li>
-
-                        </ul>
-                    </div>
+                <hr />
+                    <h3 class="price-container">
+                        Quantity Avaliable: @product.Amount
+                    </h3>
+                   
                     <hr />
                     <div class="description description-tabs">
                         <ul id="myTab" class="nav nav-pills">

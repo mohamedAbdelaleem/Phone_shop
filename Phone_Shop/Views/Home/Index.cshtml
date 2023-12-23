@@ -12,7 +12,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-4 col-md-3">
-        <form method="get">
+        <form method="get" name="searchForm">
           <div class="well">
             <div class="row">
               <div class="col-sm-12">
@@ -29,14 +29,13 @@
           </div>
         </form>
 
-         <form class="shop__filter" >
 
           <h3 class="headline">
             <span>Price</span>
           </h3>
           <p>Custom</p>
           <div class="radio">
-                    <form id="priceForm" method="post" asp-route-Des="@ViewData["Des"]" asp-route-PageNumber="1">
+                <form id="priceForm" name="PriceForm" method="post" asp-route-Des="@ViewData["Des"]" asp-route-PageNumber="1">
                         <label for="LowestPrice">Lowest Price:</label>
                         <input type="number" id="LowestPrice" name="LowestPrice" step="0.01" required>
                         <br>
@@ -72,7 +71,6 @@
             <input type="checkbox" value id="shop-filter-checkbox_5">
             <label for="shop-filter-checkbox_5">Not specified</label>
                 </div> *@
-        </form> 
       </div>
       <div class="col-sm-8 col-md-9">
 
@@ -169,11 +167,109 @@
     </div>
   </div>
 
-    @section Scripts{
-           <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-          <script src="~/js/bootstrap.min.js"></script>
-          <script type="text/javascript">
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+   @*  <script type="text/javascript">
+        // Wait for the DOM to be ready
+        $(document).ready(function () {
+            // Handle the form submission for the search form
+            $("form[name='searchForm']").submit(function (event) {
+                event.preventDefault(); // Prevent the default form submission
 
-          </script>
-    }
+                // Get the search term from the input
+                var searchTerm = $(this).find("input[name='search']").val();
+
+                // Update the URL based on the search term and reset page to 1
+                updateUrl(searchTerm, null, null, 1);
+
+                // You can add additional logic here if needed
+
+                // Perform any other actions (e.g., fetching search results)
+            });
+
+            // Handle the form submission for the price filter form
+            $("form[name='priceForm']").submit(function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Get the values of the price filter inputs
+                var lowestPrice = $(this).find("input[name='LowestPrice']").val();
+                var maximumPrice = $(this).find("input[name='MaxmiumPrice']").val();
+
+                // Update the URL based on the price filter values and reset page to 1
+                updateUrl(null, lowestPrice, maximumPrice, 1);
+
+                // You can add additional logic here if needed
+
+                // Perform any other actions (e.g., fetching filtered results)
+            });
+
+            // Handle pagination clicks
+            $("ul.pagination a").click(function (event) {
+                event.preventDefault(); // Prevent the default link behavior
+
+                // Get the page number from the clicked link
+                var pageNumber = $(this).text();
+
+                // Update the URL with the new page number
+                updateUrl(null, null, null, pageNumber);
+
+                // You can add additional logic here if needed
+
+                // Perform any other actions (e.g., fetching results for the clicked page)
+            });
+
+            // Handle sorting clicks
+            $("ul.shop__sorting a").click(function (event) {
+                event.preventDefault(); // Prevent the default link behavior
+
+                // Get the sorting direction from the clicked link
+                var descending = $(this).attr("asp-route-Des");
+
+                // Update the URL with the new sorting direction and reset page to 1
+                updateUrl(null, null, null, 1, descending);
+
+                // You can add additional logic here if needed
+
+                // Perform any other actions (e.g., fetching sorted results)
+            });
+
+            // Function to update the URL
+            function updateUrl(searchTerm, lowestPrice, maximumPrice, pageNumber, descending) {
+                var baseUrl = window.location.href.split('?')[0]; // Get the base URL without parameters
+                var params = new URLSearchParams(window.location.search);
+
+                // Update or add the search term
+                if (searchTerm !== null) {
+                    params.set('search', searchTerm);
+                }
+
+                // Update or add the lowest price filter
+                if (lowestPrice !== null) {
+                    params.set('LowestPrice', lowestPrice);
+                }
+
+                // Update or add the maximum price filter
+                if (maximumPrice !== null) {
+                    params.set('MaxmiumPrice', maximumPrice);
+                }
+
+                // Update or add the page number
+                params.set('PageNumber', pageNumber);
+
+                // Update or add the sorting direction
+                if (descending !== undefined) {
+                    params.set('Des', descending);
+                }
+
+                // Construct the updated URL
+                var updatedUrl = baseUrl + '?' + params.toString();
+
+                // Redirect to the updated URL
+                window.location.href = updatedUrl;
+            }
+        });
+    </script> *@
+}
+
 
