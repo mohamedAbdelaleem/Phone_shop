@@ -15,13 +15,13 @@ namespace Phone_Shop.Controllers
         {
             _context = context;
         }
-        public IActionResult Home(bool Checked=false)
+        public IActionResult Home(bool Shipped = false)
         {
             var Result = _context.Order;
-            if (Checked)
-                return View(Result.Where(o => o.Status == "Checked"));
+            if (Shipped)
+                return View(Result.Where(o => o.Status == "Shipped"));
             else
-                return View(Result.Where(o => o.Status == "UnChecked"));
+                return View(Result.Where(o => o.Status == "UnShipped"));
 
         }
 
@@ -49,15 +49,15 @@ namespace Phone_Shop.Controllers
         }
 
         [HttpPost]
-        public IActionResult ChangeStatusToChecked(int id)
+        public IActionResult ChangeStatusToShipped(int id)
         {
             var order = _context.Order.SingleOrDefault(o => o.Id == id);
-            if (order == null || order.Status== "Checked" || order.Status == "delivered")
+            if (order == null || order.Status== "Shipped" || order.Status == "delivered")
             {
                 return RedirectToAction("Home", "Delivery");
             }
 
-            order.Status = "Checked";
+            order.Status = "Shipped";
             _context.SaveChanges();
 
             return RedirectToAction("Home", "Delivery");
@@ -68,7 +68,7 @@ namespace Phone_Shop.Controllers
         public IActionResult ChangeStatusTodelivered(int id)
         {
             var order = _context.Order.SingleOrDefault(o => o.Id == id);
-            if (order == null || order.Status == "delivered" || order.Status == "UnChecked")
+            if (order == null || order.Status == "delivered" || order.Status == "UnShipped")
             {
                 return RedirectToAction("Home", "Delivery");
             }

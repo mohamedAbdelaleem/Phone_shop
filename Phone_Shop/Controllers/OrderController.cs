@@ -45,7 +45,7 @@ public class OrderController : Controller
                 UserId = user.Id,
                 OrderedAt = DateTime.Now,
                 PickupAddressId=ViewModel.Address.AddressId,
-                Status= "UnChecked",
+                Status= "UnShipped",
                 PickupAddress=ViewModel.Address,
                 User=user
             };

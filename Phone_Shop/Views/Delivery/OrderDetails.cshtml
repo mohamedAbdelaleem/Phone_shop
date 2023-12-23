@@ -54,14 +54,14 @@
                             <div class="mb-3 d-flex justify-content-between">
                                 <div>
                                     <span class="me-3">@order.OrderedAt</span>
-                                    @if (order.Status == "UnChecked")
+                                    @if (order.Status == "UnShipped")
                                     {
-                                        <form method="post" asp-controller="Delivery" asp-action="ChangeStatusToChecked" asp-route-id="@order.Id">
-                                            <button type="submit" class="btn btn-success btn-lg">Checked</button>
+                                        <form method="post" asp-controller="Delivery" asp-action="ChangeStatusToShipped" asp-route-id="@order.Id">
+                                            <button type="submit" class="btn btn-success btn-lg">Shipped</button>
                                         </form>
                                     }
 
-                                    @if (order.Status == "Checked")
+                                    @if (order.Status == "Shipped")
                                     {
                                         <form method="post" asp-controller="Delivery" asp-action="ChangeStatusTodelivered" asp-route-id="@order.Id">
                                             <button type="submit" class="btn btn-success btn-lg">delivered</button>
@@ -74,7 +74,16 @@
                                             @foreach (var product in Model)
                                             {
                                              <tr>
-
+                                                 <td>
+                                                <img src="@product.ImgUrl" alt width="35" class="img-fluid">
+                                                 </td>
+                                            <td>
+                                                <div class="d-flex mb-2">
+                                                    <div class="flex-lg-grow-1 ms-3">
+                                                        <h6 class="small mb-0"><a href="#" class="text-reset">Name : @product.Name</a></h6>
+                                                    </div>
+                                                </div>
+                                            </td>
                                                 <td>
                                                     <div class="d-flex mb-2">
                                                         <div class="flex-lg-grow-1 ms-3">
