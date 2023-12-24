@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="wwwroot\imj\NewFolder\" />
     <Folder Include="wwwroot\NewFolder1\" />
     <Folder Include="wwwroot\NewFolder\" />

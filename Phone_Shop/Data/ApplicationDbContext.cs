@@ -25,6 +25,7 @@ namespace Phone_Shop.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<Governorate> Governorates { get; set; }
         public DbSet<Review> Review { get; set; }
+        public DbSet<Notification> Notification { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -120,6 +121,12 @@ namespace Phone_Shop.Data
             .HasOne(r => r.Customer)
             .WithMany()
             .HasForeignKey(r => r.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Notification>()
+            .HasOne(n => n.User)
+            .WithMany()
+            .HasForeignKey(n => n.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         }
