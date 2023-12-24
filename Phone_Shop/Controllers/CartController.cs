@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 namespace Phone_Shop.Controllers
 {
+    [AllowAnonymous]
     [Authorize(Roles = "Customer, Seller")]
     public class CartController : Controller
     {
