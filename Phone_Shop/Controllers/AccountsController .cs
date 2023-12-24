@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Security.Claims;
 using System.Diagnostics.Eventing.Reader;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Phone_Shop.Controllers
 {
@@ -40,14 +41,19 @@ namespace Phone_Shop.Controllers
             var result = _context.Account.Where(p => p.Id == Userid).ToList();
             ViewData["PhoneNumber"]=_context.Users.SingleOrDefault(u=>(u.Id==Userid)).PhoneNumber;
              var productstoseller=_context.Product.Where(x=>x.SellerId==Userid).ToList();
-             var items=_context.OrderItem.ToList();
+             var orderitems=_context.OrderItem.ToList();
+            var order = _context.Order.ToList();
+            var shippedproudct = from i in order
+                                 join item in orderitems on i.Id equals item.OrderID
+                                 where i.Status == "delivered"
+                                 select new { item.ProductID, item.Quantity, item.UnitPrice };
 
-            var test = from prodect in productstoseller
-                       join item in items on prodect.Id equals item.ProductID
+            var  newtable= from prodect in productstoseller
+                       join item in shippedproudct  on prodect.Id equals item.ProductID
 
                        select new { item.UnitPrice, item.Quantity };
             
-           foreach (var item in test)
+           foreach (var item in newtable)
             {
                // Console.WriteLine(item);
                 totalprice+= item.UnitPrice*item.Quantity;
