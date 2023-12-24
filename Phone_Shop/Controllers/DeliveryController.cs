@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
+using Phone_Shop.Services;
 
 namespace Phone_Shop.Controllers
 {
@@ -11,9 +12,11 @@ namespace Phone_Shop.Controllers
     public class DeliveryController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public DeliveryController(ApplicationDbContext context)
+        private readonly INotification _notificationService;
+        public DeliveryController(ApplicationDbContext context, INotification notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
         [HttpGet]
         public IActionResult Home(int stage = 0,
@@ -44,11 +47,11 @@ namespace Phone_Shop.Controllers
 
             if (stage==0)
             {
-                query = query.Where(o => o.Status == "Shipped");
+                query = query.Where(o => o.Status == "UnShipped");
             }
             else if(stage==1)
             {
-                query = query.Where(o => o.Status == "UnShipped");
+                query = query.Where(o => o.Status == "Shipped");
             }
             else
             {
@@ -106,6 +109,8 @@ namespace Phone_Shop.Controllers
             order.Status = "Shipped";
             _context.SaveChanges();
 
+            _notificationService.SendOrderShipped(order.UserId, order.Id);
+
             return RedirectToAction("Home", "Delivery");
 
         }
@@ -121,6 +126,8 @@ namespace Phone_Shop.Controllers
 
             order.Status = "delivered";
             _context.SaveChanges();
+
+            _notificationService.SendOrderDelivered(order.UserId, order.Id);
 
             return RedirectToAction ("Home", "Delivery");
 
