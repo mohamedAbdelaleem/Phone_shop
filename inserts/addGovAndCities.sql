@@ -1,4 +1,5 @@
-﻿INSERT INTO [phoneShopDB].[dbo].[governorates] (governorate_name_ar, governorate_name_en) VALUES
+﻿/*Took from https://github.com/Tech-Labs/egypt-governorates-and-cities-db*/
+INSERT INTO [phoneShopDB].[dbo].[governorates] (governorate_name_ar, governorate_name_en) VALUES
 ('القاهرة', 'Cairo'),
 ('الجيزة', 'Giza'),
 ('الأسكندرية', 'Alexandria'),
