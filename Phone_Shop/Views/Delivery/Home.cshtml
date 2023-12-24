@@ -88,7 +88,7 @@
             $.get('/Delivery/GetCities', { governorateId: governorateId }, function (data) {
                 var cityDropdown = $('#cityId');
                 cityDropdown.empty();
-                cityDropdown.append($('<option>').text('All').val('null'));
+                cityDropdown.append($('<option>').text('Select City').val('null'));
                 $.each(data, function (key, value) {
                     cityDropdown.append($('<option>').text(value.city_name_en).val(value.id));
                 });
