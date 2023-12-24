@@ -15,14 +15,48 @@ namespace Phone_Shop.Controllers
         {
             _context = context;
         }
-        public IActionResult Home(bool Shipped = false)
+        [HttpGet]
+        public IActionResult Home(int stage = 0,
+            DateTime? startDate = null, DateTime? endDate = null, int? governorateId = null, int? cityId = null)
         {
-            var Result = _context.Order;
-            if (Shipped)
-                return View(Result.Where(o => o.Status == "Shipped"));
-            else
-                return View(Result.Where(o => o.Status == "UnShipped"));
+            ViewData["Governorates"] = _context.Governorates.ToList();
+            ViewData["stage"] = stage;
+            var query = _context.Order.AsQueryable();
+            if (startDate.HasValue)
+            {
+                query = query.Where(o => o.OrderedAt >= startDate.Value);
+            }
 
+            if (endDate.HasValue)
+            {
+                query = query.Where(o => o.OrderedAt <= endDate.Value);
+            }
+
+            if (governorateId.HasValue)
+            {
+                query = query.Where(o => o.PickupAddress.GovernorateId == governorateId.Value);
+            }
+
+            if (cityId.HasValue)
+            {
+                query = query.Where(o => o.PickupAddress.CityId == cityId.Value);
+            }
+
+            if (stage==0)
+            {
+                query = query.Where(o => o.Status == "Shipped");
+            }
+            else if(stage==1)
+            {
+                query = query.Where(o => o.Status == "UnShipped");
+            }
+            else
+            {
+                query = query.Where(o => o.Status == "delivered");
+            }
+
+            var result = query.ToList();
+            return View(result);
         }
 
         public IActionResult OrderDetails(int id)
@@ -91,14 +125,12 @@ namespace Phone_Shop.Controllers
             return RedirectToAction ("Home", "Delivery");
 
         }
-        public IActionResult DeliveryReport()
+        [HttpGet]
+        public IActionResult GetCities(int governorateId)
         {
-            var deliveryData = _context.Order.Where(o=>o.Status== "delivered").ToList();
-            foreach (var item in deliveryData)
-            {
-                item.User = _context.Users.Single(u => u.Id == item.UserId);
-            }
-            return View(deliveryData);
+            var cities = _context.Cities.Where(c => c.governorate_id == governorateId);
+            return Json(cities);
         }
+
     }
 }

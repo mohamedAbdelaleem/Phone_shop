@@ -36,6 +36,15 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Delivery" asp-action="Home">Home</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Delivery" asp-action="Home" asp-route-Stage="0">UnShipped</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Delivery" asp-action="Home" asp-route-Stage="1">Shipped</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Delivery" asp-action="Home" asp-route-Stage="2">Delivered</a>
+                            </li>
                         }else{
                        
                             <li class="nav-item">
@@ -66,7 +75,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Phone_Shop 
+            &copy; @DateTime.Now.Year - Phone_Shop
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
