@@ -6,13 +6,54 @@
         margin: 30px;
     }
 </style>
-
-<li class="nav-item">
-    <a class="nav-link" asp-controller="Delivery" asp-action="DeliveryReport">Delivery Report</a>
-    <a class="nav-link" asp-controller="Delivery" asp-action="Home" asp-route-Shipped="false">UnShipped</a>
-    <a class="nav-link" asp-controller="Delivery" asp-action="Home" asp-route-Shipped="true">Shipped</a>
-</li>
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="get" asp-controller="Delivery" asp-action="Home">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Filter Options</h5>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="startDate">Start Date:</label>
+                                    <input type="date" class="form-control" name="startDate" id="startDate">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="endDate">End Date:</label>
+                                    <input type="date" class="form-control" name="endDate" id="endDate">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="governorateId">Governorate:</label>
+                                    <select class="form-control" name="governorateId" id="governorateId">
+                                        <option value="">Select Governorate</option>
+                                        @foreach (var governorate in ViewData["Governorates"] as List<Governorate>)
+                                        {
+                                            <option value="@governorate.Id">@governorate.governorate_name_en</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="cityId">City:</label>
+                                    <select class="form-control" name="cityId" id="cityId">
+                                        <option value="">Select City</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="stage" id="stage" value="@ViewData["stage"]" />
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 <div class="container bootstrap snippets bootdey">
     @foreach (var Order in Model)
     {
@@ -27,9 +68,31 @@
         </div>
     }
 </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="~/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-    // Your script logic here
+</script>
+<script>
+    $(document).ready(function () {
+        updateCityDropdown();
+        $('#governorateId').change(function () {
+            updateCityDropdown();
+        });
+
+        function updateCityDropdown() {
+            var governorateId = $('#governorateId').val();
+
+
+            $.get('/Delivery/GetCities', { governorateId: governorateId }, function (data) {
+                var cityDropdown = $('#cityId');
+                cityDropdown.empty();
+                cityDropdown.append($('<option>').text('Select City').val('null'));
+                $.each(data, function (key, value) {
+                    cityDropdown.append($('<option>').text(value.city_name_en).val(value.id));
+                });
+            });
+        }
+    });
 </script>
