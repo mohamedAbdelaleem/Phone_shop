@@ -12,8 +12,8 @@ using Phone_Shop.Data;
 namespace Phone_Shop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231219214658_updated_database")]
-    partial class updated_database
+    [Migration("20231224110315_CascadeCartItemWithProduct")]
+    partial class CascadeCartItemWithProduct
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -407,12 +407,12 @@ namespace Phone_Shop.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressId"));
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
+                    b.Property<string>("AdditionalInfo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
 
                     b.Property<int>("GovernorateId")
                         .HasColumnType("int");
@@ -515,11 +515,11 @@ namespace Phone_Shop.Migrations
 
             modelBuilder.Entity("Phone_Shop.Models.Store", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -615,7 +615,7 @@ namespace Phone_Shop.Migrations
                     b.HasOne("Phone_Shop.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");

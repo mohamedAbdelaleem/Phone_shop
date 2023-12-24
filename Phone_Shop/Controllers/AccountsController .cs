@@ -10,6 +10,8 @@ using Phone_Shop.Data;
 using Phone_Shop.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.Security.Claims;
+using System.Diagnostics.Eventing.Reader;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Phone_Shop.Controllers
 {
@@ -22,7 +24,7 @@ namespace Phone_Shop.Controllers
 
 
 
-
+     
         public AccountsController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
@@ -32,20 +34,35 @@ namespace Phone_Shop.Controllers
 
         public IActionResult profile()
         {
+            decimal totalprice= 0l;
+             int totalsoldproducts = 0;
             var Userid = _userManager.GetUserId(User);
             var result = _context.Account.Where(p => p.Id == Userid).ToList();
             ViewData["PhoneNumber"]=_context.Users.SingleOrDefault(u=>(u.Id==Userid)).PhoneNumber;
+             var productstoseller=_context.Product.Where(x=>x.SellerId==Userid).ToList();
+             var items=_context.OrderItem.ToList();
+
+            var test = from prodect in productstoseller
+                       join item in items on prodect.Id equals item.ProductID
+
+                       select new { item.UnitPrice, item.Quantity };
+            
+           foreach (var item in test)
+            {
+               // Console.WriteLine(item);
+                totalprice+= item.UnitPrice*item.Quantity;
+                totalsoldproducts += item.Quantity;
+
+            }
+
+            ViewData["Total Revenu"]=totalprice;
+            ViewData["Total Sold Products"]=totalsoldproducts;
+
             return View(result);
         }
 
-        public IActionResult Oreders()
-        {
-            var Userid = _userManager.GetUserId(User);
-            var result = _context.Order.Where(p => p.UserId == Userid).ToList();
-            return View(result);
-        }
 
-
+   
 
 
         // GET: Accounts

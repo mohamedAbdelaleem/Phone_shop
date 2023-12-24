@@ -54,7 +54,7 @@
                 <!-- Dropdown for Governorates -->
                 <div class="form-group">
                     <label asp-for="Address.GovernorateId" class="control-label">Governorate:</label>
-                    <select asp-for="Address.GovernorateId" asp-items="new SelectList(Model.Governorates, nameof(Phone_Shop.Models.Governorate.Id), nameof(Phone_Shop.Models.Governorate.governorate_name_en))" class="form-control" id="governorateDropdown">
+                    <select asp-for="Address.GovernorateId" asp-items="new SelectList(Model.Governorates, nameof(Phone_Shop.Models.Governorate.Id), nameof(Phone_Shop.Models.Governorate.governorate_name_en), Model.Address.GovernorateId)" class="form-control" id="governorateDropdown">
                         <option value="">Select Governorate</option>
                     </select>
                     <span asp-validation-for="Address.GovernorateId" class="text-danger"></span>
@@ -62,7 +62,7 @@
                 <!-- Dropdown for Cities -->
                 <div class="form-group">
                     <label asp-for="Address.CityId" class="control-label">City:</label>
-                    <select asp-for="Address.CityId" class="form-control" id="cityDropdown">
+                    <select asp-for="Address.CityId" asp-items="new SelectList(Model.Cities, nameof(Phone_Shop.Models.City.Id), nameof(Phone_Shop.Models.City.city_name_en), Model.Address.CityId)" class="form-control" id="cityDropdown">
                         <option value="">Select City</option>
                     </select>
                     <span asp-validation-for="Address.CityId" class="text-danger"></span>
