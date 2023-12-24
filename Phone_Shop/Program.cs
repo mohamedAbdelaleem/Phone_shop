@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
+using Phone_Shop.Services;
 
 namespace Phone_Shop
 {
@@ -36,7 +37,7 @@ namespace Phone_Shop
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            //builder.Services.AddScoped<IReviewSerivce, ReviewService>();
+            builder.Services.AddScoped<INotification, NotificationService>();
 
             var app = builder.Build();
 
