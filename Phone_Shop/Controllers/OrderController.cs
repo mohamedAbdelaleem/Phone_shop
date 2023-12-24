@@ -27,6 +27,46 @@ public class OrderController : Controller
         };
         return View(ViewModel);
     }
+
+    public ActionResult OrderHistory(string Id)
+    {
+        var orders = _context.Order.Where(o => o.UserId == Id);
+        return View(orders);
+    }
+
+    public IActionResult OrderDetails(int id)
+    {
+
+        var order = _context.Order.SingleOrDefault(o => o.Id == id);
+        if (order == null)
+        {
+            return RedirectToAction("Home", "Delivery");
+        }
+
+        var account = _context.Account.SingleOrDefault(a => a.Id == order.UserId);
+        var PickupAddress = _context.PickupAddress.SingleOrDefault(p => p.AddressId == order.PickupAddressId);
+
+        ViewData["order"] = order;
+        ViewData["account"] = account;
+        ViewData["PhoneNumber"] = _context.Users.SingleOrDefault(u => u.Id == account.Id).PhoneNumber;
+        ViewData["PickupAddress"] = PickupAddress;
+        ViewData["Governorate"] = _context.Governorates.SingleOrDefault(g => g.Id == PickupAddress.GovernorateId).governorate_name_en;
+        ViewData["City"] = _context.Cities.SingleOrDefault(c => c.Id == PickupAddress.CityId).city_name_en;
+        ViewData["TotalPrice"] = _context.OrderItem.Where(oi => oi.OrderID == id).Select(oi => oi.UnitPrice * oi.Quantity).Sum();
+        var orderitem = _context.OrderItem.Where(oi => oi.OrderID == id).Select(oi => oi.ProductID).ToList();
+        return View("OrderDetails", _context.Product.Where(p => orderitem.Contains(p.Id)));
+    }
+    public IActionResult StoreDetails(int id)
+    {
+
+        var store = _context.Store.SingleOrDefault(s => s.Id == id);
+        if (store == null)
+        {
+            return RedirectToAction("Home", "Delivery");
+        }
+        return View(store);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Index(CheckoutViewModel ViewModel)
     {
