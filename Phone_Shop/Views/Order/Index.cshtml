@@ -92,18 +92,30 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Populate cities based on the selected governorate
-            $("#governorateDropdown").change(function () {
-                var governorateId = $(this).val();
-                $.getJSON("/Order/GetCities", { governorateId: governorateId }, function (data) {
-                    var cityDropdown = $("#cityDropdown");
-                    cityDropdown.empty();
-                    cityDropdown.append('<option value="">Select City</option>');
-                    $.each(data, function (index, item) {
-                        cityDropdown.append('<option value="' + item.id + '">' + item.city_name_en + '</option>');
-                    });
-                });
+            updateCityDropdown();
+            $('#governorateId').change(function () {
+                updateCityDropdown();
             });
+
+            function updateCityDropdown() {
+                var governorateId = $('#governorateId').val();
+                var cityDropdown = $('#cityId');
+
+                $.get('/Order/GetCities', { governorateId: governorateId }, function (data) {
+                    cityDropdown.empty();
+
+                    if (data.length > 0) {
+                        $.each(data, function (key, value) {
+                            cityDropdown.append($('<option>').text(value.city_name_en).val(value.id));
+                        });
+
+                        cityDropdown.prop('disabled', false);
+                    } else {
+                        cityDropdown.prop('disabled', true);
+                    }
+                });
+            }
         });
+
     </script>
 }
