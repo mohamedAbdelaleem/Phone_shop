@@ -420,7 +420,7 @@
                     <ul class="nav nav-pills nav-stacked">
                         <li class="active col-lg-12"><a href="#"> <i class="fa fa-user"></i> Profile</a></li>
                         <li class="col-lg-12"><a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"> <i class="fa fa-edit"></i> Edit profile</a></li>
-                            <li class="col-lg-12"><a asp-area="Identity" asp-page=""> <i class="fa fa-"></i> Order History</a></li>
+                            <li class="col-lg-12"><a asp-controller="Order" asp-action="OrderHistory" asp-route-id="@user.Id">Order History</a></li>
 
                             @if (User.IsInRole("Seller"))
                             {
@@ -431,7 +431,7 @@
                                     </a>
                                 </li>
                                 <li class="col-lg-12">
-                                    <a asp-controller="Product" asp-action="Index" asp-route-id="@user.Id">
+                                    <a asp-controller="Order" asp-action="OrderHistory" asp-route-id="@user.Id">
                                         <i class="fa fa-"></i> Products
                                     </a>
                                 </li>
