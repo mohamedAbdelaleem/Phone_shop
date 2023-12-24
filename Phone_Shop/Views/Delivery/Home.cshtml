@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<Phone_Shop.Models.Order>
 
-
 <link rel="stylesheet" href="~/css/bootstrap.min.css" />
 <style type="text/css">
     .container {
@@ -10,38 +9,27 @@
 
 <li class="nav-item">
     <a class="nav-link" asp-controller="Delivery" asp-action="DeliveryReport">Delivery Report</a>
-    <a class="nav-link" a asp-controller="Delivery" asp-action="Home" asp-route-Shipped="false">UnShipped</a>
-    <a class="nav-link" a asp-controller="Delivery" asp-action="Home" asp-route-Shipped="true">Shipped</a>
+    <a class="nav-link" asp-controller="Delivery" asp-action="Home" asp-route-Shipped="false">UnShipped</a>
+    <a class="nav-link" asp-controller="Delivery" asp-action="Home" asp-route-Shipped="true">Shipped</a>
 </li>
+
 <div class="container bootstrap snippets bootdey">
-            <!-- <a href="#"><strong><i class="glyphicon glyphicon-dashboard"></i> My Dashboard</strong></a>
-            <hr> -->
-            @foreach (var Order in Model)
-            {
-                <div class="row">
-
-                    <div class="col-md-7">
-                        <div class="well">
-                            <a asp-controller="Delivery" asp-action="OrderDetails" asp-route-id="@Order.Id">Order Details</a>
-                            <span class="badge pull-right">@Order.OrderedAt</span>
-                        </div>
-                        <hr>
-
-                        <!-- <div class="panel panel-default">
-
-                        </div> -->
-                    </div>
-
-
+    @foreach (var Order in Model)
+    {
+        <div class="row">
+            <div class="col-md-7">
+                <div class="well">
+                    <a asp-controller="Delivery" asp-action="OrderDetails" asp-route-id="@Order.Id">Order Details</a>
+                    <span class="badge pull-right">@Order.OrderedAt</span>
                 </div>
-            }
+                <hr>
+            </div>
         </div>
-    </div>
-
+    }
 </div>
 
-<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="~/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-
+    // Your script logic here
 </script>
