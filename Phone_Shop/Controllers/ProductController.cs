@@ -13,10 +13,10 @@ namespace Phone_Shop.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public ProductController(ApplicationDbContext context, UserManager<IdentityUser> UserManager)
+        public ProductController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            _userManager = UserManager;
+            _userManager = userManager;
         }
 
         [Authorize(Roles = "Seller")]

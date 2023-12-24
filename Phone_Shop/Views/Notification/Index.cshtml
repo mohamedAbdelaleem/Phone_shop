@@ -1,0 +1,82 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    
+}
+
+
+<style>
+    .unread-notification {
+        background-color: #e2f0ff; /* Light blue background for unread notifications */
+    }
+</style>
+<body>
+
+    <div class="container mt-4">
+        <h2>Notifications</h2>
+
+        <ul class="list-group">
+            @foreach (var notification in (List<Notification>)ViewData["notifications"])
+            {
+                @if (notification.IsReaded)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-primary rounded-pill ml-2">@notification.CreatedAt</span>
+                            @notification.Content
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actions
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <form method="post">
+
+                                    <button type="submit" class="dropdown-item" asp-action="MarkAsReaded" asp-controller="Notification" asp-route-id="@notification.Id">
+                                        Mark as Read
+                                    </button>
+                                    <button type="submit" class="dropdown-item" asp-action="Delete" asp-controller="Notification" asp-route-id="@notification.Id">
+                                        Delete
+                                    </button>
+                                    
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center unread-notification">
+                        <div>
+                            <span class="badge bg-primary rounded-pill ml-2">@notification.CreatedAt</span>
+                            @notification.Content
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actions
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                <form method="post">
+
+                                    <button type="submit" class="dropdown-item" asp-action="MarkAsReaded" asp-controller="Notification" asp-route-id="@notification.Id">
+                                        Mark as Read
+                                    </button>
+                                    <button type="submit" class="dropdown-item" asp-action="Delete" asp-controller="Notification" asp-route-id="@notification.Id">
+                                        Delete
+                                    </button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+
+                }
+            }
+            
+            
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-b4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wyq9R9yjsq0rQHzOEAgooqA/KPiIdK9aZ" crossorigin="anonymous"></script>
+</body>

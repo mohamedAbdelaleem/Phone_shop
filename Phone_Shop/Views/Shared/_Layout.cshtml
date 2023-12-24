@@ -1,4 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+
+@inject Phone_Shop.Services.INotification NotificationService
 
 <link rel="stylesheet" href="~/Content/site.css" />
 <!DOCTYPE html>
@@ -10,7 +13,25 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Phone_Shop.styles.css" asp-append-version="true" />
+    <style>
+        .notification {
+            color: white;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+        }
 
+            .notification .badge {
+                position: absolute;
+                top: -5px;
+                right: -10px;
+                padding: 5px 10px;
+                border-radius: 50%;
+                background: red;
+                color: white;
+            }
+    </style>
     @RenderSection("CustomStyles", required: false)
 
 </head>
@@ -50,8 +71,27 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
-                       
+                            
                         }
+
+                        @if (User.IsInRole("Customer") || User.IsInRole("Seller"))
+                        {
+
+                            var notificationCount = @NotificationService.CountUnReadNotifications(@User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark notification" asp-area="" asp-controller="Notification" asp-action="Index">
+
+                                    Notifications
+                                    @if (notificationCount > 0)
+                                    {
+                                        <span class="badge">@notificationCount</span>
+                                    }
+
+                                </a>
+                            </li>
+                        }
+                        
                          
                     </ul>
                     <partial name="_LoginPartial" />
