@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text.Encodings.Web;
 using Grpc.Core;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 namespace Phone_Shop.Controllers
 {
-
+    [Authorize(Roles = "Customer, Seller")]
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _context;

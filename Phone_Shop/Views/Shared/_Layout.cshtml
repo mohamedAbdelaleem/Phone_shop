@@ -47,11 +47,14 @@
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
-                <div id="cart-icon">
-                    <a href="@Url.Action("Index", "Cart")">
-                        <img src="/imj/cart-icon.png" alt="Shopping Cart" />
-                    </a>
-                </div>
+                @if (!User.IsInRole("Admin") && !User.IsInRole("Delivery"))
+                {
+                    <div id="cart-icon">
+                        <a href="@Url.Action("Index", "Cart")">
+                            <img src="/imj/cart-icon.png" alt="Shopping Cart" />
+                        </a>
+                    </div>
+                }
             </div>
         </nav>
     </header>

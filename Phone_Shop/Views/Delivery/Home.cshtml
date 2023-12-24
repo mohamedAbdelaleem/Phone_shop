@@ -10,17 +10,10 @@
 
 <li class="nav-item">
     <a class="nav-link" asp-controller="Delivery" asp-action="DeliveryReport">Delivery Report</a>
+    <a class="nav-link" a asp-controller="Delivery" asp-action="Home" asp-route-Shipped="false">UnShipped</a>
+    <a class="nav-link" a asp-controller="Delivery" asp-action="Home" asp-route-Shipped="true">Shipped</a>
 </li>
 <div class="container bootstrap snippets bootdey">
-
-    <div class="row">
-        <div class="col-md-3">
-
-            <a asp-controller="Delivery" asp-action="Home" asp-route-Shipped="false">UnShipped</a>
-            <a asp-controller="Delivery" asp-action="Home" asp-route-Shipped="true">Shipped</a>
-        </div>
-        <div class="col-md-9">
-
             <!-- <a href="#"><strong><i class="glyphicon glyphicon-dashboard"></i> My Dashboard</strong></a>
             <hr> -->
             @foreach (var Order in Model)
