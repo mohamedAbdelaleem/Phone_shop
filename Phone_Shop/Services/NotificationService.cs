@@ -16,7 +16,7 @@ namespace Phone_Shop.Services
 
     }
 
-    public class NotificationService
+    public class NotificationService: INotification
     {
         private readonly ApplicationDbContext _context;
         public NotificationService(ApplicationDbContext context) {
