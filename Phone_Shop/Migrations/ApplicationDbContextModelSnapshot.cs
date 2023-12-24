@@ -612,7 +612,7 @@ namespace Phone_Shop.Migrations
                     b.HasOne("Phone_Shop.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");

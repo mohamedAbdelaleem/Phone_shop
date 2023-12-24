@@ -98,7 +98,7 @@ namespace Phone_Shop.Data
             .HasOne(o => o.Product)
             .WithMany()
             .HasForeignKey(o => o.ProductId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<City>()
            .HasOne(o => o.Governorate)
