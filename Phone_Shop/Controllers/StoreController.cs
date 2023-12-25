@@ -19,6 +19,7 @@ namespace Phone_Shop.Controllers
             _context = context;
             _userManager = UserManager;
         }
+        [Authorize(Roles = "Seller")]
         public IActionResult Index()
         {
             var sellerid = _userManager.GetUserId(User);

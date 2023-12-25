@@ -52,7 +52,7 @@
 
             <div class="form-group">
                 <label asp-for="Amount" class="control-label" style="color: #3498db;">Amount:</label>
-                <input asp-for="Amount" class="form-control" style="color: #3498db;" />
+                <input asp-for="Amount" class="form-control" style="color: #3498db;" type="number" step="1" pattern="\d+" />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
 

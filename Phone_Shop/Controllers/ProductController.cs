@@ -60,13 +60,13 @@ namespace Phone_Shop.Controllers
 
                 model.ImgUrl = $"/imj/{imageName}"; // Save in the database
             }
-            else
+           /* else
             {
                 model.ImgUrl = "/imj/defaultImage.jpg";
-            }
+            }*/
             model.CreatedAt = DateTime.Now;
             Console.WriteLine(DateTime.Now);
-
+            model.Amount = Convert.ToInt32(model.Amount);
             _context.Product.Add(model);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -107,9 +107,9 @@ namespace Phone_Shop.Controllers
             }
             var sellerId = _userManager.GetUserId(User);
             model.SellerId = sellerId;
-            ;
+            model.Amount = (int)model.Amount; ;
             model.CreatedAt = DateTime.Now;
-            Console.WriteLine(DateTime.Now);
+            //Console.WriteLine(DateTime.Now);
             _context.Product.Update(model);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
