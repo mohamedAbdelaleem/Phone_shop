@@ -21,6 +21,14 @@ namespace Phone_Shop.Controllers
 
         public IActionResult Index(string? search, int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = int.MaxValue,bool Des=false)
         {
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Home", "Admin");
+            }
+            if (User.IsInRole("Delivery"))
+            {
+                return RedirectToAction("Home", "Delivery");
+            }
             var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice && product.Amount > 0));
             if (Des)
                 Result = Result.OrderByDescending(p => p.Price);
