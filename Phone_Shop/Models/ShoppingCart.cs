@@ -61,7 +61,7 @@ namespace Phone_Shop.Models
             }
             else
             {
-                cartItem.Quantity=Math.Min(product.Amount, cartItem.Quantity+qty);
+                cartItem.Quantity = Math.Min(product.Amount, cartItem.Quantity + qty);
             }
             _context.SaveChanges();
         }

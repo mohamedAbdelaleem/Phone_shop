@@ -86,7 +86,7 @@ namespace Phone_Shop
             {
                 var userManger = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-                var email = "aliadmin12@phone.com";
+                var email = "mohamed@phone.com";
                 var password = "Ali1212#";
 
                 if (await userManger.FindByEmailAsync(email) == null)

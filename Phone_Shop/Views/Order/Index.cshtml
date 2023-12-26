@@ -54,7 +54,7 @@
                 <!-- Dropdown for Governorates -->
                 <div class="form-group">
                     <label asp-for="Address.GovernorateId" class="control-label">Governorate:</label>
-                    <select asp-for="Address.GovernorateId" asp-items="new SelectList(Model.Governorates, nameof(Phone_Shop.Models.Governorate.Id), nameof(Phone_Shop.Models.Governorate.governorate_name_en), Model.Address.GovernorateId)" class="form-control" id="governorateDropdown">
+                    <select asp-for="Address.GovernorateId" asp-items="new SelectList(Model.Governorates, nameof(Phone_Shop.Models.Governorate.Id), nameof(Phone_Shop.Models.Governorate.governorate_name_en))" class="form-control" id="governorateDropdown">
                         <option value="">Select Governorate</option>
                     </select>
                     <span asp-validation-for="Address.GovernorateId" class="text-danger"></span>
@@ -62,7 +62,7 @@
                 <!-- Dropdown for Cities -->
                 <div class="form-group">
                     <label asp-for="Address.CityId" class="control-label">City:</label>
-                    <select asp-for="Address.CityId" asp-items="new SelectList(Model.Cities, nameof(Phone_Shop.Models.City.Id), nameof(Phone_Shop.Models.City.city_name_en), Model.Address.CityId)" class="form-control" id="cityDropdown">
+                    <select asp-for="Address.CityId" class="form-control" id="cityDropdown">
                         <option value="">Select City</option>
                     </select>
                     <span asp-validation-for="Address.CityId" class="text-danger"></span>
@@ -92,30 +92,18 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         $(document).ready(function () {
-            updateCityDropdown();
-            $('#governorateId').change(function () {
-                updateCityDropdown();
-            });
-
-            function updateCityDropdown() {
-                var governorateId = $('#governorateId').val();
-                var cityDropdown = $('#cityId');
-
-                $.get('/Order/GetCities', { governorateId: governorateId }, function (data) {
+            // Populate cities based on the selected governorate
+            $("#governorateDropdown").change(function () {
+                var governorateId = $(this).val();
+                $.getJSON("/Order/GetCities", { governorateId: governorateId }, function (data) {
+                    var cityDropdown = $("#cityDropdown");
                     cityDropdown.empty();
-
-                    if (data.length > 0) {
-                        $.each(data, function (key, value) {
-                            cityDropdown.append($('<option>').text(value.city_name_en).val(value.id));
-                        });
-
-                        cityDropdown.prop('disabled', false);
-                    } else {
-                        cityDropdown.prop('disabled', true);
-                    }
+                    cityDropdown.append('<option value="">Select City</option>');
+                    $.each(data, function (index, item) {
+                        cityDropdown.append('<option value="' + item.id + '">' + item.city_name_en + '</option>');
+                    });
                 });
-            }
+            });
         });
-
     </script>
 }
