@@ -146,11 +146,6 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
                 account.Name = Input.Name; 
                 _context.SaveChanges();
             }
-            if (Input.Photo != account.Photo)
-            {
-                account.Photo = Input.Photo;
-                _context.SaveChanges();
-            }
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
