@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
 using Phone_Shop.Models;
 using Phone_Shop.Services;
+using System.Linq;
 
 namespace Phone_Shop.Controllers
 {
@@ -24,42 +25,65 @@ namespace Phone_Shop.Controllers
         {
             ViewData["Governorates"] = _context.Governorates.ToList();
             ViewData["stage"] = stage;
-            var query = _context.Order.AsQueryable();
+            var query = _context.Order.Include(o=>o.PickupAddress).ToList();
+            if (stage == 0)
+            {
+                query = query.Where(q => q.Status == "UnShipped").ToList();
+            }
+            else if (stage == 1)
+            {
+                query = query.Where(q => q.Status == "Shipped").ToList();
+            }
+            else
+            {
+                query = query.Where(q => q.Status == "delivered").ToList();
+            }
             if (startDate.HasValue)
             {
-                query = query.Where(o => o.OrderedAt >= startDate.Value);
+                query = query.Where(q => q.OrderedAt >= startDate.Value).ToList();
             }
 
             if (endDate.HasValue)
             {
-                query = query.Where(o => o.OrderedAt <= endDate.Value);
+                query = query.Where(q => q.OrderedAt <= endDate.Value).ToList();
             }
+            if (stage != 0)
+            {
+                if (governorateId.HasValue)
+                {
+                    query = query.Where(q=> q.PickupAddress.GovernorateId == governorateId.Value).ToList();
+                }
 
-            if (governorateId.HasValue)
-            {
-                query = query.Where(o => o.PickupAddress.GovernorateId == governorateId.Value);
+                if (cityId.HasValue)
+                {
+                    query = query.Where(q => q.PickupAddress.CityId == cityId.Value).ToList();
+                }
             }
+            else if(governorateId.HasValue || cityId.HasValue)
+            {
+                List<Store> stores = new List<Store>();
+                List<OrderItem> orderItems = new List<OrderItem>();
+                foreach (var item in query)
+                {
+                    var SingleOrder = _context.OrderItem.Include(o=>o.Product.Store).Where(o => o.OrderID == item.Id).ToList();
+                    orderItems.AddRange(SingleOrder);
+                }
+                stores = orderItems.Select(o => o.Product.Store).ToList();
+                if (governorateId.HasValue)
+                {
+                    string govName = _context.Governorates.SingleOrDefault(g => g.Id == governorateId).governorate_name_en;
+                    stores = stores.Where(s => s.Governace == govName).ToList();
+                }
 
-            if (cityId.HasValue)
-            {
-                query = query.Where(o => o.PickupAddress.CityId == cityId.Value);
+                if (cityId.HasValue)
+                {
+                    string CityName = _context.Cities.SingleOrDefault(c => c.Id == cityId).city_name_en;
+                    stores = stores.Where(s => s.City == CityName).ToList();
+                }
+                orderItems = orderItems.Where(o => stores.Any(s => o.Product.StoreId == s.Id)).ToList();
+                query = query.Where(q => orderItems.Any(o => o.OrderID == q.Id)).ToList();
             }
-
-            if (stage==0)
-            {
-                query = query.Where(o => o.Status == "UnShipped");
-            }
-            else if(stage==1)
-            {
-                query = query.Where(o => o.Status == "Shipped");
-            }
-            else
-            {
-                query = query.Where(o => o.Status == "delivered");
-            }
-
-            var result = query.ToList();
-            return View(result);
+            return View(query);
         }
 
         public IActionResult OrderDetails(int id)
