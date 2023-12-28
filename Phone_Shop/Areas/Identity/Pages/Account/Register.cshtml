@@ -64,7 +64,7 @@
         var fileName = fileInput.value;
         var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 
-        if (!allowedExtensions.exec(fileName)) {
+        if (!allowedExtensions.exec(fileName) && fileName != "") {
             alert('Please upload a file with a valid extension (.jpg, .jpeg, or .png).');
             event.preventDefault(); // Prevent form submission
         }
