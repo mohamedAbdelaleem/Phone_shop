@@ -71,11 +71,12 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
             /// </summary>
             [Phone]
             [Display(Name = "Phone number")]
+            [StringLength(11, MinimumLength = 11)]
             public string PhoneNumber { get; set; }
             [Display(Name = "Name")]
             public string Name { get; set; }
             [Display(Name = "Photo")]
-            public string Photo { get; set; }
+            public IFormFile ? Photo { get; set; }
         }
 
 
@@ -85,7 +86,6 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
-
             var account =  _context.Account.Single(x => x.Id == userId); 
 
 
@@ -94,9 +94,7 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
-               Name = account.Name,
-               Photo = account.Photo
-
+                Name = account.Name,
             };
 
         }
@@ -144,6 +142,25 @@ namespace Phone_Shop.Areas.Identity.Pages.Account.Manage
             if (Input.Name != account.Name)
             {
                 account.Name = Input.Name; 
+                _context.SaveChanges();
+            }
+
+            if (Input.Photo != null && Input.Photo.Length > 0)
+            {
+                // Get the wwwroot path
+                string uploadPath = Path.Combine(_hostingEnvironment.WebRootPath, "imj");
+                Directory.CreateDirectory(uploadPath);
+
+                // Generate a unique filename for the uploaded file
+                string newfilename = $"{Guid.NewGuid().ToString()}{Path.GetExtension(Input.Photo.FileName)}";
+                string fileName = Path.Combine(uploadPath, newfilename);
+
+                // Save the file to the server
+                using (var fileStream = new FileStream(fileName, FileMode.Create))
+                {
+                    Input.Photo.CopyTo(fileStream);
+                }
+                account.Photo = $"/imj/{newfilename}";
                 _context.SaveChanges();
             }
 
