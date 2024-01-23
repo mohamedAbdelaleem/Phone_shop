@@ -23,7 +23,13 @@ namespace Phone_Shop.Controllers
         public IActionResult Index()
         {
             var sellerid = _userManager.GetUserId(User);
-            var result = _context.Product.Include(x => x.Category).Include(x => x.Store).Where(p => p.SellerId == sellerid).ToList();
+            var products = _context.Store.Join(_userManager.Users,
+                                                        store => store.SellerId, seller => seller.Id,
+                                                        (store, seller) => store)
+                                                        .Join(_context.Product,
+                                                           store => store.Id, product => product.StoreId,
+                                                           (store, product) => product);
+            var result = products.Include(x => x.Category).Include(x => x.Store).ToList();
             return View(result);
         }
         [Authorize(Roles = "Seller")]
@@ -42,8 +48,6 @@ namespace Phone_Shop.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Product model)
         {
-            var sellerId = _userManager.GetUserId(User);
-            model.SellerId = sellerId;
 
             var file = HttpContext.Request.Form.Files;
 
@@ -105,8 +109,7 @@ namespace Phone_Shop.Controllers
             {
                 model.ImgUrl = model.ImgUrl;
             }
-            var sellerId = _userManager.GetUserId(User);
-            model.SellerId = sellerId;
+            
             model.Amount = (int)model.Amount; ;
             model.CreatedAt = DateTime.Now;
             //Console.WriteLine(DateTime.Now);
@@ -137,7 +140,8 @@ namespace Phone_Shop.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var seller = _context.Account.SingleOrDefault(a => a.Id == product.SellerId);
+            var store = _context.Store.Single(s => s.Id == product.StoreId);
+            var seller = _context.Account.SingleOrDefault(a => a.Id == store.SellerId);
 
 
             bool canReviewProduct = false;

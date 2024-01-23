@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Phone_Shop.Data;
 using Phone_Shop.Services;
 
@@ -38,9 +39,9 @@ namespace Phone_Shop.Controllers
             {
                 return RedirectToAction("Home", "Admin");
             }
-            
 
-            var account = _dbContext.Account.SingleOrDefault(a => a.Id == product.SellerId);
+            var store = _dbContext.Store.Single(s => s.Id == product.StoreId);
+            var account = _dbContext.Account.SingleOrDefault(a => a.Id == store.SellerId);
 
             ViewData["product"] = product;
             ViewData["account"] = account;
@@ -57,9 +58,11 @@ namespace Phone_Shop.Controllers
                 return RedirectToAction("Home", "Admin");
             }
 
+            var store = _dbContext.Store.Single(s => s.Id == product.StoreId);
+
             product.IsActive = true;
             _dbContext.SaveChanges();
-            _notificationService.SendProductAccepted(product.SellerId, product.Name);
+            _notificationService.SendProductAccepted(store.SellerId, product.Name);
 
             return RedirectToAction("Home", "Admin");
         }
@@ -73,11 +76,12 @@ namespace Phone_Shop.Controllers
                 return RedirectToAction("Home", "Admin");
             }
 
+            var store = _dbContext.Store.Single(s => s.Id == product.StoreId);
             var productName = product.Name;
 
             _dbContext.Product.Remove(product);
             _dbContext.SaveChanges();
-            _notificationService.SendProductRejected(product.SellerId, productName);
+            _notificationService.SendProductRejected(store.SellerId, productName);
             return RedirectToAction("Home", "Admin");
         }
 

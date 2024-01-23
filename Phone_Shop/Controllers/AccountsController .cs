@@ -40,7 +40,12 @@ namespace Phone_Shop.Controllers
             var Userid = _userManager.GetUserId(User);
             var result = _context.Account.Where(p => p.Id == Userid).ToList();
             ViewData["PhoneNumber"]=_context.Users.SingleOrDefault(u=>(u.Id==Userid)).PhoneNumber;
-             var productstoseller=_context.Product.Where(x=>x.SellerId==Userid).ToList();
+            var productstoseller = _context.Store.Join(_userManager.Users,
+                                                        store => store.SellerId, seller => seller.Id,
+                                                        (store, seller) => store)
+                                                        .Join(_context.Product,
+                                                           store => store.Id, product => product.StoreId,
+                                                           (store, product) => product).ToList();
              var orderitems=_context.OrderItem.ToList();
             var order = _context.Order.ToList();
             var shippedproudct = from i in order

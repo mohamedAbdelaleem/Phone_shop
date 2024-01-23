@@ -78,11 +78,6 @@ namespace Phone_Shop.Data
                     .HasForeignKey(s => s.SellerId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Product>()
-            .HasOne(p => p.Seller)
-            .WithMany()
-            .HasForeignKey(p => p.SellerId)
-            .OnDelete(DeleteBehavior.NoAction);
             
             modelBuilder.Entity<Product>()
             .HasOne(p => p.Store)

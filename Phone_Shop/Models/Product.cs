@@ -10,10 +10,6 @@ namespace Phone_Shop.Models
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey("Seller")]
-        public string SellerId { get; set; }
-
-        [Required]
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         [Required]
@@ -42,7 +38,6 @@ namespace Phone_Shop.Models
 
         public Store Store { get; set; }
 
-        public IdentityUser Seller { get; set; }
 
     }
 }
