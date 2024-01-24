@@ -47,6 +47,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Total Orders: @Model.Count()</h3>
+                    </div>
+                </div>
                 <!-- Filter Form -->
                 <form method="get" asp-controller="Delivery" asp-action="Home">
                     <div class="card">
