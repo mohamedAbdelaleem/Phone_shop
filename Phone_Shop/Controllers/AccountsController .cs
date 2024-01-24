@@ -149,7 +149,7 @@ namespace Phone_Shop.Controllers
                 account.Photo = $"/imj/{newfilename}";
             }
             else
-                account.Photo = "/imj/defult.jpg";
+                account.Photo = "/imj/default.jpg";
             // Optionally, save the file path to a database or return it to the user
             account.Id = user.Id;
             account.Name = name;

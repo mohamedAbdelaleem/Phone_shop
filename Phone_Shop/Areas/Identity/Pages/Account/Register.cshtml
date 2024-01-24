@@ -40,7 +40,7 @@
 
             <div class="form-group">
                 <label asp-for="Input.Photo" class="control-label"></label>
-                <input asp-for="Input.Photo" type="file" name="Input.Photo" class="form-control" autocomplete="Photo" aria-required="true" placeholder="Photo" style="margin-bottom:20px" />
+                <input asp-for="Input.Photo" type="file" name="Input.Photo" accept=".jpg, .jpeg, .png" class="form-control" autocomplete="Photo" aria-required="true" placeholder="Photo" style="margin-bottom:20px" />
                 <span asp-validation-for="Input.Photo" class="text-danger"></span>
             </div>
 
@@ -57,6 +57,19 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', function (event) {
+        var fileInput = document.getElementById('Input_Photo');
+        var fileName = fileInput.value;
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+
+        if (!allowedExtensions.exec(fileName) && fileName != "") {
+            alert('Please upload a file with a valid extension (.jpg, .jpeg, or .png).');
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+</script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
