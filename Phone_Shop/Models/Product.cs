@@ -34,6 +34,8 @@ namespace Phone_Shop.Models
 
         public bool IsActive { get; set; } = false;
 
+        public bool Archived { get; set; } = false;
+
         public Category Category { get; set; }
 
         public Store Store { get; set; }

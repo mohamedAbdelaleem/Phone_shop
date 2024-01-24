@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.Metrics;
 using System.Net;
+using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +46,7 @@ namespace Phone_Shop.Data
             .HasOne(oi => oi.Product)
             .WithMany()
             .HasForeignKey(oi => oi.ProductID)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
 
             modelBuilder.Entity<OrderItem>()
@@ -76,9 +77,15 @@ namespace Phone_Shop.Data
                     .HasOne(s => s.Seller)
                     .WithMany()
                     .HasForeignKey(s => s.SellerId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.NoAction);
 
+
+            modelBuilder.Entity<Store>()
+            .ToTable(tb => tb.HasTrigger("ArchivingStores")); 
             
+            modelBuilder.Entity<Product>()
+            .ToTable(tb => tb.HasTrigger("ArchivingProducts"));
+
             modelBuilder.Entity<Product>()
             .HasOne(p => p.Store)
             .WithMany()
@@ -89,12 +96,12 @@ namespace Phone_Shop.Data
             .HasOne(p => p.Category)
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.CategoryId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<CartItem>()
             .HasOne(o => o.Product)
             .WithMany()
             .HasForeignKey(o => o.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<City>()
            .HasOne(o => o.Governorate)
@@ -109,7 +116,7 @@ namespace Phone_Shop.Data
             .HasOne(r => r.Product)
             .WithMany()
             .HasForeignKey(r => r.ProductID)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
 
             modelBuilder.Entity<Review>()

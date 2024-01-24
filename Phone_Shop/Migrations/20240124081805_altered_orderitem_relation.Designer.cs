@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Phone_Shop.Data;
 
@@ -11,9 +12,11 @@ using Phone_Shop.Data;
 namespace Phone_Shop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240124081805_altered_orderitem_relation")]
+    partial class altered_orderitem_relation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -508,10 +511,7 @@ namespace Phone_Shop.Migrations
 
                     b.HasIndex("StoreId");
 
-                    b.ToTable("Product", t =>
-                        {
-                            t.HasTrigger("ArchivingProducts");
-                        });
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Phone_Shop.Models.Review", b =>
@@ -644,7 +644,7 @@ namespace Phone_Shop.Migrations
                     b.HasOne("Phone_Shop.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -741,7 +741,7 @@ namespace Phone_Shop.Migrations
                     b.HasOne("Phone_Shop.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Phone_Shop.Models.Store", "Store")
@@ -766,7 +766,7 @@ namespace Phone_Shop.Migrations
                     b.HasOne("Phone_Shop.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -779,7 +779,7 @@ namespace Phone_Shop.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Seller");

@@ -23,6 +23,7 @@ namespace Phone_Shop.Models
         [Required]
         public string Street { get; set; }
 
+        public bool Archived { get; set; } = false;
         public IdentityUser Seller { get; set; }
     }
 }
