@@ -29,7 +29,7 @@ namespace Phone_Shop.Controllers
                                                         .Join(_context.Product,
                                                            store => store.Id, product => product.StoreId,
                                                            (store, product) => product);
-            var result = products.Include(x => x.Category).Include(x => x.Store).ToList();
+            var result = products.Where(p=>p.Archived==false).Include(x => x.Category).Include(x => x.Store).ToList();
             return View(result);
         }
         [Authorize(Roles = "Seller")]
@@ -37,7 +37,7 @@ namespace Phone_Shop.Controllers
         {
             var sellerid = _userManager.GetUserId(User);
             ViewBag.Category = _context.Category.OrderBy(x => x.Name).ToList();
-            ViewBag.Store = _context.Store.Where(p => p.SellerId == sellerid).OrderBy(x => x.Name).ToList();
+            ViewBag.Store = _context.Store.Where(p => p.SellerId == sellerid && p.Archived == false).OrderBy(x => x.Name).ToList();
             return View();
         }
 
@@ -125,7 +125,8 @@ namespace Phone_Shop.Controllers
             var result = _context.Product.Find(id);
             if (result != null)
             {
-                _context.Product.Remove(result);
+                result.Archived = true;
+                _context.Remove(result);
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));

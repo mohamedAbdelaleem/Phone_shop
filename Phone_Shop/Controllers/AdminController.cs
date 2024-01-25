@@ -23,7 +23,7 @@ namespace Phone_Shop.Controllers
         public IActionResult Home()
         {
 
-            var inActiveProducts = _dbContext.Product.Where(p => !p.IsActive).OrderByDescending(p => p.CreatedAt).ToList();
+            var inActiveProducts = _dbContext.Product.Where(p => !p.IsActive&&p.Archived==false).OrderByDescending(p => p.CreatedAt).ToList();
 
             ViewData["inActiveProducts"] = inActiveProducts;
             

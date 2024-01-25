@@ -29,7 +29,7 @@ namespace Phone_Shop.Controllers
             {
                 return RedirectToAction("Home", "Delivery");
             }
-            var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice && product.Amount > 0));
+            var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice && product.Amount > 0 && product.Archived == false) );
             if (Des)
                 Result = Result.OrderByDescending(p => p.Price);
             else

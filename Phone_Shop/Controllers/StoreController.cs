@@ -23,7 +23,7 @@ namespace Phone_Shop.Controllers
         public IActionResult Index()
         {
             var sellerid = _userManager.GetUserId(User);
-            var result = _context.Store.Where(p => p.SellerId == sellerid).ToList();
+            var result = _context.Store.Where(p => p.SellerId == sellerid&&p.Archived==false).ToList();
             return View(result);
         }
         [Authorize(Roles = "Seller")]
@@ -101,7 +101,7 @@ namespace Phone_Shop.Controllers
 
             if (result != null)
             {
-                var associatedProducts = _context.Product.Where(p => p.StoreId == id).ToList();
+                var associatedProducts = _context.Product.Where(p => p.StoreId == id  && p.Archived==false).ToList();
 
                 if (associatedProducts.Count > 0)
                 {
@@ -110,7 +110,8 @@ namespace Phone_Shop.Controllers
                 }
 
 
-                _context.Store.Remove(result);
+                result.Archived = true;
+                _context.Remove(result);
                 _context.SaveChanges();
 
             }
