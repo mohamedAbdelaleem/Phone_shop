@@ -1,5 +1,5 @@
 ﻿/*Took from https://github.com/Tech-Labs/egypt-governorates-and-cities-db*/
-INSERT INTO [phoneShopDB].[dbo].[governorates] (governorate_name_ar, governorate_name_en) VALUES
+INSERT INTO [BlogDb].[dbo].[governorates] (governorate_name_ar, governorate_name_en) VALUES
 ('القاهرة', 'Cairo'),
 ('الجيزة', 'Giza'),
 ('الأسكندرية', 'Alexandria'),
@@ -29,7 +29,7 @@ INSERT INTO [phoneShopDB].[dbo].[governorates] (governorate_name_ar, governorate
 ('سوهاج', 'Sohag');
 
 
-INSERT INTO [phoneShopDB].[dbo].[cities] (governorate_id, city_name_ar, city_name_en) VALUES
+INSERT INTO [BlogDb].[dbo].[cities] (governorate_id, city_name_ar, city_name_en) VALUES
 
 /* Start Cairo ID:1 */
 (1, '15 مايو', '15 May'),

@@ -85,25 +85,25 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <form method="post" asp-controller="Admin" asp-action="ProductConfirmation" asp-route-id="@product.Id">
-                                    <button type="submit" class="btn btn-success btn-lg">Confirm</button>
+                                    <button type="submit" class="btn btn-success btn-lg" style="margin-right:20px;">Confirm</button>
                                 </form>
                             </div>
                             
                             <div class="col-sm-4">
                                 <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-id="@product.Id">
-                                    <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-lg" style="margin-left:15px;">Delete</button>
                                 </form>
                             </div>
 
                             <div class="col-sm-4">
-                                <a asp-controller="Admin" asp-action="Home" class="btn btn-warning btn-lg">Back</a>
+                                <a asp-controller="Admin" asp-action="Home" class="btn btn-warning btn-lg" style="margin-left:18px;">Back</a>
                             </div>
 
                         </div>
                     </div>
 
                         <div class="col-sm-12 col-md-6 col-lg-6">
-                            <div class="btn-group pull-right">
+                            <div class="btn-group pull-right" >
                                 <!-- version2 -->
                                 <!-- <button class="btn btn-white btn-default"><i class="fa fa-star"></i> Add to
                                     wishlist</button> -->
@@ -117,6 +117,7 @@
         </div>
 
     </div>
+<div style="margin-bottom:50px;"></div>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
     <script type="text/javascript">

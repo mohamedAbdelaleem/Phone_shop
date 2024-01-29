@@ -11,9 +11,9 @@
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
   <div class="container">
     <div class="row">
-      <div class="col-sm-4 col-md-3">
+        <div class="col-sm-4 col-md-3" style="background-color:#72abdb;">
         <form method="get" name="searchForm">
-          <div class="well">
+          <div class="well" style="margin-top:15px;">
             <div class="row">
               <div class="col-sm-12">
                 <div class="input-group">
@@ -36,15 +36,15 @@
           <p>Custom</p>
           <div class="radio">
                 <form id="priceForm" name="PriceForm" method="post" asp-route-Des="@ViewData["Des"]" asp-route-PageNumber="1" asp-route-search="@ViewData["search"]">
-                        <label for="LowestPrice">Lowest Price:</label>
+                    <label for="LowestPrice" style="margin-bottom:5px; margin-top:7px">Lowest Price:</label>
                         <input type="number" id="LowestPrice" name="LowestPrice" step="0.01" required>
                         <br>
 
-                        <label for="MaxmiumPrice">Maximum Price:</label>
+                        <label for="MaxmiumPrice" style="margin-bottom:5px; margin-top:7px">Maximum Price:</label>
                         <input type="number" id="MaxmiumPrice" name="MaxmiumPrice" step="0.01" required>
                         <br>
 
-                        <input type="submit" value="Submit">
+                        <input type="submit" value="Submit" style="margin-top:10px; margin-bottom:15px;margin-left:35%;">
                  </form>
           </div>
 
