@@ -5,13 +5,15 @@
 }
 
 
-<div class="row" style="background-color:#40A2D8;">
-    <div class="col-4"></div>
-    <div class="col-md-4">
-        <h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-md-5" style="background-color:#1d2733;  border-radius:15px; margin:10px">
+        <br />
+
+        <h1 style="color:white;">@ViewData["Title"]</h1>
 
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
-            <h2>Create a new account.</h2>
+            <h2 style="color:white;">Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
@@ -41,13 +43,13 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Input.Photo" class="control-label"></label>
+                <label asp-for="Input.Photo" class="control-label" style="color:white;"></label>
                 <input asp-for="Input.Photo" type="file" name="Input.Photo" accept=".jpg, .jpeg, .png" class="form-control" autocomplete="Photo" aria-required="true" placeholder="Photo" style="margin-bottom:20px" />
                 <span asp-validation-for="Input.Photo" class="text-danger"></span>
             </div>
 
             <div>
-                <label asp-for="Input.Role" for="selectField" >Select a Role:</label>
+                <label asp-for="Input.Role" for="selectField"  style="color:white;">Select a Role:</label>
                 <select id="selectField" asp-for="Input.Role" style="margin-bottom:20px" class="form-select" aria-label="Default select example">
                     <option selected value="Customer">Customer</option>
                     <option value="Seller">Seller</option>
@@ -55,8 +57,10 @@
                 </select>
             </div>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-secondary">Register</button>
         </form>
+        <br />
+
     </div>
 </div>
 

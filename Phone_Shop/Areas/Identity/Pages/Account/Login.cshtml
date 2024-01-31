@@ -6,14 +6,16 @@
 }
 
 
-<div class="row" style="background-color:#40A2D8;">
-    <div class="col-4"></div>
+<div class="row">
+    <div class="col-3"></div>
 
-    <div class="col-md-4" >
+    <div class="col-md-5" style="background-color:#1d2733; border-radius:15px; margin:10px">
         <section>
-            <h1>@ViewData["Title"]</h1>
+            <br />
+
+            <h1 style="color:white;">@ViewData["Title"]</h1>
             <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
+                <h2 style="color:white;">Use a local account to log in.</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
@@ -27,18 +29,20 @@
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
+                    <label asp-for="Input.RememberMe" class="form-label" style="color:white;">
                         <input class="form-check-input" asp-for="Input.RememberMe" />
                         @Html.DisplayNameFor(m => m.Input.RememberMe)
                     </label>
                 </div>
                 <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn" style="background-color:#5c6a72">Log in</button>
                 </div>
                 <div>
                     <p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
                     </p>
+                    <br />
+                    <br />
                 </div>
             </form>
         </section>

@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Phone_Shop.styles.css" asp-append-version="true" />
     <style>
+        body{
+            
+            background-color:#7e8e98;
+        }
         .notification {
             color: white;
             text-decoration: none;
@@ -38,8 +42,8 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid" style="height:70px">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/imj/Phone-Shop-logo.png" style="height:40px;width:150px; border-radius:10px; "/></a>
+            <div class="container-fluid" style="height:70px;background-color:#0F0F0F;">
+                <img class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" src="~/imj/Phone-Shop-logo.png" style="height:70px;width:150px; border-radius:30px; "/>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -49,27 +53,27 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Home">Admin</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Admin" asp-action="Home">Admin</a>
                             </li>
                         } 
                         @if (User.IsInRole("Delivery"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Delivery" asp-action="Home">Home</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Delivery" asp-action="Home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Delivery" asp-action="Home" asp-route-Stage="0">UnShipped</a>
+                                <a class="nav-link text-white" asp-controller="Delivery" asp-action="Home" asp-route-Stage="0">UnShipped</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Delivery" asp-action="Home" asp-route-Stage="1">Shipped</a>
+                                <a class="nav-link text-white" asp-controller="Delivery" asp-action="Home" asp-route-Stage="1">Shipped</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Delivery" asp-action="Home" asp-route-Stage="2">Delivered</a>
+                                <a class="nav-link text-white" asp-controller="Delivery" asp-action="Home" asp-route-Stage="2">Delivered</a>
                             </li>
                         }else{
                        
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             
                         }
@@ -80,7 +84,7 @@
                             var notificationCount = @NotificationService.CountUnReadNotifications(@User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark notification" asp-area="" asp-controller="Notification" asp-action="Index">
+                                <a class="nav-link text-white notification" asp-area="" asp-controller="Notification" asp-action="Index">
 
                                     Notifications
                                     @if (notificationCount > 0)
@@ -98,7 +102,7 @@
                 </div>
                 @if (!User.IsInRole("Admin") && !User.IsInRole("Delivery"))
                 {
-                    <div id="cart-icon">
+                    <div id="cart-icon" style="color:white;">
                         <a href="@Url.Action("Index", "Cart")">
                             <img src="/imj/cart-icon.png" alt="Shopping Cart" />
                         </a>
@@ -114,7 +118,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
+        <div class="" style="background-color:#0F0F0F;">
+            <span style="margin-left:30px;"></span>
             &copy; @DateTime.Now.Year - Phone_Shop
         </div>
     </footer>
