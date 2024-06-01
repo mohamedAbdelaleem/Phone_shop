@@ -19,7 +19,7 @@ namespace Phone_Shop.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string? search, int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = int.MaxValue,bool Des=false)
+        public IActionResult Index(string? search,string? Des, int PageNumber=1,int LowestPrice = -1,int MaxmiumPrice = int.MaxValue)
         {
             if (User.IsInRole("Admin"))
             {
@@ -29,16 +29,16 @@ namespace Phone_Shop.Controllers
             {
                 return RedirectToAction("Home", "Delivery");
             }
-            var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice && product.Amount > 0 && product.Archived == false) );
-            if (Des)
+            var Result = _context.Product.Where(product => (product.IsActive && product.Price >= LowestPrice && product.Price <= MaxmiumPrice && product.Amount > 0 && product.Archived == false));
+            if (Des!=null && Des.Equals("true"))
                 Result = Result.OrderByDescending(p => p.Price);
-            else
+            else if (Des!=null)
                 Result = Result.OrderBy(p => p.Price);
             if (search != null)
             {
-                if (Des)
+                if (Des != null && Des.Equals("true"))
                     Result = SearchProducts(Result, search).OrderByDescending(p=>p.Price);
-                else
+                else if (Des != null)
                     Result = SearchProducts(Result, search).OrderBy(p => p.Price);
 
             }
@@ -49,19 +49,18 @@ namespace Phone_Shop.Controllers
             ViewData["LowestPrice"] = LowestPrice;
             ViewData["Des"] = Des;
             ViewData["search"] = search;
-            int ca = 0;
-            foreach (var product in Result)
-            {
-                ca++;
-                if (ca >= 9 * (PageNumber - 1) + 1 && ca <= 9 * PageNumber )
-                    result.Add(product);
-            }
-            if (Des)
+
+            result = Result.AsNoTracking()
+               .OrderByDescending(p=>p.CreatedAt)
+              .Skip((PageNumber - 1) * 9)
+              .Take(9).ToList();
+
+            if (Des != null && Des.Equals("true"))
                 return View(result.OrderByDescending(p=>p.Price));
               
-            else
+            else if (Des != null)
                 return View(result.OrderBy(p => p.Price));
-
+            return View(result);
          
         }
 
